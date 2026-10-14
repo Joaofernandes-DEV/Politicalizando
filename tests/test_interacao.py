@@ -2,6 +2,7 @@ import pytest
 
 from politicalizando.dominio.acoes import Escolha, Fala
 from politicalizando.dominio.cenas import CenaInvalida, Cenas, Verbo
+from politicalizando.dominio.checagem import Casos
 from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.diretor import Diretor
 from politicalizando.dominio.estado_jogo import EstadoJogo
@@ -206,3 +207,34 @@ def test_entrada_em_cena_inexistente_e_erro(interacao):
 def test_interacao_confere_as_referencias_ao_ser_criada(cenas):
     with pytest.raises(CenaInvalida, match="exemplo.guia"):
         Interacao(cenas, ROTEIROS, Dialogos())
+
+
+def test_verbo_com_caso_de_checagem():
+    casos = Casos.de_toml(
+        """
+[casos.exemplo.comentario]
+tipo = "fala"
+conteudo = "exemplo.comentario.texto"
+classe = "opiniao"
+explicacao = "exemplo.comentario.explicacao"
+"""
+    )
+    cenas = Cenas.de_toml(
+        RECUSAS + '[cenas.sala]\nobjetos = [{ id = "jornal", nome = "exemplo.jornal",'
+        ' area = [0, 0, 10, 10], olhar = { checagem = "exemplo.comentario" } }]'
+    )
+    interacao = Interacao(cenas, Roteiros(), Dialogos(), casos)
+    estado = EstadoJogo()
+    vistos = rodar(interacao.agir(estado, cenas["sala"].objetos[0], Verbo.OLHAR), estado)
+    assert vistos[0] == Fala("exemplo.comentario.texto")
+    assert isinstance(vistos[1], Escolha)
+    assert estado.tem_flag("exemplo.comentario.checou")
+
+
+def test_interacao_acusa_caso_inexistente(cenas):
+    texto = RECUSAS + (
+        '[cenas.sala]\nobjetos = [{ id = "a", nome = "exemplo.a", area = [0, 0, 1, 1],'
+        ' olhar = { checagem = "exemplo.sumiu" } }]'
+    )
+    with pytest.raises(CenaInvalida, match="caso 'exemplo.sumiu'"):
+        Interacao(Cenas.de_toml(texto), Roteiros(), Dialogos())
