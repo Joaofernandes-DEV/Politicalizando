@@ -62,3 +62,16 @@ Modelo:
 - Testes: 5 → 5 (só documentação).
 - Antes, a `main` recebeu um único commit direto (o commit inicial vazio, autorizado pelo João), necessário porque o repositório estava vazio. Daqui em diante, tudo entra por PR.
 - Próximo passo: revisar o rascunho de conteúdo do briefing, responder às perguntas P1 a P5 e iniciar a Fase 1 (núcleo) numa sessão nova.
+
+### 2026-10-13 22:08 — CI: fixa o Ubuntu 24.04 nos jobs Linux
+
+**Feito:**
+- Os jobs Linux do `ci.yml` passam a usar `ubuntu-24.04` em vez de `ubuntu-latest`. O Windows continua em `windows-latest`.
+- Os checks exigidos na proteção da `main` foram trocados para os novos nomes (`Lint e testes (ubuntu-24.04, Python 3.11/3.12/3.13)`), mantendo o do Windows.
+
+**Arquivos:** `.github/workflows/ci.yml`, `LOG.md`.
+
+**Motivo / observações:**
+- O GitHub avisou que o `ubuntu-latest` migra para o Ubuntu 26 a partir de 2026-10-19. Fixar a versão evita que o CI quebre sozinho se o `setup-python` ainda não tiver o Python 3.11 pronto para o sistema novo.
+- Testes: 5 → 5 (só CI).
+- Rever a fixação quando o Ubuntu 26 estiver estável nas actions.
