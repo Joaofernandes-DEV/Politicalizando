@@ -4,6 +4,8 @@
 # objeto não tem resposta para o verbo. Elas alternam em rodízio e nunca falam de correntes
 # (E4). São obrigatórias quando houver cenas.
 #
+# `inicio` é a cena onde o novo jogo começa; precisa existir.
+#
 # Cada tabela de [cenas] com `objetos` é uma cena, e o caminho dela é o ID. Entrar numa cena
 # marca a flag "<id da cena>.visitou"; `entrada` (opcional) roda só na primeira visita.
 #
@@ -20,6 +22,8 @@
 #                pode fazer o objeto sumir)
 #
 # Exemplo:
+#
+#   inicio = "praca"
 #
 #   [recusas]
 #   olhar = ["recusa.olhar.1", "recusa.olhar.2"]
@@ -43,4 +47,76 @@
 #   area = [200, 80, 24, 48]
 #   falar = { dialogo = "praca.vendedor" }
 #
-# As cenas do capítulo e os textos das recusas entram na Fase 2, com a primeira tela de cena.
+# As cenas "teste.*" são provisórias e neutras: servem para testar a tela de cena e saem quando
+# as cenas do capítulo entrarem (PR feat/capitulo-1-jogavel).
+
+inicio = "teste.sala"
+
+[recusas]
+olhar = ["recusa.olhar.1", "recusa.olhar.2"]
+usar = ["recusa.usar.1", "recusa.usar.2"]
+falar = ["recusa.falar.1", "recusa.falar.2"]
+
+[cenas.teste.sala]
+entrada = { roteiro = "teste.sala.boas_vindas" }
+
+[[cenas.teste.sala.objetos]]
+id = "porta"
+nome = "teste.sala.porta.nome"
+area = [276, 34, 32, 96]
+olhar = [{ fala = "teste.sala.porta.olhar" }]
+usar = [{ trocar_cena = "teste.corredor" }]
+
+[[cenas.teste.sala.objetos]]
+id = "mesa"
+nome = "teste.sala.mesa.nome"
+area = [110, 100, 70, 26]
+olhar = [{ fala = "teste.sala.mesa.olhar" }]
+
+# O caderno fica em cima da mesa: vem depois dela, então fica por cima no clique.
+[[cenas.teste.sala.objetos]]
+id = "caderno"
+nome = "teste.sala.caderno.nome"
+area = [134, 92, 18, 10]
+olhar = [{ fala = "teste.sala.caderno.olhar" }]
+usar = [{ dar_item = "caderno" }, { fala = "teste.sala.caderno.pegou" }]
+se_nao_item = ["caderno"]
+
+[[cenas.teste.sala.objetos]]
+id = "relogio"
+nome = "teste.sala.relogio.nome"
+area = [30, 24, 20, 20]
+olhar = [{ fala = "teste.sala.relogio.olhar" }]
+usar = [
+  { fala = "teste.sala.relogio.corda" },
+  { esperar = 1 },
+  { fala = "teste.sala.relogio.tique" },
+]
+
+[[cenas.teste.sala.objetos]]
+id = "mural"
+nome = "teste.sala.mural.nome"
+area = [70, 24, 48, 32]
+olhar = { checagem = "teste.mural" }
+
+[[cenas.teste.sala.objetos]]
+id = "pessoa"
+nome = "teste.sala.pessoa.nome"
+area = [210, 58, 22, 70]
+olhar = [{ fala = "teste.sala.pessoa.olhar" }]
+falar = { dialogo = "teste.pessoa" }
+
+[cenas.teste.corredor]
+
+[[cenas.teste.corredor.objetos]]
+id = "porta"
+nome = "teste.corredor.porta.nome"
+area = [12, 34, 32, 96]
+olhar = [{ fala = "teste.corredor.porta.olhar" }]
+usar = [{ trocar_cena = "teste.sala" }]
+
+[[cenas.teste.corredor.objetos]]
+id = "janela"
+nome = "teste.corredor.janela.nome"
+area = [140, 30, 60, 40]
+olhar = [{ fala = "teste.corredor.janela.olhar" }]
