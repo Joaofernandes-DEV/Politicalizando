@@ -1,15 +1,22 @@
 """Todo ID de texto usado existe em `textos.toml`, e nenhum texto de lá ficou órfão.
 
-Hoje os IDs vêm só do código: uma varredura com `ast` coleta, em `src/politicalizando/`, todo
-acesso `textos["id"]` (ou `algo.textos["id"]`) e as ações dos roteiros em Python,
-`Fala("id")` e `Escolha(("id_a", "id_b"))`. Quando os roteiros, diálogos e cenas em dados
-chegarem, cada tipo carregado expõe os IDs que usa, e `ids_usados` passa a juntá-los aqui.
+Os IDs vêm de duas fontes:
+
+- do código: uma varredura com `ast` coleta, em `src/politicalizando/`, todo acesso
+  `textos["id"]` (ou `algo.textos["id"]`) e as ações dos roteiros em Python, `Fala("id")` e
+  `Escolha(("id_a", "id_b"))`;
+- dos dados: as falas dos roteiros em `roteiros.toml`.
+
+Quando os diálogos e as cenas em dados chegarem, cada tipo carregado expõe os IDs que usa, e
+`ids_usados` passa a juntá-los aqui.
 """
 
 import ast
+import sys
 from pathlib import Path
 
-from politicalizando.conteudo import carregar_textos
+from politicalizando.conteudo import carregar_roteiros, carregar_textos
+from politicalizando.dominio.roteiro import Roteiros
 
 PASTA_CODIGO = Path(__file__).resolve().parents[1] / "src" / "politicalizando"
 
@@ -79,6 +86,7 @@ def ids_usados() -> tuple[set[str], list[str]]:
         achados, erros = ids_no_codigo(arquivo.read_text(encoding="utf-8"), nome)
         ids |= achados
         problemas += erros
+    ids |= carregar_roteiros().ids_de_texto()
     return ids, problemas
 
 
@@ -115,6 +123,13 @@ def test_varredura_acusa_acao_sem_id_literal():
         "roteiro.py:2: use um ID literal em Escolha(...)",
         "roteiro.py:3: use um ID literal em Escolha(...)",
     ]
+
+
+def test_ids_usados_inclui_as_falas_dos_roteiros(monkeypatch):
+    roteiros = Roteiros.de_toml('exemplo.cena = [{ fala = "exemplo.so_no_roteiro" }]')
+    monkeypatch.setattr(sys.modules[__name__], "carregar_roteiros", lambda: roteiros)
+    ids, _ = ids_usados()
+    assert "exemplo.so_no_roteiro" in ids
 
 
 def test_codigo_so_acessa_textos_com_id_literal():
