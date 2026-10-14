@@ -16,7 +16,8 @@ Siga o [CONTRIBUTING.md](CONTRIBUTING.md). Em resumo, a cada mudança:
 
 ## Cuidados
 
-- Jogo educativo, não propaganda: todo conteúdo segue os princípios C1 a C5 do `briefing.md` e o checklist de equilíbrio do CONTRIBUTING. Nunca escreva texto que favoreça ou ridicularize uma corrente, partido ou pessoa real.
+- Jogo educativo, não propaganda: todo conteúdo segue os princípios C1 a C6 e as salvaguardas E1 a E5 do `briefing.md`, além do checklist de equilíbrio do CONTRIBUTING. Nunca escreva texto ou mecânica que favoreça ou ridicularize uma corrente, partido ou pessoa real.
+- Referências de outros jogos servem só como ideia (D12): nunca copie código, textos, nomes, personagens ou assets, e nunca adicione materiais de referência ao repositório.
 - Conteúdo factual sempre com fonte registrada. Na dúvida sobre um fato, pergunte em vez de inventar.
 - Assets são gerados por `ferramentas/gerar_*.py`; não edite os binários à mão.
 - Decisões de produto e de gosto (nomes, versão, licença, tom do conteúdo, publicar) são do João: pergunte.
