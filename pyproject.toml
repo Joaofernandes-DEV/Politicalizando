@@ -23,6 +23,10 @@ politicalizando = "politicalizando.__main__:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+# Dados revisáveis (textos e, depois, cenas, diálogos e roteiros) vão junto no pacote.
+"politicalizando.conteudo" = ["pt_BR/*.toml"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"
