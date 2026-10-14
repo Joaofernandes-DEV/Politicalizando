@@ -12,3 +12,20 @@ texto = "Pensar antes de escolher um lado."
 
 [titulo.dica_sair]
 texto = "Esc: sair"
+
+# Checagem de fontes (J4): rótulos das classes e resultado da classificação.
+
+[checagem.classe.fato]
+texto = "Fato verificável"
+
+[checagem.classe.opiniao]
+texto = "Opinião ou valor"
+
+[checagem.classe.manipulacao]
+texto = "Manipulação"
+
+[checagem.resultado.certo]
+texto = "Isso mesmo."
+
+[checagem.resultado.errado]
+texto = "Não é bem isso."
