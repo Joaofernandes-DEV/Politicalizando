@@ -93,3 +93,22 @@ Modelo:
 - Busca na web por "Novátria" não encontrou município ou bairro real com esse nome.
 - Testes: 5 → 5 (só documentação).
 - Próximo: PR `feat/estado-do-jogo` (flags, inventário, save JSON e autosave), o primeiro da Fase 1.
+
+### 2026-10-14 17:13 — Fase 1: estado do jogo e save em JSON
+
+**Feito:**
+- `dominio/estado_jogo.py`: o `EstadoJogo` guarda as flags de evento, o inventário (na ordem de coleta) e a cena atual, e sabe se houve mudança desde o último save. Os IDs seguem um formato único (`biblioteca.ouviu_bibliotecaria`), para que erros de digitação nos dados dos próximos PRs falhem cedo. O estado vira dicionário e volta (`para_dict` / `de_dict`), com validação estrita.
+- `persistencia.py`: save de 1 slot em `dados/save.json`, ao lado do jogo (do `.exe` empacotado ou da raiz do projeto), com gravação atômica (arquivo temporário + troca). Um save ilegível ou de versão futura gera erro e nunca é apagado. O `autosalvar` só grava se houve mudança e nada está bloqueado. A variável `POLITICALIZANDO_DADOS` troca a pasta.
+- `tests/conftest.py`: fixture automática que aponta a pasta de dados para uma pasta temporária, para nenhum teste tocar no save real.
+- Formato do save: `{"versao": 1, "cena_atual": ..., "flags": [...], "inventario": [...]}`, com as flags ordenadas.
+
+**Arquivos:** `src/politicalizando/dominio/estado_jogo.py` (novo), `src/politicalizando/persistencia.py` (novo), `tests/conftest.py`, `tests/test_estado_jogo.py` (novo), `tests/test_persistencia.py` (novo), `LOG.md`.
+
+**Motivo / observações:**
+- Primeiro PR da Fase 1 (`D10`, `J8`). `E1` por construção: o estado só tem flags booleanas, itens e a cena, e um teste confere que o save não tem nenhum outro campo (pontuação, medidor de corrente).
+- Pasta do save escolhida pelo João: `dados/` ao lado do jogo (portátil, combina com o `.gitignore`). Limitação: se o `.exe` ficar numa pasta sem permissão de escrita, o save falha; tratar a mensagem ao jogador na Fase 2.
+- O "bloqueado" do autosave ainda vem de quem chama; passa a vir do diretor de ações (`feat/diretor-de-acoes`). A tela de título ainda não usa o save ("Continuar" entra na Fase 2).
+- A exceção `SaveInvalido` mantém o nome em português, com `noqa: N818` (o ruff pede o sufixo "Error").
+- Testes: 5 → 55, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0, sem criar `dados/`. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/textos-por-id`.
