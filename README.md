@@ -15,7 +15,7 @@ Projeto de extensão da UNIP. Público: 14 anos ou mais.
 
 ## Situação
 
-🚧 **Em desenvolvimento.** A Fase 0 (fundação) está concluída: a janela abre com uma tela de título provisória, e o lint e os testes rodam no CI. A próxima etapa é a Fase 1 (núcleo). O roteiro completo, as decisões e o escopo da V1 estão no [briefing.md](briefing.md); o histórico de cada mudança está no [LOG.md](LOG.md).
+🚧 **Em desenvolvimento.** As Fases 0 (fundação) e 1 (núcleo) estão concluídas: a janela abre com uma tela de título provisória, e as regras do jogo (estado e save, textos, roteiros, diálogos, cenas, fichas, checagem de fontes e avaliação da matéria) estão modeladas como dados e testadas sem janela, com testes de equilíbrio entre as correntes. A próxima etapa é a Fase 2 (fluxo principal), que deixa o capítulo jogável. O roteiro completo, as decisões e o escopo da V1 estão no [briefing.md](briefing.md); o histórico de cada mudança está no [LOG.md](LOG.md).
 
 O executável para Windows será publicado nas [releases](https://github.com/Joaofernandes-DEV/Politicalizando/releases) na entrega da V1.
 
