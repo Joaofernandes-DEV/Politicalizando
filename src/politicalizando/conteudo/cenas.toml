@@ -1,0 +1,46 @@
+# Cenas: telas fixas com objetos interativos (briefing D8, J9, J10).
+#
+# [recusas] traz as falas genéricas de cada verbo (olhar, usar, falar), usadas quando um
+# objeto não tem resposta para o verbo. Elas alternam em rodízio e nunca falam de correntes
+# (E4). São obrigatórias quando houver cenas.
+#
+# Cada tabela de [cenas] com `objetos` é uma cena, e o caminho dela é o ID. Entrar numa cena
+# marca a flag "<id da cena>.visitou"; `entrada` (opcional) roda só na primeira visita.
+#
+# Cada objeto tem:
+#   id           nome curto, único na cena
+#   nome         ID do texto com o nome do objeto
+#   area         [x, y, largura, altura] na resolução lógica de 320×180
+#   olhar, usar, falar
+#                resposta ao verbo (opcional): lista de passos no formato dos roteiros,
+#                { roteiro = "id" } ou { dialogo = "id" }
+#   se, se_nao   flags que precisam estar / não podem estar marcadas para o objeto aparecer
+#   se_item, se_nao_item
+#                itens que precisam estar / não podem estar no inventário (um item coletado
+#                pode fazer o objeto sumir)
+#
+# Exemplo:
+#
+#   [recusas]
+#   olhar = ["recusa.olhar.1", "recusa.olhar.2"]
+#   usar = ["recusa.usar.1", "recusa.usar.2"]
+#   falar = ["recusa.falar.1", "recusa.falar.2"]
+#
+#   [cenas.praca]
+#   entrada = { roteiro = "praca.apresentacao" }
+#
+#   [[cenas.praca.objetos]]
+#   id = "folheto"
+#   nome = "praca.folheto.nome"
+#   area = [40, 100, 16, 12]
+#   olhar = [{ fala = "praca.folheto.olhar" }]
+#   usar = [{ dar_item = "folheto" }]
+#   se_nao_item = ["folheto"]
+#
+#   [[cenas.praca.objetos]]
+#   id = "vendedor"
+#   nome = "praca.vendedor.nome"
+#   area = [200, 80, 24, 48]
+#   falar = { dialogo = "praca.vendedor" }
+#
+# As cenas do capítulo e os textos das recusas entram na Fase 2, com a primeira tela de cena.
