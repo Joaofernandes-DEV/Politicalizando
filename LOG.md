@@ -235,3 +235,24 @@ Modelo:
 - Testes: 323 → 386 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/checagem-de-fontes`, o último da Fase 1, com os testes de equilíbrio E2, E3 e E5.
+
+### 2026-10-14 18:30 — Fase 1: checagem de fontes e testes E3 e E5
+
+**Feito:**
+- `dominio/checagem.py`: os casos de checagem ficam em `conteudo/checagem.toml`. Cada caso (post, manchete ou fala) tem conteúdo, classe e explicação. **Fato** leva `confere` e fontes obrigatórias (C6: fato não é "mais uma opinião"); **opinião** não tem resposta certa nem origem; **manipulação** leva `origem` (uma das 4 correntes ou `sem_lado`) e a `tecnica` usada (fora de contexto, dado falso, manchete enganosa, apelo à emoção, falsa autoridade, caça-clique ou golpe). Campos que não combinam com a classe são recusados.
+- O caso roda no `Diretor`: mostra o conteúdo, oferece as 3 classes sempre na mesma ordem, marca `<caso>.checou` (e `<caso>.acertou` se acertou), diz se acertou e sempre mostra a explicação. Errar nunca pune (J11).
+- As cenas aceitam `{ checagem = "id" }` como resposta de um objeto, e o carregamento confere que o caso existe.
+- `textos.toml`: os primeiros textos de interface, provisórios e neutros: "Fato verificável", "Opinião ou valor", "Manipulação", "Isso mesmo." e "Não é bem isso.".
+- Testes de equilíbrio em `tests/test_equilibrio.py`: **E3** (os diálogos marcados com `corrente` precisam ter o mesmo perfil de tópicos e níveis, isto é, o número de opções por nó em cada nível, nas 4 correntes) e **E5** (os exemplos de manipulação se distribuem por igual entre as 4 correntes, com pelo menos um sem lado).
+- Testes de conteúdo: os textos dos casos entram no teste de usados e órfãos; `checou` e `acertou` contam como origem de flag; nenhum caso fica sem uso por alguma cena.
+
+**Arquivos:** `src/politicalizando/dominio/checagem.py` (novo), `src/politicalizando/dominio/cenas.py`, `src/politicalizando/dominio/interacao.py`, `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/checagem.toml` (novo), `src/politicalizando/conteudo/pt_BR/textos.toml`, `tests/test_checagem.py` (novo), `tests/test_cenas.py`, `tests/test_interacao.py`, `tests/test_textos_usados.py`, `tests/test_flags_exigidas.py`, `tests/test_conteudo_sem_uso.py`, `tests/test_equilibrio.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Oitavo PR da Fase 1 (`J4`, `C6`, `R9`, `E3`, `E5`). O #11 (fichas) entrou na `main` pelo auto-merge.
+- Decisões do João: o **E2** e o modelo de avaliação da matéria (J7) saem deste PR e ganham um PR próprio, `feat/avaliacao-da-materia`, que fecha a Fase 1; as regras por classe; as 7 técnicas iniciais; os 5 rótulos provisórios; o perfil do E3 como opções por nó em cada nível; e a ligação dos casos às cenas por `{ checagem = "id" }`.
+- O `checagem.toml` começa só com o formato documentado; os casos reais (com fontes verificadas e revisão externa, P5) são da Fase 4. Os exemplos dos testes são fictícios e neutros.
+- Registrado também: o João quer propor um exemplo de arte, a partir da tela de início de um jogo que ele desenvolveu, antes de criar a arte e as personagens (Fase 3).
+- Testes: 386 → 445 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/avaliacao-da-materia` (J7 no domínio e o teste E2), o último da Fase 1.
