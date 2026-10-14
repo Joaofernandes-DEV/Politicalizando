@@ -5,18 +5,22 @@ Os IDs vêm de duas fontes:
 - do código: uma varredura com `ast` coleta, em `src/politicalizando/`, todo acesso
   `textos["id"]` (ou `algo.textos["id"]`) e as ações dos roteiros em Python, `Fala("id")` e
   `Escolha(("id_a", "id_b"))`;
-- dos dados: as falas dos roteiros em `roteiros.toml` e as falas e opções dos diálogos em
-  `dialogos.toml`.
-
-Quando as cenas em dados chegarem, elas também expõem os IDs que usam, e `ids_usados` passa a
-juntá-los aqui.
+- dos dados: as falas dos roteiros (`roteiros.toml`), as falas e opções dos diálogos
+  (`dialogos.toml`) e os nomes de objeto, as falas em linha e as recusas das cenas
+  (`cenas.toml`).
 """
 
 import ast
 import sys
 from pathlib import Path
 
-from politicalizando.conteudo import carregar_dialogos, carregar_roteiros, carregar_textos
+from politicalizando.conteudo import (
+    carregar_cenas,
+    carregar_dialogos,
+    carregar_roteiros,
+    carregar_textos,
+)
+from politicalizando.dominio.cenas import Cenas
 from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.roteiro import Roteiros
 
@@ -102,6 +106,7 @@ def ids_usados() -> tuple[set[str], list[str]]:
         problemas += erros
     ids |= carregar_roteiros().ids_de_texto()
     ids |= carregar_dialogos().ids_de_texto()
+    ids |= carregar_cenas().ids_de_texto()
     return ids, problemas
 
 
@@ -169,6 +174,25 @@ def test_ids_usados_inclui_as_falas_e_opcoes_dos_dialogos(monkeypatch):
     monkeypatch.setattr(sys.modules[__name__], "carregar_dialogos", lambda: dialogos)
     ids, _ = ids_usados()
     assert {"exemplo.so_no_dialogo", "exemplo.opcao_do_dialogo"} <= ids
+
+
+def test_ids_usados_inclui_os_textos_das_cenas(monkeypatch):
+    cenas = Cenas.de_toml(
+        """
+[recusas]
+olhar = ["exemplo.r_olhar"]
+usar = ["exemplo.r_usar"]
+falar = ["exemplo.r_falar"]
+
+[cenas.sala]
+objetos = [
+  { id = "a", nome = "exemplo.nome", area = [0, 0, 1, 1], olhar = [{ fala = "exemplo.olhar" }] },
+]
+"""
+    )
+    monkeypatch.setattr(sys.modules[__name__], "carregar_cenas", lambda: cenas)
+    ids, _ = ids_usados()
+    assert {"exemplo.nome", "exemplo.olhar", "exemplo.r_olhar", "exemplo.r_falar"} <= ids
 
 
 def test_codigo_so_acessa_textos_com_id_literal():
