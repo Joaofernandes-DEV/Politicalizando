@@ -1,0 +1,49 @@
+# Fichas das correntes: o mesmo modelo de 8 itens para todas (briefing J3, seção 5).
+#
+# A chave da ficha é a corrente: liberalismo, conservadorismo, socialismo ou social_democracia.
+# Os textos ficam no textos.toml, por ID; as fontes ficam aqui, como dados. Todos os itens são
+# obrigatórios, e as fichas precisam ter tamanho parecido (teste de equilíbrio).
+#
+#   se              flags que desbloqueiam a ficha (opcional)
+#   ideia_central   1. a ideia central em uma frase, escrita como um defensor a escreveria
+#   valores         2. valores que prioriza (lista)
+#   estado, mercado, sociedade
+#                   3. como vê o papel de cada um
+#   origem          4. origem histórica
+#   pensadores         e pensadores de referência (lista)
+#   proposta        5. o que propõe para o problema do capítulo
+#   criticas        6. críticas, cada uma com `texto` e `de` (outra corrente ou "outras");
+#                      pelo menos 2 origens diferentes, nunca a própria corrente
+#   confusoes       7. confusões de nome, só terminologia (lista)
+#   fontes          8. autor, titulo, ano e editora; ou url (https://) com a data de acesso
+#
+# Exemplo (estrutura só; os textos e as fontes reais entram na Fase 4):
+#
+#   [fichas.liberalismo]
+#   se = ["biblioteca.bibliotecaria.posicao"]
+#   ideia_central = "ficha.liberalismo.ideia"
+#   valores = ["ficha.liberalismo.valor.1", "ficha.liberalismo.valor.2"]
+#   estado = "ficha.liberalismo.estado"
+#   mercado = "ficha.liberalismo.mercado"
+#   sociedade = "ficha.liberalismo.sociedade"
+#   origem = "ficha.liberalismo.origem"
+#   pensadores = ["ficha.liberalismo.pensador.1"]
+#   proposta = "ficha.liberalismo.proposta"
+#   confusoes = ["ficha.liberalismo.confusao.1"]
+#
+#   [[fichas.liberalismo.criticas]]
+#   texto = "ficha.liberalismo.critica.1"
+#   de = "socialismo"
+#
+#   [[fichas.liberalismo.criticas]]
+#   texto = "ficha.liberalismo.critica.2"
+#   de = "conservadorismo"
+#
+#   [[fichas.liberalismo.fontes]]
+#   autor = "Sobrenome, Nome"
+#   titulo = "Título da obra"
+#   ano = 1999
+#   editora = "Editora"
+#
+# As fichas reais passam pelo teste do defensor (C5), pelo checklist de equilíbrio do
+# CONTRIBUTING e pela revisão externa (P5) antes de entrar.

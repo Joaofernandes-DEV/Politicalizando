@@ -215,3 +215,23 @@ Modelo:
 - Testes: 247 → 323, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/fichas-das-correntes`.
+
+### 2026-10-14 18:19 — Fase 1: fichas das correntes e fontes
+
+**Feito:**
+- `dominio/fichas.py`: as fichas ficam em `conteudo/fichas.toml`, uma por corrente (a chave é a corrente), todas no modelo de 8 itens do briefing: ideia central, valores, papel do Estado, do mercado e da sociedade, origem e pensadores, proposta para o problema do capítulo, críticas, confusões de nome e fontes. Os textos ficam no `textos.toml`, por ID.
+- Validação do modelo comum: todos os itens obrigatórios e listas não vazias; pelo menos uma fonte (R5, C4); críticas de pelo menos 2 origens diferentes (outra corrente ou `"outras"`), nunca da própria corrente.
+- Desbloqueio por flags (`se`, J3); as fichas desbloqueadas saem sempre na ordem fixa das correntes, nunca numa ordem que favoreça uma delas.
+- `dominio/fontes.py`: `Fonte` (autor, título, ano e editora; ou url `https://` com a data de acesso), separada para ser reaproveitada nos casos de checagem.
+- Testes de conteúdo: os textos das fichas entram no teste de usados e órfãos, e as flags de desbloqueio precisam de origem. Em `tests/test_equilibrio.py`: a ficha mais longa pode ter no máximo 1,3× os caracteres da mais curta, e um teste exige uma ficha para cada uma das 4 correntes.
+
+**Arquivos:** `src/politicalizando/dominio/fontes.py` (novo), `src/politicalizando/dominio/fichas.py` (novo), `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/fichas.toml` (novo), `tests/test_fontes.py` (novo), `tests/test_fichas.py` (novo), `tests/test_textos_usados.py`, `tests/test_flags_exigidas.py`, `tests/test_equilibrio.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Sétimo PR da Fase 1 (`J3`, `R5`, `C4`; prepara `C1`, `R2`). O #10 (cenas e interação) entrou na `main` pelo auto-merge.
+- Decisões do João: textos no `textos.toml` e fontes como dados no `fichas.toml`; críticas com `de` = outra corrente ou `"outras"`, de pelo menos 2 origens; limite de tamanho de 1,3×; teste das 4 correntes como `xfail` estrito até a Fase 4; desbloqueio por `se`.
+- O `fichas.toml` começa só com o formato documentado; os exemplos dos testes são fictícios (IDs `exemplo.*` e "Autor Exemplo"), sem nenhum conteúdo político. O texto das fichas é da Fase 4 e passa pelo teste do defensor (C5), pelo checklist de equilíbrio e pela revisão externa (P5).
+- O `xfail` estrito é um lembrete automático: quando as 4 fichas chegarem, o teste passa, o pytest acusa e a marcação precisa ser removida para o teste virar obrigatório.
+- Testes: 323 → 386 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/checagem-de-fontes`, o último da Fase 1, com os testes de equilíbrio E2, E3 e E5.

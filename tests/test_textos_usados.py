@@ -6,8 +6,8 @@ Os IDs vêm de duas fontes:
   `textos["id"]` (ou `algo.textos["id"]`) e as ações dos roteiros em Python, `Fala("id")` e
   `Escolha(("id_a", "id_b"))`;
 - dos dados: as falas dos roteiros (`roteiros.toml`), as falas e opções dos diálogos
-  (`dialogos.toml`) e os nomes de objeto, as falas em linha e as recusas das cenas
-  (`cenas.toml`).
+  (`dialogos.toml`), os nomes de objeto, as falas em linha e as recusas das cenas
+  (`cenas.toml`) e os itens das fichas (`fichas.toml`).
 """
 
 import ast
@@ -17,11 +17,13 @@ from pathlib import Path
 from politicalizando.conteudo import (
     carregar_cenas,
     carregar_dialogos,
+    carregar_fichas,
     carregar_roteiros,
     carregar_textos,
 )
 from politicalizando.dominio.cenas import Cenas
 from politicalizando.dominio.dialogo import Dialogos
+from politicalizando.dominio.fichas import Fichas
 from politicalizando.dominio.roteiro import Roteiros
 
 PASTA_CODIGO = Path(__file__).resolve().parents[1] / "src" / "politicalizando"
@@ -107,6 +109,7 @@ def ids_usados() -> tuple[set[str], list[str]]:
     ids |= carregar_roteiros().ids_de_texto()
     ids |= carregar_dialogos().ids_de_texto()
     ids |= carregar_cenas().ids_de_texto()
+    ids |= carregar_fichas().ids_de_texto()
     return ids, problemas
 
 
@@ -193,6 +196,31 @@ objetos = [
     monkeypatch.setattr(sys.modules[__name__], "carregar_cenas", lambda: cenas)
     ids, _ = ids_usados()
     assert {"exemplo.nome", "exemplo.olhar", "exemplo.r_olhar", "exemplo.r_falar"} <= ids
+
+
+def test_ids_usados_inclui_os_textos_das_fichas(monkeypatch):
+    fichas = Fichas.de_toml(
+        """
+[fichas.socialismo]
+ideia_central = "exemplo.ideia"
+valores = ["exemplo.valor"]
+estado = "exemplo.estado"
+mercado = "exemplo.mercado"
+sociedade = "exemplo.sociedade"
+origem = "exemplo.origem"
+pensadores = ["exemplo.pensador"]
+proposta = "exemplo.proposta"
+confusoes = ["exemplo.confusao"]
+criticas = [
+  { texto = "exemplo.critica_1", de = "liberalismo" },
+  { texto = "exemplo.critica_2", de = "outras" },
+]
+fontes = [{ autor = "Exemplo, Autor", titulo = "Obra", ano = 2000, editora = "Ed." }]
+"""
+    )
+    monkeypatch.setattr(sys.modules[__name__], "carregar_fichas", lambda: fichas)
+    ids, _ = ids_usados()
+    assert {"exemplo.ideia", "exemplo.critica_2", "exemplo.confusao"} <= ids
 
 
 def test_codigo_so_acessa_textos_com_id_literal():
