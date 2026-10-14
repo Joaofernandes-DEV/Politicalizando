@@ -195,3 +195,23 @@ Modelo:
 - Testes: 192 → 247, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/cenas-e-interacao` (cenas, objetos com Olhar/Usar/Falar, disparo de roteiros e diálogos, e a ligação do diretor com o `Jogo`).
+
+### 2026-10-14 18:10 — Fase 1: cenas e interação
+
+**Feito:**
+- `dominio/cenas.py`: as cenas ficam em `conteudo/cenas.toml`. Cada cena tem objetos com `id`, `nome` (ID de texto), `area` (x, y, largura e altura em 320×180, validada contra a tela) e respostas aos verbos Olhar, Usar e Falar. Uma resposta é uma lista de passos em linha, `{ roteiro = "id" }` ou `{ dialogo = "id" }`. As condições de objeto são `se` e `se_nao` (flags) e `se_item` e `se_nao_item` (itens): um item coletado pode fazer o objeto sumir (J9).
+- `[recusas]` traz as falas genéricas de cada verbo, obrigatórias quando há cenas; um verbo sem resposta usa a próxima recusa daquele verbo, em rodízio determinístico.
+- `dominio/interacao.py`: `objetos_visiveis` (na ordem do arquivo, que será a do Tab), `objeto_em` (o clique: o último objeto fica por cima e os invisíveis são ignorados) e `Interacao`, que transforma verbos e entradas em roteiros para o `Diretor`. `ao_entrar` marca `<cena>.visitou` e roda a `entrada` só na primeira visita (J10).
+- `conteudo.carregar_cenas()` confere que todo roteiro e diálogo citado existe.
+- Testes de conteúdo: os textos das cenas entram no teste de usados e órfãos; flags **e itens** exigidos precisam ter origem nos dados; nenhum roteiro ou diálogo fica sem uso por alguma cena; e o novo `tests/test_equilibrio.py` traz o teste `E4` (o texto das recusas não pode citar nenhuma corrente).
+
+**Arquivos:** `src/politicalizando/dominio/cenas.py` (novo), `src/politicalizando/dominio/interacao.py` (novo), `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/cenas.toml` (novo), `tests/test_cenas.py` (novo), `tests/test_interacao.py` (novo), `tests/test_textos_usados.py`, `tests/test_flags_exigidas.py`, `tests/test_conteudo_sem_uso.py` (novo), `tests/test_equilibrio.py` (novo), `LOG.md`.
+
+**Motivo / observações:**
+- Sexto PR da Fase 1 (`J9`, `J10`, `D8`, `E4`; prepara `I4` e `I9`). O João fez o merge do #9 (árvores de diálogo) e ligou o auto-merge e a exclusão automática de branches no repositório: daqui em diante, cada PR entra sozinho quando o CI fica verde.
+- Decisões do João: a ligação do diretor com o `Jogo` (input, caixa de diálogo, autosave ao entrar na cena) passa para o primeiro PR da Fase 2, junto com a primeira tela de cena (antes estava prevista para este PR); a flag `<cena>.visitou` é automática e a `entrada` roda só na primeira visita; condições de objeto por flags e itens; recusas por verbo em rodízio; objetos com `nome` e `area`. O `cenas.toml` começa só com o formato documentado; as cenas e os textos das recusas chegam na Fase 2.
+- `ao_entrar` deve ser chamado pelo jogo quando a cena muda **e** o diretor está livre, para não iniciar uma sequência por cima de outra (uma `TrocarCena` dentro de um roteiro só dispara a entrada depois que ele termina).
+- `dominio/cenas.py` importa `config.py` (resolução lógica), que não importa o pygame; o teste do domínio sem pygame continua passando.
+- Testes: 247 → 323, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/fichas-das-correntes`.
