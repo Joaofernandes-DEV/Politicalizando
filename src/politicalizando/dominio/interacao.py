@@ -11,6 +11,7 @@ from collections.abc import Mapping
 
 from politicalizando.dominio.acoes import Acao, Fala, MarcarFlag, Roteiro
 from politicalizando.dominio.cenas import Cena, Cenas, Objeto, Resposta, Verbo, conferir_referencias
+from politicalizando.dominio.checagem import Caso
 from politicalizando.dominio.dialogo import Dialogo
 from politicalizando.dominio.estado_jogo import EstadoJogo
 from politicalizando.dominio.roteiro import Sequencia
@@ -41,11 +42,14 @@ class Interacao:
         cenas: Cenas,
         roteiros: Mapping[str, Sequencia],
         dialogos: Mapping[str, Dialogo],
+        casos: Mapping[str, Caso] | None = None,
     ) -> None:
-        conferir_referencias(cenas, roteiros, dialogos)
+        casos = casos if casos is not None else {}
+        conferir_referencias(cenas, roteiros, dialogos, casos)
         self.cenas = cenas
         self.roteiros = roteiros
         self.dialogos = dialogos
+        self.casos = casos
         # Rodízio determinístico, sem sorteio; é só variação de texto e não vai no save.
         self._proxima_recusa = dict.fromkeys(Verbo, 0)
 
@@ -78,4 +82,6 @@ class Interacao:
             return self.roteiros[resposta.roteiro].executar(estado)
         if resposta.dialogo is not None:
             return self.dialogos[resposta.dialogo].executar(estado)
+        if resposta.checagem is not None:
+            return self.casos[resposta.checagem].executar(estado)
         return _passos(resposta.passos)
