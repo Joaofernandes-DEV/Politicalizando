@@ -300,3 +300,19 @@ def test_exemplo_do_comentario_do_arquivo_e_valido():
 
 def test_arquivo_do_jogo_carrega_sem_erro():
     assert isinstance(carregar_cenas(), Cenas)
+
+
+def test_resposta_pode_ser_um_caso_de_checagem():
+    cenas = Cenas.de_toml(_cena('usar = { checagem = "exemplo.cartaz" }'))
+    objeto = cenas["sala"].objetos[0]
+    assert objeto.respostas[Verbo.USAR] == Resposta(checagem="exemplo.cartaz")
+    assert cenas.checagens_usadas() == {"exemplo.cartaz"}
+
+
+def test_conferir_referencias_acusa_caso_inexistente():
+    cenas = Cenas.de_toml(_cena('usar = { checagem = "exemplo.cartaz" }'))
+    with pytest.raises(CenaInvalida, match="caso 'exemplo.cartaz'"):
+        conferir_referencias(cenas, {}, {})
+    with pytest.raises(CenaInvalida, match="caso 'exemplo.cartaz'"):
+        conferir_referencias(cenas, {}, {}, {"exemplo.outro": None})
+    conferir_referencias(cenas, {}, {}, {"exemplo.cartaz": None})
