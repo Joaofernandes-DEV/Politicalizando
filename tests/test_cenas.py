@@ -82,6 +82,13 @@ def test_arquivo_sem_cenas_dispensa_as_recusas():
     cenas = Cenas.de_toml("# só um comentário\n")
     assert len(cenas) == 0
     assert dict(cenas.recusas) == {}
+    assert cenas.inicio is None
+
+
+def test_inicio_e_a_cena_onde_o_novo_jogo_comeca():
+    cenas = Cenas.de_toml('inicio = "exemplo.corredor"\n' + EXEMPLO)
+    assert cenas.inicio == "exemplo.corredor"
+    assert Cenas.de_toml(EXEMPLO).inicio is None
 
 
 @pytest.mark.parametrize(
@@ -133,6 +140,9 @@ def _cena(objeto: str = "", extra: str = "", recusas: str = RECUSAS) -> str:
         pytest.param('mapa = "x"', "chaves inesperadas", id="chave-extra-na-raiz"),
         pytest.param("cenas = 1", "deveria ser uma tabela", id="cenas-nao-e-tabela"),
         pytest.param("[cenas]\nsala = 1", "valor solto", id="valor-solto"),
+        pytest.param('inicio = "sala"', "a cena 'sala' não existe", id="inicio-sem-cena"),
+        pytest.param('inicio = "Sala"\n' + _cena(), "inicio: ID inválido", id="inicio-invalido"),
+        pytest.param('inicio = "corredor"\n' + _cena(), "não existe", id="inicio-inexistente"),
         pytest.param(_cena(recusas=""), "faltam as recusas", id="sem-recusas"),
         pytest.param(
             _cena(recusas=RECUSAS.replace('falar = ["exemplo.recusa.falar_1"]', "")),
@@ -295,11 +305,16 @@ def test_exemplo_do_comentario_do_arquivo_e_valido():
             break
     cenas = Cenas.de_toml("\n".join(exemplo))
     assert list(cenas) == ["praca"]
+    assert cenas.inicio == "praca"
     assert [objeto.id for objeto in cenas["praca"].objetos] == ["folheto", "vendedor"]
 
 
 def test_arquivo_do_jogo_carrega_sem_erro():
     assert isinstance(carregar_cenas(), Cenas)
+
+
+def test_arquivo_do_jogo_tem_a_cena_inicial():
+    assert carregar_cenas().inicio is not None
 
 
 def test_resposta_pode_ser_um_caso_de_checagem():
