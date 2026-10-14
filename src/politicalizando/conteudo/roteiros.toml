@@ -17,5 +17,11 @@
 #     { marcar_flag = "biblioteca.visitou" },
 #   ]
 #
-# Escolhas com ramos ficam nas árvores de diálogo. Os roteiros do capítulo entram a partir do
-# PR feat/cenas-e-interacao, quando houver cenas para dispará-los.
+# Escolhas com ramos ficam nas árvores de diálogo. Os roteiros "teste.*" são provisórios e
+# neutros, da cena de teste; saem quando os roteiros do capítulo entrarem.
+
+[teste.sala]
+boas_vindas = [
+  { fala = "teste.sala.boas_vindas.1" },
+  { fala = "teste.sala.boas_vindas.2" },
+]
