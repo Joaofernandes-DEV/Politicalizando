@@ -48,7 +48,7 @@ python -m ruff format --check .
 python -m pytest
 ```
 
-Estrutura: regras puras em `src/politicalizando/dominio/` (sem pygame), telas em `estados/`, componentes visuais em `ui/`, assets gerados por scripts em `ferramentas/` e testes em `tests/`.
+Estrutura: regras puras em `src/politicalizando/dominio/` (sem pygame), textos e outros dados revisáveis em `conteudo/` (TOML), telas em `estados/`, componentes visuais em `ui/`, assets gerados por scripts em `ferramentas/` e testes em `tests/`.
 
 ## Licença
 
