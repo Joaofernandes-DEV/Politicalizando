@@ -1,0 +1,41 @@
+# Árvores de diálogo: conversas com escolhas, executadas pelo diretor (briefing J2; D11).
+#
+# Cada tabela com `inicio` é um diálogo, e o caminho dela é o ID. Os nós ficam em `nos`, cada
+# um com `passos` no formato dos roteiros (fala, esperar, marcar_flag, dar_item, trocar_cena).
+# Depois dos passos, o nó oferece `opcoes`, segue sozinho para outro nó (`vai_para`) ou termina.
+#
+# Cada opção tem:
+#   id         nome curto; escolher marca a flag "<id do diálogo>.<id>"
+#   texto      ID do texto da opção no textos.toml
+#   vai_para   nó seguinte, ou "fim" para encerrar
+#   uso_unico  true: some depois de usada (opcional)
+#   se         flags que precisam estar marcadas para a opção aparecer (opcional)
+#   se_nao     flags que não podem estar marcadas (opcional)
+#
+# `corrente` (opcional) marca o diálogo de uma personagem de uma das 4 correntes, para o teste
+# de equilíbrio E3 (mesma estrutura para todas). Ela nunca vira flag nem pontuação (E1).
+#
+# Exemplo:
+#
+#   [biblioteca.bibliotecaria]
+#   inicio = "ola"
+#
+#   [biblioteca.bibliotecaria.nos.ola]
+#   passos = [{ fala = "biblioteca.bibliotecaria.ola" }]
+#
+#   [[biblioteca.bibliotecaria.nos.ola.opcoes]]
+#   id = "posicao"
+#   texto = "biblioteca.bibliotecaria.pergunta_posicao"
+#   vai_para = "posicao"
+#   uso_unico = true
+#
+#   [[biblioteca.bibliotecaria.nos.ola.opcoes]]
+#   id = "tchau"
+#   texto = "biblioteca.bibliotecaria.tchau"
+#   vai_para = "fim"
+#
+#   [biblioteca.bibliotecaria.nos.posicao]
+#   passos = [{ fala = "biblioteca.bibliotecaria.resposta_posicao" }]
+#   vai_para = "ola"
+#
+# Os diálogos do capítulo entram com as cenas e com os textos finais (Fase 4).
