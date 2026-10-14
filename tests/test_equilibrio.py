@@ -1,11 +1,14 @@
 """Salvaguardas de equilíbrio nas mecânicas e no conteúdo (briefing, seções 5 e 6.1).
 
-Aqui ficam o E3 (mesma estrutura de diálogo por corrente), o E4 (recusas sem correntes), o E5
-(manipulação distribuída por igual) e o equilíbrio das fichas (mesmo modelo, tamanho parecido,
-as 4 correntes). O E2 chega com a avaliação da matéria, no PR `feat/avaliacao-da-materia`.
+Aqui ficam o E1 e o E2 (a avaliação da matéria não tem rótulo, e trocar as correntes de lugar
+não muda a nota), o E3 (mesma estrutura de diálogo por corrente), o E4 (recusas sem correntes),
+o E5 (manipulação distribuída por igual) e o equilíbrio das fichas (mesmo modelo, tamanho
+parecido, as 4 correntes).
 """
 
 from collections import Counter
+from dataclasses import fields
+from itertools import permutations
 
 import pytest
 
@@ -19,7 +22,9 @@ from politicalizando.conteudo import (
 from politicalizando.dominio.checagem import SEM_LADO, Casos, Classe
 from politicalizando.dominio.correntes import CORRENTES
 from politicalizando.dominio.dialogo import FIM, Dialogo, Dialogos
+from politicalizando.dominio.estado_jogo import EstadoJogo
 from politicalizando.dominio.fichas import Fichas
+from politicalizando.dominio.materia import Avaliacao, Inclusao, Pecas, avaliar
 from politicalizando.dominio.textos import Textos
 
 # A ficha mais longa pode ter no máximo 1,3× os caracteres da mais curta.
@@ -282,3 +287,108 @@ def test_e5_fatos_e_opinioes_nao_entram_na_conta():
 
 def test_e5_manipulacao_do_jogo_distribuida_por_igual():
     assert desequilibrio_da_manipulacao(carregar_checagem()) is None
+
+
+# --- E2: trocar as correntes de lugar não muda a nota --------------------------------------
+
+# Matéria fictícia: duas opiniões de cada corrente (uma delas só disponível depois de uma
+# conversa), um fato com fonte, um fato sem fonte e uma manipulação.
+_PECAS_E2 = """
+[pecas.exemplo.fato_a]
+tipo = "fato"
+texto = "exemplo.fato_a"
+fonte_se = ["exemplo.fonte_a"]
+
+[pecas.exemplo.fato_b]
+tipo = "fato"
+texto = "exemplo.fato_b"
+
+[pecas.exemplo.boato]
+tipo = "manipulacao"
+texto = "exemplo.boato"
+"""
+for _n, _corrente in enumerate(CORRENTES):
+    for _k in (1, 2):
+        _PECAS_E2 += f"""
+[pecas.exemplo.op_{_n}_{_k}]
+tipo = "opiniao"
+texto = "exemplo.op_{_n}_{_k}"
+de = "exemplo.pessoa_{_n}"
+corrente = "{_corrente}"
+se = ["exemplo.ouviu_{_n}_{_k}"]
+"""
+
+# Estados de investigação: quais opiniões foram ouvidas e se a fonte do fato foi conferida.
+_ESTADOS_E2 = {
+    "ouviu-tudo": ["exemplo.fonte_a"]
+    + [f"exemplo.ouviu_{n}_{k}" for n in range(4) for k in (1, 2)],
+    "ouviu-tres": [f"exemplo.ouviu_{n}_1" for n in range(3)],
+    "ouviu-duas": [
+        "exemplo.fonte_a",
+        "exemplo.ouviu_0_1",
+        "exemplo.ouviu_0_2",
+        "exemplo.ouviu_2_1",
+    ],
+}
+
+# Matérias de qualidades diferentes, montadas só com o que cada estado deixa usar.
+_MATERIAS_E2 = {
+    "ouviu-tudo": [
+        [("fato_a", True)] + [(f"op_{n}_1", True) for n in range(4)],
+        [("fato_a", True), ("boato", False), ("op_0_1", True), ("op_0_2", False), ("op_1_1", True)],
+        [("fato_b", False), ("op_0_1", True), ("op_0_2", True), ("op_1_1", True), ("op_2_1", True)],
+        [(f"op_{n}_{k}", k == 1) for n in range(4) for k in (1, 2)],
+    ],
+    "ouviu-tres": [
+        [(f"op_{n}_1", True) for n in range(3)],
+        [("op_0_1", True), ("op_1_1", False)],
+        [("fato_b", False), ("boato", False), ("op_2_1", True)],
+    ],
+    "ouviu-duas": [
+        [("fato_a", True), ("op_0_1", True), ("op_2_1", True)],
+        [("op_0_1", True), ("op_0_2", True), ("op_2_1", True)],
+    ],
+}
+
+
+def _avaliar_com_correntes(ordem: tuple[str, ...], nome_estado: str, materia) -> Avaliacao:
+    """Avalia a mesma matéria com as correntes trocadas de lugar conforme `ordem`."""
+    troca = dict(zip(CORRENTES, ordem, strict=True))
+    texto = _PECAS_E2
+    for original in CORRENTES:
+        texto = texto.replace(f'corrente = "{original}"', f'corrente = "@{original}"')
+    for original, nova in troca.items():
+        texto = texto.replace(f'corrente = "@{original}"', f'corrente = "{nova}"')
+    estado = EstadoJogo()
+    for flag in _ESTADOS_E2[nome_estado]:
+        estado.marcar_flag(flag)
+    inclusoes = [Inclusao(f"exemplo.{peca}", citar) for peca, citar in materia]
+    return avaliar(Pecas.de_toml(texto), estado, inclusoes)
+
+
+@pytest.mark.parametrize(
+    ("nome_estado", "materia"),
+    [
+        pytest.param(nome, materia, id=f"{nome}-{indice}")
+        for nome, materias in _MATERIAS_E2.items()
+        for indice, materia in enumerate(materias)
+    ],
+)
+def test_e2_trocar_as_correntes_nao_muda_a_nota(nome_estado, materia):
+    original = _avaliar_com_correntes(CORRENTES, nome_estado, materia)
+    for ordem in permutations(CORRENTES):
+        assert _avaliar_com_correntes(ordem, nome_estado, materia) == original, ordem
+
+
+def test_e2_as_materias_de_exemplo_tem_qualidades_diferentes():
+    # Garante que o E2 compara matérias variadas, e não só a nota máxima ou a mínima.
+    notas = {
+        _avaliar_com_correntes(CORRENTES, nome, materia)
+        for nome, materias in _MATERIAS_E2.items()
+        for materia in materias
+    }
+    assert len(notas) >= 5
+
+
+def test_e1_avaliacao_nao_tem_rotulo_nem_corrente():
+    assert {campo.name for campo in fields(Avaliacao)} == {"fatos", "atribuicao", "justica"}
