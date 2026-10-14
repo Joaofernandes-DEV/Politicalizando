@@ -38,4 +38,36 @@
 #   passos = [{ fala = "biblioteca.bibliotecaria.resposta_posicao" }]
 #   vai_para = "ola"
 #
-# Os diálogos do capítulo entram com as cenas e com os textos finais (Fase 4).
+# Os diálogos do capítulo entram com as cenas e com os textos finais (Fase 4). O "teste.pessoa"
+# é provisório e neutro, da cena de teste.
+
+[teste.pessoa]
+inicio = "ola"
+
+[teste.pessoa.nos.ola]
+passos = [{ fala = "teste.pessoa.ola" }]
+vai_para = "menu"
+
+[[teste.pessoa.nos.menu.opcoes]]
+id = "o_que_fazer"
+texto = "teste.pessoa.pergunta_o_que_fazer"
+vai_para = "explica"
+uso_unico = true
+
+[[teste.pessoa.nos.menu.opcoes]]
+id = "de_novo"
+texto = "teste.pessoa.pergunta_de_novo"
+vai_para = "explica"
+se = ["teste.pessoa.o_que_fazer"]
+
+[[teste.pessoa.nos.menu.opcoes]]
+id = "tchau"
+texto = "teste.pessoa.tchau"
+vai_para = "despedida"
+
+[teste.pessoa.nos.explica]
+passos = [{ fala = "teste.pessoa.explica" }]
+vai_para = "menu"
+
+[teste.pessoa.nos.despedida]
+passos = [{ fala = "teste.pessoa.ate_mais" }]
