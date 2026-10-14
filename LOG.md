@@ -174,3 +174,24 @@ Modelo:
 - Conferido o pacote: o wheel contém `conteudo/roteiros.toml` e `conteudo/pt_BR/textos.toml`, e os dois são lidos da cópia instalada.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/arvore-de-dialogo`.
+
+### 2026-10-14 17:59 — Fase 1: árvores de diálogo
+
+**Feito:**
+- `dominio/dialogo.py`: as árvores de diálogo ficam em `conteudo/dialogos.toml` e rodam no `Diretor` como um roteiro comum, só com as ações que já existiam. Cada nó tem `passos` no formato dos roteiros e depois oferece `opcoes`, segue sozinho (`vai_para`) ou termina.
+- Escolher uma opção marca a flag `<diálogo>.<opção>` ("perguntou"). Ela esconde as opções de `uso_unico` (também nas conversas seguintes, porque vai no save) e alimenta as condições `se` e `se_nao`. Se todas as opções de um nó estiverem escondidas, o diálogo termina.
+- Validação estrita, com o diálogo, o nó e a opção na mensagem: início e destinos existentes, `fim` reservado, nó vazio, `opcoes` e `vai_para` juntos, ids de opção repetidos no diálogo, textos repetidos no nó, nó que nunca é alcançado, laço só de `vai_para` (rodaria sem fim), chaves e tipos fora do formato.
+- `dominio/correntes.py`: os IDs das 4 correntes (`liberalismo`, `conservadorismo`, `socialismo`, `social_democracia`), usados pela marcação opcional `corrente` dos diálogos.
+- `roteiro.py`: a leitura dos passos virou a função `ler_passos`, usada também pelos nós de diálogo (sem mudar o comportamento dos roteiros).
+- Testes de conteúdo: as falas e as opções dos diálogos entram no teste de IDs de texto usados e órfãos, e um teste novo exige que toda flag citada em `se` ou `se_nao` seja marcada por algum roteiro ou diálogo (pega erros de digitação). Na varredura do código, a marca `# ids-de-texto: dados` libera os usos cujos IDs vêm dos dados, como o motor de diálogos.
+
+**Arquivos:** `src/politicalizando/dominio/roteiro.py`, `src/politicalizando/dominio/correntes.py` (novo), `src/politicalizando/dominio/dialogo.py` (novo), `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/dialogos.toml` (novo), `tests/test_dialogo.py` (novo), `tests/test_flags_exigidas.py` (novo), `tests/test_textos_usados.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Quinto PR da Fase 1 (`J2`, `D11`, `E1`). O João fez o merge do #8 (roteiros em dados) antes deste PR.
+- Decisões do João: a flag automática `<diálogo>.<opção>` é a base do uso único e das condições; as condições usam só flags (por item, quando uma cena precisar); os IDs das correntes ficam em `dominio/correntes.py`; o `dialogos.toml` começa só com o formato documentado, e os exemplos neutros ficam nos testes.
+- `E1`: as únicas flags que um diálogo cria são as de "perguntou" das opções e as dos passos; a marcação `corrente` não vira flag (há teste). O teste `E3` (mesma estrutura de diálogo por corrente) entra no `feat/checagem-de-fontes`, como na ordem aprovada; este PR deixa a marcação pronta nos dados.
+- Um teste confere que o exemplo do comentário do `dialogos.toml` é um diálogo válido, para a documentação não envelhecer.
+- Testes: 192 → 247, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/cenas-e-interacao` (cenas, objetos com Olhar/Usar/Falar, disparo de roteiros e diálogos, e a ligação do diretor com o `Jogo`).

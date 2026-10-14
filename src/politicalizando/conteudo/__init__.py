@@ -1,13 +1,14 @@
-"""Dados revisáveis do jogo (textos, roteiros e, depois, cenas e diálogos) e a leitura deles.
+"""Dados revisáveis do jogo (textos, roteiros, diálogos e, depois, cenas) e a leitura deles.
 
 Fica fora de `dominio/` porque mexe em arquivos; as regras de cada formato estão no domínio.
 Os arquivos são lidos por `importlib.resources`, que funciona no código-fonte, no pacote
 instalado e no executável. O que tem texto fica na pasta do idioma; o que só tem IDs (como os
-roteiros) fica na raiz de `conteudo/`.
+roteiros e os diálogos) fica na raiz de `conteudo/`.
 """
 
 from importlib.resources import files
 
+from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.roteiro import Roteiros
 from politicalizando.dominio.textos import Textos
 
@@ -24,3 +25,9 @@ def carregar_roteiros() -> Roteiros:
     """Lê `conteudo/roteiros.toml`; levanta `RoteiroInvalido` se o arquivo não bate."""
     arquivo = files(__name__) / "roteiros.toml"
     return Roteiros.de_toml(arquivo.read_text(encoding="utf-8"))
+
+
+def carregar_dialogos() -> Dialogos:
+    """Lê `conteudo/dialogos.toml`; levanta `DialogoInvalido` se o arquivo não bate."""
+    arquivo = files(__name__) / "dialogos.toml"
+    return Dialogos.de_toml(arquivo.read_text(encoding="utf-8"))
