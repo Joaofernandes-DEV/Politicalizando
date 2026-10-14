@@ -1,9 +1,10 @@
-"""Dados revisáveis do jogo (textos, roteiros, diálogos, cenas, fichas e checagem) e a leitura.
+"""Dados revisáveis do jogo (textos, roteiros, diálogos, cenas, fichas, checagem e matéria).
 
 Fica fora de `dominio/` porque mexe em arquivos; as regras de cada formato estão no domínio.
 Os arquivos são lidos por `importlib.resources`, que funciona no código-fonte, no pacote
 instalado e no executável. O que tem texto fica na pasta do idioma; o que só tem IDs (como os
-roteiros, os diálogos, as cenas, as fichas e os casos de checagem) fica na raiz de `conteudo/`.
+roteiros, os diálogos, as cenas, as fichas, os casos de checagem e as peças da matéria) fica
+na raiz de `conteudo/`.
 """
 
 from importlib.resources import files
@@ -12,6 +13,7 @@ from politicalizando.dominio.cenas import Cenas, conferir_referencias
 from politicalizando.dominio.checagem import Casos
 from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.fichas import Fichas
+from politicalizando.dominio.materia import Pecas
 from politicalizando.dominio.roteiro import Roteiros
 from politicalizando.dominio.textos import Textos
 
@@ -57,3 +59,9 @@ def carregar_checagem() -> Casos:
     """Lê `conteudo/checagem.toml`; levanta `CasoInvalido` se o arquivo não bate."""
     arquivo = files(__name__) / "checagem.toml"
     return Casos.de_toml(arquivo.read_text(encoding="utf-8"))
+
+
+def carregar_materia() -> Pecas:
+    """Lê `conteudo/materia.toml`; levanta `PecaInvalida` se o arquivo não bate."""
+    arquivo = files(__name__) / "materia.toml"
+    return Pecas.de_toml(arquivo.read_text(encoding="utf-8"))
