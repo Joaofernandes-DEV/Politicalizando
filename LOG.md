@@ -153,3 +153,24 @@ Modelo:
 - Testes: 87 → 166, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/roteiros-em-dados`.
+
+### 2026-10-14 17:48 — Fase 1: roteiros em dados
+
+**Feito:**
+- `dominio/roteiro.py`: os roteiros simples saem do código e vão para `conteudo/roteiros.toml`. Cada lista é um roteiro (o caminho é o ID) e cada passo tem exatamente uma ação: `fala`, `esperar`, `marcar_flag`, `dar_item` ou `trocar_cena`. A `Sequencia` gera as ações para o `Diretor` (`diretor.iniciar(sequencia.executar(estado))`), a mesma forma de uso dos roteiros especiais em Python.
+- Validação estrita, com o ID do roteiro e o número do passo na mensagem. São recusados: sintaxe quebrada, ID fora do formato, valor solto, roteiro vazio, passo com zero ou duas ações, ação desconhecida, `escolha` (fica nas árvores de diálogo) e valor inválido na ação.
+- `conteudo.carregar_roteiros()` lê o arquivo, e o `pyproject.toml` passa a empacotar também os TOML da raiz de `conteudo/`.
+- O teste de IDs de texto usados e órfãos passa a juntar as falas dos roteiros às do código.
+- Merges do João, na ordem: #5 (estado do jogo), #6 (textos por ID) e #7 (ações e diretor), todos por merge commit e com as branches apagadas. Auto-fix ligado no #7.
+
+**Arquivos:** `src/politicalizando/dominio/roteiro.py` (novo), `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/roteiros.toml` (novo), `pyproject.toml`, `tests/test_roteiro.py` (novo), `tests/test_textos_usados.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Quarto PR da Fase 1 (`D11`, briefing seção 3: "Roteiros em dados").
+- Decisões do João: `escolha` fica fora dos roteiros em dados (os ramos são da árvore de diálogo); não há condições por passo por enquanto (a condição de disparo é da cena, no `feat/cenas-e-interacao`); o `roteiros.toml` começa só com o comentário de formato, e os exemplos ficam nos testes.
+- O `roteiros.toml` fica fora de `pt_BR/` porque guarda só IDs; os textos ficam no `textos.toml` do idioma.
+- Incidente nos merges: ao apagar a branch do #5, o GitHub fechou o #6, que ainda tinha base nela. A branch foi recriada no mesmo commit, o #6 foi reaberto com base na `main` e a branch foi apagada de novo; o #7 teve a base trocada para a `main` antes do merge do #6. Para PRs empilhados: trocar a base do PR de cima para a `main` **antes** de apagar a branch de baixo.
+- Testes: 166 → 192, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
+- Conferido o pacote: o wheel contém `conteudo/roteiros.toml` e `conteudo/pt_BR/textos.toml`, e os dois são lidos da cópia instalada.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/arvore-de-dialogo`.
