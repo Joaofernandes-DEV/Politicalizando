@@ -1,0 +1,14 @@
+# Textos do jogo por ID (briefing, seção 3).
+#
+# Cada tabela com `texto` é uma entrada, e o caminho dela é o ID (minúsculas, sem acento,
+# trechos separados por ponto). `quem` é opcional e guarda o ID de quem fala; sem ele, o
+# texto é narração ou interface. Todo ID daqui precisa ser usado pelo jogo, e todo ID usado
+# precisa existir aqui (tests/test_textos_usados.py).
+#
+# Os textos finais são escritos e revisados na Fase 4.
+
+[titulo.frase]
+texto = "Pensar antes de escolher um lado."
+
+[titulo.dica_sair]
+texto = "Esc: sair"

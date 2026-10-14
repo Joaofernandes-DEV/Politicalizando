@@ -14,11 +14,14 @@ class EstadoTitulo(Estado):
         # Fonte padrão do pygame até a fonte pixel com acentos chegar (Fase 3, I2).
         fonte_titulo = pygame.font.Font(None, 28)
         fonte_texto = pygame.font.Font(None, 16)
+        textos = jogo.textos
+        frase = textos["titulo.frase"].texto
+        dica_sair = textos["titulo.dica_sair"].texto
         # Sem antialiasing: o texto fica com o mesmo pixel duro da arte.
         self._linhas = [
             (fonte_titulo.render(TITULO.upper(), False, Paleta.DESTAQUE), 62),
-            (fonte_texto.render("Pensar antes de escolher um lado.", False, Paleta.TEXTO), 92),
-            (fonte_texto.render("Esc: sair", False, Paleta.APAGADO), 150),
+            (fonte_texto.render(frase, False, Paleta.TEXTO), 92),
+            (fonte_texto.render(dica_sair, False, Paleta.APAGADO), 150),
             (fonte_texto.render(f"v{__version__}", False, Paleta.APAGADO), 164),
         ]
 

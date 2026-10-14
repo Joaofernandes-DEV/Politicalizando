@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 from politicalizando.config import ALTURA_TELA, FPS, LARGURA_TELA, TITULO
+from politicalizando.conteudo import carregar_textos
 
 if TYPE_CHECKING:
     from politicalizando.estados.base import Estado
@@ -21,6 +22,8 @@ class Jogo:
         # SCALED amplia a resolução lógica para a janela sem borrar a pixel art.
         self.tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA), pygame.SCALED)
         self.relogio = pygame.time.Clock()
+        # Todo texto de tela vem daqui, pelo ID (`self.textos["titulo.frase"]`).
+        self.textos = carregar_textos()
         self.estado: Estado | None = None
         self.rodando = False
 
