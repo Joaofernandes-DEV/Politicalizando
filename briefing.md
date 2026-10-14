@@ -2,7 +2,7 @@
 
 Diagnóstico, decisões e roteiro da primeira versão. Este documento vem antes do código e é atualizado quando uma decisão muda; cada mudança é registrada no [LOG.md](LOG.md).
 
-> **Situação:** Fase 0 (fundação) em andamento. As seções marcadas com **[RASCUNHO]** tratam de conteúdo e narrativa e ainda vão ser revisadas em conjunto antes da Fase 1.
+> **Situação:** Fase 0 (fundação) concluída; próxima: Fase 1 (núcleo). As seções marcadas com **[RASCUNHO]** tratam de conteúdo e narrativa e ainda vão ser revisadas em conjunto antes da Fase 1.
 
 ---
 
@@ -184,7 +184,7 @@ Valem para todo texto, diálogo, ficha, imagem e som do jogo, e são conferidos 
 
 | Fase | Foco | Itens | Pronto quando… |
 |------|------|-------|----------------|
-| 0. Fundação ⏳ | Esqueleto, lint, CI, briefing | D1 a D7 | O jogo abre e fecha sem erro; lint e CI passando; `main` protegida |
+| 0. Fundação ✅ | Esqueleto, lint, CI, briefing | D1 a D7 | O jogo abre e fecha sem erro; lint e CI passando; `main` protegida |
 | 1. Núcleo | Domínio e conteúdo como dados | J2, J3, J4, J8, R5, C4 | Ideologias, diálogos, checagem e progresso modelados e testados sem janela; teste que exige fonte em toda ficha; perguntas P1 a P5 respondidas |
 | 2. Fluxo principal | Capítulo jogável com formas simples | J1, J5, J6, J7 | O capítulo 1 pode ser jogado do início ao fim, com retângulos no lugar da arte |
 | 3. Interface | Visual e som | I1 a I7, R7 | Arte gerada por código, fonte com acentos, menus e sons |

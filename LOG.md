@@ -47,3 +47,18 @@ Modelo:
 - As seções de conteúdo e narrativa do briefing (J1 a J8, as 4 correntes, C5) são **rascunho** para revisão conjunta; as perguntas P1 a P5 ficam em aberto até a Fase 1.
 - A fonte e a frase da tela de título são provisórias (fonte final na Fase 3, `I2`).
 - Pendente para concluir a Fase 0: CI verde no GitHub e proteção da `main`.
+
+### 2026-10-13 21:57 — Fase 0 concluída: CI verde e `main` protegida
+
+**Feito:**
+- O CI do PR #1 passou nos 4 jobs (Ubuntu com Python 3.11, 3.12 e 3.13; Windows com 3.11), e o PR entrou na `main` por merge commit, com a branch apagada em seguida.
+- A `main` foi protegida pelo `gh`: Pull Request obrigatório (sem aprovação mínima, por ser trabalho solo), os 4 checks do CI obrigatórios, branch em dia com a `main`, force-push e exclusão proibidos. O dono pode ignorar em emergência.
+- A Fase 0 foi marcada como ✅ no roteiro do briefing, e a situação do README foi atualizada.
+
+**Arquivos:** `briefing.md`, `README.md`, `LOG.md`.
+
+**Motivo / observações:**
+- Fecha o critério "Pronto quando…" da Fase 0 (o jogo abre e fecha sem erro; lint e CI passando; `main` protegida).
+- Testes: 5 → 5 (só documentação).
+- Antes, a `main` recebeu um único commit direto (o commit inicial vazio, autorizado pelo João), necessário porque o repositório estava vazio. Daqui em diante, tudo entra por PR.
+- Próximo passo: revisar o rascunho de conteúdo do briefing, responder às perguntas P1 a P5 e iniciar a Fase 1 (núcleo) numa sessão nova.
