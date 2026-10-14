@@ -1,0 +1,33 @@
+# Peças da matéria do fechamento (briefing J7, E1, E2).
+#
+# Cada tabela de [pecas] com `tipo` é uma peça, e o caminho dela é o ID. Os textos ficam no
+# textos.toml, por ID. O jogador monta a matéria com as peças disponíveis e, em cada fato ou
+# opinião, escolhe se vai citar: num fato, mostrar a fonte; numa opinião, dizer quem disse.
+#
+#   tipo       fato, opiniao ou manipulacao (uma armadilha: incluí-la conta como fato sem fonte)
+#   texto      ID do texto da peça
+#   se         flags que deixam a peça disponível (opcional)
+#   fonte_se   só em fato: flags que permitem citar a fonte (opcional)
+#   de         só em opiniao, obrigatório: ID de quem disse
+#   corrente   só em opiniao, opcional: a visão que a peça representa (liberalismo,
+#              conservadorismo, socialismo ou social_democracia); conta para a justiça
+#
+# A avaliação tem três critérios (fatos com fonte, opiniões atribuídas e visões com justiça),
+# cada um de 0 a 2, e nunca mede a posição da matéria nem dá um rótulo ao jogador.
+#
+# Exemplo:
+#
+#   [pecas.biblioteca.horario]
+#   tipo = "fato"
+#   texto = "materia.biblioteca.horario"
+#   se = ["praca.cartaz.checou"]
+#   fonte_se = ["praca.cartaz.acertou"]
+#
+#   [pecas.biblioteca.visao_a]
+#   tipo = "opiniao"
+#   texto = "materia.biblioteca.visao_a"
+#   de = "biblioteca.bibliotecaria"
+#   corrente = "liberalismo"
+#   se = ["biblioteca.bibliotecaria.posicao"]
+#
+# As peças do capítulo entram na Fase 2, com a tela da matéria, e os textos finais na Fase 4.
