@@ -2,7 +2,7 @@
 
 Diagnóstico, decisões e roteiro da primeira versão. Este documento vem antes do código e é atualizado quando uma decisão muda; cada mudança é registrada no [LOG.md](LOG.md).
 
-> **Situação:** Fase 0 (fundação) concluída; próxima: Fase 1 (núcleo). O conteúdo e a narrativa foram revisados em conjunto em 2026-10-14 (seções 5 e 6); os textos finais e as fontes são escritos e revisados na Fase 4.
+> **Situação:** Fases 0 (fundação) e 1 (núcleo) concluídas; próxima: Fase 2 (fluxo principal). O conteúdo e a narrativa foram revisados em conjunto em 2026-10-14 (seções 5 e 6); os textos finais e as fontes são escritos e revisados na Fase 4.
 
 ---
 
@@ -228,7 +228,7 @@ Valem para todo texto, diálogo, ficha, imagem, som e mecânica do jogo, e são 
 | Fase | Foco | Itens | Pronto quando… |
 |------|------|-------|----------------|
 | 0. Fundação ✅ | Esqueleto, lint, CI, briefing | D1 a D7 | O jogo abre e fecha sem erro; lint e CI passando; `main` protegida |
-| 1. Núcleo | Domínio e conteúdo como dados | D10, D11, J2, J3, J4, J8, J9, J10, E1 a E5, R5, C4 | Estado e save, textos por ID, diretor de ações, roteiros, diálogos, cenas e objetos interativos, fichas e checagem modelados e testados sem janela; teste que exige fonte em toda ficha; testes de equilíbrio |
+| 1. Núcleo ✅ | Domínio e conteúdo como dados | D10, D11, J2, J3, J4, J8, J9, J10, E1 a E5, R5, C4 | Estado e save, textos por ID, diretor de ações, roteiros, diálogos, cenas e objetos interativos, fichas, checagem e avaliação da matéria modelados e testados sem janela; teste que exige fonte em toda ficha; testes de equilíbrio |
 | 2. Fluxo principal | Capítulo jogável com formas simples | J1, J5, J6, J7, J11, I4, I8, I9 | O capítulo 1 pode ser jogado do início ao fim, com retângulos no lugar da arte, por mouse e por teclado |
 | 3. Interface | Visual e som | I1 a I7, R7 | Arte gerada por código, fonte com acentos, menus e sons |
 | 4. Conteúdo | Textos finais e revisão | C1 a C6, R1, R2, R6, R9, P5 | Todos os textos revisados pelo checklist de equilíbrio e pela revisão externa, fontes registradas e créditos completos |
