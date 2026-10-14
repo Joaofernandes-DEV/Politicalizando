@@ -24,8 +24,8 @@ politicalizando = "politicalizando.__main__:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-# Dados revisáveis (textos e, depois, cenas, diálogos e roteiros) vão junto no pacote.
-"politicalizando.conteudo" = ["pt_BR/*.toml"]
+# Dados revisáveis (textos, roteiros e, depois, cenas e diálogos) vão junto no pacote.
+"politicalizando.conteudo" = ["*.toml", "pt_BR/*.toml"]
 
 [tool.ruff]
 line-length = 100
