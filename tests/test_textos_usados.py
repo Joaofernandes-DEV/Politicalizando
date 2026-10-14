@@ -1,8 +1,9 @@
 """Todo ID de texto usado existe em `textos.toml`, e nenhum texto de lá ficou órfão.
 
-Hoje os IDs vêm só do código: uma varredura com `ast` coleta todo acesso `textos["id"]` (ou
-`algo.textos["id"]`) em `src/politicalizando/`. Quando os roteiros, diálogos e cenas chegarem,
-cada tipo carregado dos dados expõe os IDs que usa, e `ids_usados` passa a juntá-los aqui.
+Hoje os IDs vêm só do código: uma varredura com `ast` coleta, em `src/politicalizando/`, todo
+acesso `textos["id"]` (ou `algo.textos["id"]`) e as ações dos roteiros em Python,
+`Fala("id")` e `Escolha(("id_a", "id_b"))`. Quando os roteiros, diálogos e cenas em dados
+chegarem, cada tipo carregado expõe os IDs que usa, e `ids_usados` passa a juntá-los aqui.
 """
 
 import ast
@@ -19,16 +20,54 @@ def _e_catalogo_de_textos(no: ast.expr) -> bool:
     )
 
 
+def _texto_literal(no: ast.expr | None) -> str | None:
+    if isinstance(no, ast.Constant) and isinstance(no.value, str):
+        return no.value
+    return None
+
+
+def _nome_chamado(chamada: ast.Call) -> str | None:
+    if isinstance(chamada.func, ast.Name):
+        return chamada.func.id
+    if isinstance(chamada.func, ast.Attribute):
+        return chamada.func.attr
+    return None
+
+
+def _argumento(chamada: ast.Call, nome: str) -> ast.expr | None:
+    """O primeiro argumento da chamada, posicional ou pelo nome."""
+    if chamada.args:
+        return chamada.args[0]
+    return next((kw.value for kw in chamada.keywords if kw.arg == nome), None)
+
+
+def _ids_da_acao(chamada: ast.Call) -> list[str | None] | None:
+    """IDs de texto de `Fala(...)` ou `Escolha(...)`; `None` na lista marca um não literal."""
+    match _nome_chamado(chamada):
+        case "Fala":
+            return [_texto_literal(_argumento(chamada, "id_texto"))]
+        case "Escolha":
+            opcoes = _argumento(chamada, "opcoes")
+            if isinstance(opcoes, ast.Tuple | ast.List):
+                return [_texto_literal(opcao) for opcao in opcoes.elts]
+            return [None]
+    return None
+
+
 def ids_no_codigo(fonte: str, nome_arquivo: str = "<codigo>") -> tuple[set[str], list[str]]:
-    """IDs acessados como `textos["id"]` e a lista de acessos sem ID literal."""
+    """IDs de texto usados no código e a lista de usos sem ID literal."""
     ids: set[str] = set()
     problemas: list[str] = []
     for no in ast.walk(ast.parse(fonte, filename=nome_arquivo)):
         if isinstance(no, ast.Subscript) and _e_catalogo_de_textos(no.value):
-            if isinstance(no.slice, ast.Constant) and isinstance(no.slice.value, str):
-                ids.add(no.slice.value)
-            else:
-                problemas.append(f"{nome_arquivo}:{no.lineno}: use um ID literal em textos[...]")
+            achados, onde = [_texto_literal(no.slice)], "textos[...]"
+        elif isinstance(no, ast.Call) and (achados := _ids_da_acao(no)) is not None:
+            onde = f"{_nome_chamado(no)}(...)"
+        else:
+            continue
+        ids.update(id_texto for id_texto in achados if id_texto is not None)
+        if None in achados:
+            problemas.append(f"{nome_arquivo}:{no.lineno}: use um ID literal em {onde}")
     return ids, problemas
 
 
@@ -52,6 +91,30 @@ def test_varredura_acusa_acesso_sem_id_literal():
     ids, problemas = ids_no_codigo("chave = 'um.id'\nx = textos[chave]\n", "tela.py")
     assert ids == set()
     assert problemas == ["tela.py:2: use um ID literal em textos[...]"]
+
+
+def test_varredura_acha_os_ids_das_acoes():
+    fonte = (
+        'yield Fala("exemplo.ola")\n'
+        'yield acoes.Fala(id_texto="exemplo.tchau")\n'
+        'yield Escolha(("exemplo.sim", "exemplo.nao"))\n'
+        'yield Escolha(opcoes=["exemplo.talvez"])\n'
+    )
+    assert ids_no_codigo(fonte) == (
+        {"exemplo.ola", "exemplo.tchau", "exemplo.sim", "exemplo.nao", "exemplo.talvez"},
+        [],
+    )
+
+
+def test_varredura_acusa_acao_sem_id_literal():
+    fonte = 'yield Fala(id_texto)\nyield Escolha(opcoes)\nyield Escolha(("exemplo.sim", x))\n'
+    ids, problemas = ids_no_codigo(fonte, "roteiro.py")
+    assert ids == {"exemplo.sim"}
+    assert problemas == [
+        "roteiro.py:1: use um ID literal em Fala(...)",
+        "roteiro.py:2: use um ID literal em Escolha(...)",
+        "roteiro.py:3: use um ID literal em Escolha(...)",
+    ]
 
 
 def test_codigo_so_acessa_textos_com_id_literal():
