@@ -1,0 +1,38 @@
+# Checagem de fontes: posts, manchetes e falas classificados pelo jogador (briefing J4, C6, E5).
+#
+# Cada tabela de [casos] com `classe` é um caso, e o caminho dela é o ID. Os textos ficam no
+# textos.toml, por ID. Um caso entra no jogo pela resposta de um objeto: { checagem = "id" }.
+#
+#   tipo        post, manchete ou fala
+#   conteudo    ID do texto mostrado ao jogador
+#   classe      fato, opiniao ou manipulacao (a resposta certa)
+#   explicacao  ID do texto que explica a classificação; aparece sempre, acertando ou não
+#   confere     só em fato: true ou false, o que a fonte mostra
+#   fontes      obrigatórias em fato (um fato não é "mais uma opinião", C6); opcionais nos outros
+#   origem      só em manipulacao: liberalismo, conservadorismo, socialismo, social_democracia
+#               ou sem_lado (golpes, caça-cliques). Os exemplos de manipulação se distribuem por
+#               igual entre as 4 correntes, com pelo menos um sem lado (teste E5)
+#   tecnica     só em manipulacao: fora_de_contexto, dado_falso, manchete_enganosa,
+#               apelo_a_emocao, falsa_autoridade, caca_clique ou golpe
+#
+# Classificar marca a flag "<id do caso>.checou" e, se acertou, "<id do caso>.acertou".
+#
+# Exemplo:
+#
+#   [casos.praca.cartaz]
+#   tipo = "manchete"
+#   conteudo = "caso.praca.cartaz.texto"
+#   classe = "fato"
+#   confere = false
+#   explicacao = "caso.praca.cartaz.explicacao"
+#   fontes = [{ autor = "Sobrenome, Nome", titulo = "Título", ano = 2026, editora = "Editora" }]
+#
+#   [casos.feed.golpe_do_premio]
+#   tipo = "post"
+#   conteudo = "caso.feed.golpe_do_premio.texto"
+#   classe = "manipulacao"
+#   origem = "sem_lado"
+#   tecnica = "golpe"
+#   explicacao = "caso.feed.golpe_do_premio.explicacao"
+#
+# Os casos do capítulo entram na Fase 4, com fontes verificadas e revisão externa (P5).
