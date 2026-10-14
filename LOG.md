@@ -112,3 +112,25 @@ Modelo:
 - Testes: 5 → 55, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0, sem criar `dados/`. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/textos-por-id`.
+
+### 2026-10-14 17:32 — Fase 1: textos por ID
+
+**Feito:**
+- `dominio/textos.py`: o catálogo `Textos` (um `Mapping` imutável de ID para `Texto`, com `id`, `texto` e `quem`) é lido do TOML com validação estrita. Os IDs usam o mesmo formato do `estado_jogo.py` (`titulo.frase`). Um ID inexistente gera erro com o ID na mensagem.
+- Formato: cada tabela com `texto` é uma entrada, e o caminho dela é o ID. `quem` é opcional (o ID de quem fala); sem ele, o texto é narração ou interface. São recusados: sintaxe quebrada, ID repetido, ID fora do formato, texto vazio, `quem` inválido, chave a mais, valor solto e ID que é prefixo de outro texto.
+- `conteudo/__init__.py` lê `conteudo/pt_BR/textos.toml` por `importlib.resources`; o `pyproject.toml` inclui os TOML no pacote.
+- A tela de título passa a ler a frase e a dica "Esc: sair" do `textos.toml` (o `Jogo` carrega os textos ao iniciar). Nada muda na tela.
+- `tests/test_textos_usados.py`: uma varredura com `ast` coleta todo `textos["id"]` do código e confere que todo ID usado existe, que nenhum texto ficou órfão e que o código só acessa textos com ID literal.
+- README e CONTRIBUTING: textos de tela ficam no `textos.toml`, nunca no código.
+
+**Arquivos:** `src/politicalizando/dominio/textos.py` (novo), `src/politicalizando/conteudo/__init__.py` (novo), `src/politicalizando/conteudo/pt_BR/textos.toml` (novo), `pyproject.toml`, `src/politicalizando/jogo.py`, `src/politicalizando/estados/titulo.py`, `tests/test_textos.py` (novo), `tests/test_textos_usados.py` (novo), `README.md`, `CONTRIBUTING.md`, `LOG.md`.
+
+**Motivo / observações:**
+- Segundo PR da Fase 1 (briefing, seção 3: "Textos por ID"; `D11`). Empilhado sobre o `feat/estado-do-jogo` (PR #5), que ainda não entrou na `main`.
+- Decisões do João: o arquivo real tem só os textos em uso (os da tela de título); os exemplos com `quem` ficam nos testes, neutros e provisórios. `quem` é opcional. Os textos finais são da Fase 4.
+- A leitura do arquivo fica em `conteudo/`, fora do domínio, pelo mesmo motivo da `persistencia.py`.
+- Quando os roteiros, diálogos e cenas chegarem, cada tipo carregado dos dados expõe os IDs de texto que usa, e o teste de usados e órfãos passa a juntá-los aos do código. Quando houver personagens, um teste exige que todo `quem` seja uma personagem conhecida.
+- Testes: 55 → 87, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
+- Conferido o pacote: um wheel gerado fora do repositório contém `conteudo/pt_BR/textos.toml`, e `carregar_textos()` leu os textos da cópia instalada.
+- **Testado à mão (João):** a tela de título ficou igual à de antes, e o Esc fechou o jogo (código de saída 0).
+- Próximo: PR `feat/diretor-de-acoes`.
