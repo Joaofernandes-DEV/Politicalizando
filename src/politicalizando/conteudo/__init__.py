@@ -13,6 +13,7 @@ from politicalizando.dominio.cenas import Cenas, conferir_referencias
 from politicalizando.dominio.checagem import Casos
 from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.fichas import Fichas
+from politicalizando.dominio.interacao import Interacao
 from politicalizando.dominio.materia import Pecas
 from politicalizando.dominio.roteiro import Roteiros
 from politicalizando.dominio.textos import Textos
@@ -47,6 +48,13 @@ def carregar_cenas() -> Cenas:
     cenas = Cenas.de_toml(arquivo.read_text(encoding="utf-8"))
     conferir_referencias(cenas, carregar_roteiros(), carregar_dialogos(), carregar_checagem())
     return cenas
+
+
+def carregar_interacao() -> Interacao:
+    """As cenas com os roteiros, diálogos e casos que elas citam, prontos para a partida."""
+    return Interacao(
+        carregar_cenas(), carregar_roteiros(), carregar_dialogos(), carregar_checagem()
+    )
 
 
 def carregar_fichas() -> Fichas:
