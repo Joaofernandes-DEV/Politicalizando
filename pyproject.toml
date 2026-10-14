@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "politicalizando"
+version = "0.1.0"
+description = "Jogo 2D em pixel art sobre ideologias políticas, checagem de fontes e pensamento crítico"
+readme = "README.md"
+requires-python = ">=3.11"
+# Código sob MIT; conteúdo educativo (textos, arte e sons) sob CC BY 4.0.
+license = "MIT AND CC-BY-4.0"
+license-files = ["LICENSE", "LICENCA-CONTEUDO.md"]
+authors = [{ name = "João Vitor Fernandes" }]
+dependencies = ["pygame-ce>=2.5,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.gui-scripts]
+politicalizando = "politicalizando.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "N"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    # Aviso esperado do driver de vídeo "dummy" usado nos testes sem janela.
+    "ignore:no fast renderer available",
+]
