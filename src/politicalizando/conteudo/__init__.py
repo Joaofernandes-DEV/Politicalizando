@@ -1,14 +1,15 @@
-"""Dados revisáveis do jogo (textos, roteiros, diálogos, cenas e fichas) e a leitura deles.
+"""Dados revisáveis do jogo (textos, roteiros, diálogos, cenas, fichas e checagem) e a leitura.
 
 Fica fora de `dominio/` porque mexe em arquivos; as regras de cada formato estão no domínio.
 Os arquivos são lidos por `importlib.resources`, que funciona no código-fonte, no pacote
 instalado e no executável. O que tem texto fica na pasta do idioma; o que só tem IDs (como os
-roteiros, os diálogos, as cenas e as fichas) fica na raiz de `conteudo/`.
+roteiros, os diálogos, as cenas, as fichas e os casos de checagem) fica na raiz de `conteudo/`.
 """
 
 from importlib.resources import files
 
 from politicalizando.dominio.cenas import Cenas, conferir_referencias
+from politicalizando.dominio.checagem import Casos
 from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.fichas import Fichas
 from politicalizando.dominio.roteiro import Roteiros
@@ -36,13 +37,13 @@ def carregar_dialogos() -> Dialogos:
 
 
 def carregar_cenas() -> Cenas:
-    """Lê `conteudo/cenas.toml` e confere se os roteiros e diálogos citados existem.
+    """Lê `conteudo/cenas.toml` e confere se os roteiros, diálogos e casos citados existem.
 
     Levanta `CenaInvalida` se o arquivo não bate ou se uma referência está quebrada.
     """
     arquivo = files(__name__) / "cenas.toml"
     cenas = Cenas.de_toml(arquivo.read_text(encoding="utf-8"))
-    conferir_referencias(cenas, carregar_roteiros(), carregar_dialogos())
+    conferir_referencias(cenas, carregar_roteiros(), carregar_dialogos(), carregar_checagem())
     return cenas
 
 
@@ -50,3 +51,9 @@ def carregar_fichas() -> Fichas:
     """Lê `conteudo/fichas.toml`; levanta `FichaInvalida` se o arquivo não bate."""
     arquivo = files(__name__) / "fichas.toml"
     return Fichas.de_toml(arquivo.read_text(encoding="utf-8"))
+
+
+def carregar_checagem() -> Casos:
+    """Lê `conteudo/checagem.toml`; levanta `CasoInvalido` se o arquivo não bate."""
+    arquivo = files(__name__) / "checagem.toml"
+    return Casos.de_toml(arquivo.read_text(encoding="utf-8"))

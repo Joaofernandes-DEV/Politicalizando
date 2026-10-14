@@ -1,13 +1,24 @@
 """Salvaguardas de equilíbrio nas mecânicas e no conteúdo (briefing, seções 5 e 6.1).
 
-Aqui ficam o E4 e o equilíbrio das fichas (mesmo modelo, tamanho parecido, as 4 correntes);
-E2, E3 e E5 chegam no PR `feat/checagem-de-fontes`.
+Aqui ficam o E3 (mesma estrutura de diálogo por corrente), o E4 (recusas sem correntes), o E5
+(manipulação distribuída por igual) e o equilíbrio das fichas (mesmo modelo, tamanho parecido,
+as 4 correntes). O E2 chega com a avaliação da matéria, no PR `feat/avaliacao-da-materia`.
 """
+
+from collections import Counter
 
 import pytest
 
-from politicalizando.conteudo import carregar_cenas, carregar_fichas, carregar_textos
+from politicalizando.conteudo import (
+    carregar_cenas,
+    carregar_checagem,
+    carregar_dialogos,
+    carregar_fichas,
+    carregar_textos,
+)
+from politicalizando.dominio.checagem import SEM_LADO, Casos, Classe
 from politicalizando.dominio.correntes import CORRENTES
+from politicalizando.dominio.dialogo import FIM, Dialogo, Dialogos
 from politicalizando.dominio.fichas import Fichas
 from politicalizando.dominio.textos import Textos
 
@@ -135,3 +146,139 @@ def test_fichas_do_jogo_tem_tamanho_parecido():
 )
 def test_ha_uma_ficha_para_cada_uma_das_4_correntes():
     assert list(carregar_fichas()) == list(CORRENTES)
+
+
+# --- E3: mesma estrutura de diálogo para cada corrente --------------------------------------
+
+
+def perfil(dialogo: Dialogo) -> tuple[tuple[int, ...], ...]:
+    """Tópicos e níveis: para cada nível a partir do início, o número de opções de cada nó."""
+    profundidade = {dialogo.inicio: 0}
+    fila = [dialogo.inicio]
+    while fila:
+        no = dialogo.nos[fila.pop(0)]
+        destinos = [no.vai_para] if no.vai_para is not None else []
+        destinos += [opcao.vai_para for opcao in no.opcoes]
+        for destino in destinos:
+            if destino != FIM and destino not in profundidade:
+                profundidade[destino] = profundidade[no.id] + 1
+                fila.append(destino)
+    niveis = max(profundidade.values()) + 1
+    return tuple(
+        tuple(
+            sorted(len(dialogo.nos[nome].opcoes) for nome, p in profundidade.items() if p == nivel)
+        )
+        for nivel in range(niveis)
+    )
+
+
+def desequilibrio_dos_dialogos(dialogos: Dialogos) -> str | None:
+    """Uma mensagem se as correntes não têm o mesmo conjunto de perfis de diálogo."""
+    por_corrente = {
+        corrente: sorted(perfil(d) for d in dialogos.values() if d.corrente == corrente)
+        for corrente in CORRENTES
+    }
+    referencia = por_corrente[CORRENTES[0]]
+    if all(perfis == referencia for perfis in por_corrente.values()):
+        return None
+    return f"estruturas diferentes por corrente: {por_corrente}"
+
+
+def _dialogo(id_dialogo: str, corrente: str, topicos: int) -> str:
+    """Diálogo fictício: um início com `topicos` perguntas que voltam a ele e uma saída."""
+    texto = f'[{id_dialogo}]\ninicio = "ola"\ncorrente = "{corrente}"\n'
+    texto += f'[{id_dialogo}.nos.ola]\npassos = [{{ fala = "exemplo.ola" }}]\nopcoes = [\n'
+    for n in range(topicos):
+        texto += f'  {{ id = "t{n}", texto = "exemplo.t{n}", vai_para = "r{n}" }},\n'
+    texto += '  { id = "tchau", texto = "exemplo.tchau", vai_para = "fim" },\n]\n'
+    for n in range(topicos):
+        texto += f'[{id_dialogo}.nos.r{n}]\npassos = [{{ fala = "exemplo.r{n}" }}]\n'
+        texto += 'vai_para = "ola"\n'
+    return texto
+
+
+def test_e3_perfil_conta_opcoes_por_nivel():
+    dialogo = Dialogos.de_toml(_dialogo("exemplo.a", "socialismo", 3))["exemplo.a"]
+    assert perfil(dialogo) == ((4,), (0, 0, 0))
+
+
+def test_e3_correntes_com_a_mesma_estrutura_passam():
+    dialogos = Dialogos.de_toml("".join(_dialogo(f"exemplo.{c}", c, 3) for c in CORRENTES))
+    assert desequilibrio_dos_dialogos(dialogos) is None
+
+
+def test_e3_corrente_com_menos_topicos_e_acusada():
+    topicos = {"liberalismo": 3, "conservadorismo": 3, "socialismo": 2, "social_democracia": 3}
+    dialogos = Dialogos.de_toml("".join(_dialogo(f"exemplo.{c}", c, n) for c, n in topicos.items()))
+    assert "socialismo" in desequilibrio_dos_dialogos(dialogos)
+
+
+def test_e3_corrente_sem_personagem_e_acusada():
+    dialogos = Dialogos.de_toml(
+        "".join(_dialogo(f"exemplo.{c}", c, 3) for c in CORRENTES if c != "conservadorismo")
+    )
+    assert desequilibrio_dos_dialogos(dialogos) is not None
+
+
+def test_e3_dialogo_sem_corrente_nao_entra_na_conta():
+    textos = [_dialogo(f"exemplo.{c}", c, 3) for c in CORRENTES]
+    textos.append(
+        _dialogo("exemplo.vendedor", "liberalismo", 5).replace('corrente = "liberalismo"\n', "")
+    )
+    assert desequilibrio_dos_dialogos(Dialogos.de_toml("".join(textos))) is None
+
+
+def test_e3_dialogos_do_jogo_tem_a_mesma_estrutura_por_corrente():
+    assert desequilibrio_dos_dialogos(carregar_dialogos()) is None
+
+
+# --- E5: manipulação distribuída por igual -----------------------------------------------------
+
+
+def desequilibrio_da_manipulacao(casos: Casos) -> str | None:
+    """Uma mensagem se os exemplos de manipulação não se distribuem por igual (E5)."""
+    origens = Counter(caso.origem for caso in casos.values() if caso.classe is Classe.MANIPULACAO)
+    if not origens:
+        return None
+    por_corrente = {corrente: origens[corrente] for corrente in CORRENTES}
+    if len(set(por_corrente.values())) != 1:
+        return f"manipulação desigual entre as correntes: {por_corrente}"
+    if origens[SEM_LADO] == 0:
+        return "falta pelo menos um exemplo de manipulação sem lado (golpe, caça-clique)"
+    return None
+
+
+def _manipulacoes(origens: list[str]) -> Casos:
+    texto = "".join(
+        f'[casos.exemplo.m{n}]\ntipo = "post"\nconteudo = "exemplo.m{n}"\nclasse = "manipulacao"\n'
+        f'origem = "{origem}"\ntecnica = "caca_clique"\nexplicacao = "exemplo.e{n}"\n'
+        for n, origem in enumerate(origens)
+    )
+    return Casos.de_toml(texto)
+
+
+def test_e5_distribuicao_igual_com_sem_lado_passa():
+    casos = _manipulacoes([*CORRENTES, *CORRENTES, SEM_LADO])
+    assert desequilibrio_da_manipulacao(casos) is None
+
+
+def test_e5_corrente_com_mais_exemplos_e_acusada():
+    casos = _manipulacoes([*CORRENTES, "socialismo", SEM_LADO])
+    assert "desigual" in desequilibrio_da_manipulacao(casos)
+
+
+def test_e5_falta_exemplo_sem_lado_e_acusada():
+    casos = _manipulacoes(list(CORRENTES))
+    assert "sem lado" in desequilibrio_da_manipulacao(casos)
+
+
+def test_e5_fatos_e_opinioes_nao_entram_na_conta():
+    texto = (
+        '[casos.exemplo.opiniao]\ntipo = "fala"\nconteudo = "exemplo.o"\nclasse = "opiniao"\n'
+        'explicacao = "exemplo.oe"\n'
+    )
+    assert desequilibrio_da_manipulacao(Casos.de_toml(texto)) is None
+
+
+def test_e5_manipulacao_do_jogo_distribuida_por_igual():
+    assert desequilibrio_da_manipulacao(carregar_checagem()) is None
