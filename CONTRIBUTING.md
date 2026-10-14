@@ -34,6 +34,7 @@ Prefixos: `feat/`, `fix/`, `docs/`, `test/`, `chore/`.
 
 - Regras do jogo ficam em `src/politicalizando/dominio/` (sem pygame) e têm teste em `tests/`.
 - Toda mudança de comportamento traz teste novo ou ajustado.
+- Todo texto de tela fica em `src/politicalizando/conteudo/pt_BR/textos.toml`, por ID, nunca escrito no código. No código, use `textos["id"]` com o ID literal: um teste confere que todo ID usado existe e que nenhum texto ficou órfão.
 - Testes de tela rodam sem janela (`SDL_VIDEODRIVER=dummy`, já configurado em `tests/conftest.py`).
 - Assets (imagens, sons) são gerados por `ferramentas/gerar_*.py`. Edite o gerador e regenere; não edite os binários à mão.
 
