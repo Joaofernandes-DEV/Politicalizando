@@ -1,0 +1,21 @@
+# Roteiros em dados: sequências simples executadas pelo diretor (briefing, seção 3; D11).
+#
+# Cada lista é um roteiro, e o caminho dela é o ID (minúsculas, sem acento, trechos separados
+# por ponto). Cada passo é uma tabela com exatamente uma ação:
+#
+#   fala = "id.do.texto"        mostra um texto do textos.toml e espera o jogador
+#   esperar = 0.5               pausa por alguns segundos
+#   marcar_flag = "id.da.flag"  marca uma flag de investigação
+#   dar_item = "id_do_item"     põe um item no inventário
+#   trocar_cena = "id_da_cena"  muda a cena atual
+#
+# Exemplo:
+#
+#   [biblioteca]
+#   entrada = [
+#     { fala = "biblioteca.entrada.porta" },
+#     { marcar_flag = "biblioteca.visitou" },
+#   ]
+#
+# Escolhas com ramos ficam nas árvores de diálogo. Os roteiros do capítulo entram a partir do
+# PR feat/cenas-e-interacao, quando houver cenas para dispará-los.
