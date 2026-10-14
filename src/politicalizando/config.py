@@ -19,3 +19,5 @@ class Paleta:
     TEXTO: Cor = (226, 226, 214)
     DESTAQUE: Cor = (214, 72, 96)
     APAGADO: Cor = (110, 108, 124)
+    # Preenchimento dos retângulos que fazem as vezes da arte na Fase 2.
+    OBJETO: Cor = (44, 42, 64)
