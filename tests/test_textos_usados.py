@@ -5,20 +5,25 @@ Os IDs vêm de duas fontes:
 - do código: uma varredura com `ast` coleta, em `src/politicalizando/`, todo acesso
   `textos["id"]` (ou `algo.textos["id"]`) e as ações dos roteiros em Python, `Fala("id")` e
   `Escolha(("id_a", "id_b"))`;
-- dos dados: as falas dos roteiros em `roteiros.toml`.
+- dos dados: as falas dos roteiros em `roteiros.toml` e as falas e opções dos diálogos em
+  `dialogos.toml`.
 
-Quando os diálogos e as cenas em dados chegarem, cada tipo carregado expõe os IDs que usa, e
-`ids_usados` passa a juntá-los aqui.
+Quando as cenas em dados chegarem, elas também expõem os IDs que usam, e `ids_usados` passa a
+juntá-los aqui.
 """
 
 import ast
 import sys
 from pathlib import Path
 
-from politicalizando.conteudo import carregar_roteiros, carregar_textos
+from politicalizando.conteudo import carregar_dialogos, carregar_roteiros, carregar_textos
+from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.roteiro import Roteiros
 
 PASTA_CODIGO = Path(__file__).resolve().parents[1] / "src" / "politicalizando"
+
+# Comentário que marca um uso de texto cujos IDs vêm dos dados, não do código.
+MARCA_DADOS = "# ids-de-texto: dados"
 
 
 def _e_catalogo_de_textos(no: ast.expr) -> bool:
@@ -62,10 +67,19 @@ def _ids_da_acao(chamada: ast.Call) -> list[str | None] | None:
 
 
 def ids_no_codigo(fonte: str, nome_arquivo: str = "<codigo>") -> tuple[set[str], list[str]]:
-    """IDs de texto usados no código e a lista de usos sem ID literal."""
+    """IDs de texto usados no código e a lista de usos sem ID literal.
+
+    Um uso marcado com `MARCA_DADOS` (na mesma linha ou na de cima) é ignorado: os IDs vêm dos
+    dados, que já são conferidos pelo caminho dos dados (ex.: o motor de diálogos).
+    """
     ids: set[str] = set()
     problemas: list[str] = []
+    linhas = fonte.splitlines()
     for no in ast.walk(ast.parse(fonte, filename=nome_arquivo)):
+        if not isinstance(no, ast.Subscript | ast.Call):
+            continue
+        if any(MARCA_DADOS in linha for linha in linhas[max(no.lineno - 2, 0) : no.lineno]):
+            continue
         if isinstance(no, ast.Subscript) and _e_catalogo_de_textos(no.value):
             achados, onde = [_texto_literal(no.slice)], "textos[...]"
         elif isinstance(no, ast.Call) and (achados := _ids_da_acao(no)) is not None:
@@ -87,6 +101,7 @@ def ids_usados() -> tuple[set[str], list[str]]:
         ids |= achados
         problemas += erros
     ids |= carregar_roteiros().ids_de_texto()
+    ids |= carregar_dialogos().ids_de_texto()
     return ids, problemas
 
 
@@ -125,11 +140,35 @@ def test_varredura_acusa_acao_sem_id_literal():
     ]
 
 
+def test_varredura_aceita_uso_marcado_como_vindo_dos_dados():
+    fonte = (
+        "# ids-de-texto: dados\n"
+        "yield Escolha(opcoes)\n"
+        "x = textos[chave]  # ids-de-texto: dados\n"
+        "\n"
+        "yield Fala(id_texto)\n"
+    )
+    ids, problemas = ids_no_codigo(fonte, "motor.py")
+    assert ids == set()
+    assert problemas == ["motor.py:5: use um ID literal em Fala(...)"]
+
+
 def test_ids_usados_inclui_as_falas_dos_roteiros(monkeypatch):
     roteiros = Roteiros.de_toml('exemplo.cena = [{ fala = "exemplo.so_no_roteiro" }]')
     monkeypatch.setattr(sys.modules[__name__], "carregar_roteiros", lambda: roteiros)
     ids, _ = ids_usados()
     assert "exemplo.so_no_roteiro" in ids
+
+
+def test_ids_usados_inclui_as_falas_e_opcoes_dos_dialogos(monkeypatch):
+    dialogos = Dialogos.de_toml(
+        '[exemplo.guia]\ninicio = "a"\n[exemplo.guia.nos.a]\n'
+        'passos = [{ fala = "exemplo.so_no_dialogo" }]\n'
+        'opcoes = [{ id = "x", texto = "exemplo.opcao_do_dialogo", vai_para = "fim" }]'
+    )
+    monkeypatch.setattr(sys.modules[__name__], "carregar_dialogos", lambda: dialogos)
+    ids, _ = ids_usados()
+    assert {"exemplo.so_no_dialogo", "exemplo.opcao_do_dialogo"} <= ids
 
 
 def test_codigo_so_acessa_textos_com_id_literal():
