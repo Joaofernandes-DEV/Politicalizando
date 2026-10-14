@@ -118,22 +118,33 @@ def _coletar(
 def _sequencia(id_roteiro: str, passos: list[object]) -> Sequencia:
     if not passos:
         raise RoteiroInvalido(f"o roteiro {id_roteiro!r} não tem passos")
-    return Sequencia(
-        id=id_roteiro,
-        acoes=tuple(_acao(id_roteiro, numero, passo) for numero, passo in enumerate(passos, 1)),
-    )
+    try:
+        return Sequencia(id=id_roteiro, acoes=ler_passos(passos, repr(id_roteiro)))
+    except ValueError as erro:
+        raise RoteiroInvalido(str(erro)) from erro
 
 
-def _acao(id_roteiro: str, numero: int, passo: object) -> Acao:
-    onde = f"{id_roteiro!r}, passo {numero}"
+def ler_passos(passos: object, onde: str) -> tuple[Acao, ...]:
+    """Converte uma lista de passos do TOML em ações; também usada pelos nós de diálogo.
+
+    Levanta `ValueError` com `onde` e o número do passo na mensagem.
+    """
+    if not isinstance(passos, list):
+        raise ValueError(f"{onde}: 'passos' deveria ser uma lista")
+    return tuple(_acao(f"{onde}, passo {numero}", passo) for numero, passo in enumerate(passos, 1))
+
+
+def _acao(onde: str, passo: object) -> Acao:
     if not isinstance(passo, dict) or len(passo) != 1:
-        raise RoteiroInvalido(f"{onde}: cada passo é uma tabela com exatamente uma ação")
+        raise ValueError(f"{onde}: cada passo é uma tabela com exatamente uma ação")
     ((chave, valor),) = passo.items()
     if chave == "escolha":
-        raise RoteiroInvalido(f"{onde}: escolhas ficam nas árvores de diálogo")
+        raise ValueError(
+            f"{onde}: escolhas não são passos; os ramos ficam nas opções das árvores de diálogo"
+        )
     if chave not in _PASSOS:
-        raise RoteiroInvalido(f"{onde}: ação desconhecida {chave!r} (aceitas: {sorted(_PASSOS)})")
+        raise ValueError(f"{onde}: ação desconhecida {chave!r} (aceitas: {sorted(_PASSOS)})")
     try:
         return _PASSOS[chave](valor)
     except ValueError as erro:
-        raise RoteiroInvalido(f"{onde}: {erro}") from erro
+        raise ValueError(f"{onde}: {erro}") from erro
