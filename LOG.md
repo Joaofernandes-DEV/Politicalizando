@@ -134,3 +134,22 @@ Modelo:
 - Conferido o pacote: um wheel gerado fora do repositório contém `conteudo/pt_BR/textos.toml`, e `carregar_textos()` leu os textos da cópia instalada.
 - **Testado à mão (João):** a tela de título ficou igual à de antes, e o Esc fechou o jogo (código de saída 0).
 - Próximo: PR `feat/diretor-de-acoes`.
+
+### 2026-10-14 17:38 — Fase 1: ações e diretor dos roteiros
+
+**Feito:**
+- `dominio/acoes.py`: as seis ações dos roteiros, imutáveis e validadas ao serem criadas. São elas `Fala` (um ID de texto), `Escolha` (IDs de texto das opções), `Esperar` (segundos), `MarcarFlag`, `DarItem` e `TrocarCena`. Um roteiro é um gerador que recebe o `EstadoJogo`, lê o estado direto e produz ações; a resposta de uma `Escolha` volta pelo `yield`.
+- `dominio/diretor.py`: o `Diretor` executa uma sequência por vez. As ações instantâneas mudam o estado na hora, e o roteiro já vê o resultado na linha seguinte. Nas de espera, ele para: `confirmar()` encerra uma fala, `escolher(i)` devolve o índice ao roteiro e `atualizar(dt)` desconta o tempo. `ocupado` bloqueia o input e o autosave (`autosalvar(estado, bloqueado=diretor.ocupado)`).
+- Erros de programação falham cedo e não travam o diretor em "ocupado": iniciar com outra sequência rodando, roteiro que não é gerador, item que não é ação, índice de escolha inválido e exceção dentro do roteiro.
+- A varredura de `tests/test_textos_usados.py` passa a coletar também os IDs de `Fala("id")` e `Escolha(("a", "b"))` escritos em Python e acusa os não literais.
+
+**Arquivos:** `src/politicalizando/dominio/acoes.py` (novo), `src/politicalizando/dominio/diretor.py` (novo), `tests/test_acoes.py` (novo), `tests/test_diretor.py` (novo), `tests/test_textos_usados.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Terceiro PR da Fase 1 (`D11`, briefing seção 3: "API única de roteiro" e "Diretor com geradores Python"). Empilhado sobre o `feat/textos-por-id` (PR #6), que depende do #5; nenhum dos dois entrou na `main` ainda.
+- Decisões do João: `TrocarCena` é instantânea no domínio (só muda `cena_atual`; o `Jogo` percebe e troca a tela; uma transição visual fica para a Fase 3), e a ligação do diretor ao `Jogo` (input, caixa de diálogo, autosave ao entrar na cena) entra no `feat/cenas-e-interacao`.
+- `TirarItem` ficou de fora: não está no briefing e nenhum roteiro precisa dela ainda.
+- Os roteiros de exemplo dos testes são neutros e provisórios; nenhum roteiro real entrou no jogo.
+- Testes: 87 → 166, todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8). `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/roteiros-em-dados`.
