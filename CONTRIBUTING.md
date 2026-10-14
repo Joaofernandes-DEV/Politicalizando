@@ -51,7 +51,7 @@ Abra o jogo (`python -m politicalizando`) e use o que mudou. Teste automático n
 
 ## 5. Conteúdo: checklist de equilíbrio
 
-Todo PR que cria ou altera textos, diálogos, fichas ou arte segue os princípios de conteúdo do [briefing.md](briefing.md) (seção 6). Antes de abrir o PR, confira:
+Todo PR que cria ou altera textos, diálogos, fichas, arte ou mecânicas segue os princípios de conteúdo e as salvaguardas do [briefing.md](briefing.md) (seção 6). Antes de abrir o PR, confira:
 
 - [ ] A corrente está descrita pelas suas próprias ideias centrais, não pelo que os adversários dizem dela.
 - [ ] Uma pessoa que defende essa corrente se reconheceria no texto.
@@ -59,7 +59,13 @@ Todo PR que cria ou altera textos, diálogos, fichas ou arte segue os princípio
 - [ ] O texto convida a comparar e a checar, sem entregar a conclusão.
 - [ ] A distopia não aponta para um partido, governo ou corrente real.
 - [ ] Todo dado factual tem fonte registrada.
-- [ ] Nenhuma pessoa real é retratada de forma ofensiva.
+- [ ] Nenhuma pessoa real é retratada de forma ofensiva; nenhum político vivo ou partido atual aparece ou é aludido.
+- [ ] Fatos verificáveis não foram tratados como "mais uma opinião" (falso equilíbrio).
+- [ ] Nenhuma flag, pontuação ou escolha mede o alinhamento ideológico do jogador.
+
+## Referências de outros jogos
+
+Outros jogos podem inspirar a arquitetura e as mecânicas, mas **nada** deles entra no repositório: código (inclusive decompilado), textos, nomes, personagens ou assets. Materiais de referência ficam fora da pasta do projeto.
 
 ## 6. Registrar no LOG.md
 
