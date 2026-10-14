@@ -36,7 +36,7 @@ python -m pip install -e ".[dev]"
 python -m politicalizando
 ```
 
-`Esc` fecha o jogo. Para um teste rápido que fecha sozinho: `python -m politicalizando --fechar-em 2`.
+Controles: clique num objeto para Olhar, Usar ou Falar; ou use `Tab` e as setas para escolher o objeto, `Enter` para abrir o menu e `1`, `2` e `3` para os verbos. No título, `Esc` fecha o jogo; numa cena, volta ao título salvando o progresso. Para um teste rápido que fecha sozinho: `python -m politicalizando --fechar-em 2`.
 
 ## Como desenvolver
 

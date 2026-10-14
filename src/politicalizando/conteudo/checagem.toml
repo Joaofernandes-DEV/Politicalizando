@@ -35,4 +35,11 @@
 #   tecnica = "golpe"
 #   explicacao = "caso.feed.golpe_do_premio.explicacao"
 #
-# Os casos do capítulo entram na Fase 4, com fontes verificadas e revisão externa (P5).
+# Os casos do capítulo entram na Fase 4, com fontes verificadas e revisão externa (P5). O
+# "teste.mural" é provisório e neutro (uma opinião sobre os dias da semana), da cena de teste.
+
+[casos.teste.mural]
+tipo = "post"
+conteudo = "teste.mural.conteudo"
+classe = "opiniao"
+explicacao = "teste.mural.explicacao"

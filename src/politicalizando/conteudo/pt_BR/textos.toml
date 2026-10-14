@@ -13,6 +13,49 @@ texto = "Pensar antes de escolher um lado."
 [titulo.dica_sair]
 texto = "Esc: sair"
 
+[titulo.novo_jogo]
+texto = "Novo jogo"
+
+[titulo.continuar]
+texto = "Continuar"
+
+[titulo.save_invalido]
+texto = "Não foi possível ler o jogo salvo. O arquivo foi mantido como está."
+
+[aviso.save_falhou]
+texto = "Não foi possível salvar o progresso. Confira se a pasta do jogo permite gravar arquivos."
+
+# Verbos do menu (I9).
+
+[verbo.olhar]
+texto = "Olhar"
+
+[verbo.usar]
+texto = "Usar"
+
+[verbo.falar]
+texto = "Falar"
+
+# Recusas genéricas, quando um objeto não responde ao verbo. Nunca falam de correntes (E4).
+
+[recusa.olhar.1]
+texto = "Nada de especial."
+
+[recusa.olhar.2]
+texto = "Você olha com atenção, mas não nota nada de novo."
+
+[recusa.usar.1]
+texto = "Não dá para usar isso."
+
+[recusa.usar.2]
+texto = "Melhor deixar isso onde está."
+
+[recusa.falar.1]
+texto = "Não há resposta."
+
+[recusa.falar.2]
+texto = "Conversar com isso não vai ajudar."
+
 # Checagem de fontes (J4): rótulos das classes e resultado da classificação.
 
 [checagem.classe.fato]
@@ -29,3 +72,92 @@ texto = "Isso mesmo."
 
 [checagem.resultado.errado]
 texto = "Não é bem isso."
+
+# Cena de teste (provisória e neutra): sai quando as cenas do capítulo entrarem.
+
+[teste.sala.boas_vindas.1]
+texto = "Esta é uma sala de testes, com retângulos no lugar da arte."
+
+[teste.sala.boas_vindas.2]
+texto = "Clique num objeto, ou use Tab e Enter. As teclas 1, 2 e 3 escolhem Olhar, Usar e Falar."
+
+[teste.sala.porta.nome]
+texto = "Porta"
+
+[teste.sala.porta.olhar]
+texto = "Uma porta que leva ao corredor."
+
+[teste.sala.mesa.nome]
+texto = "Mesa"
+
+[teste.sala.mesa.olhar]
+texto = "Uma mesa comum, um pouco bamba."
+
+[teste.sala.caderno.nome]
+texto = "Caderno"
+
+[teste.sala.caderno.olhar]
+texto = "Um caderno com as páginas em branco."
+
+[teste.sala.caderno.pegou]
+texto = "Você guarda o caderno na mochila."
+
+[teste.sala.relogio.nome]
+texto = "Relógio"
+
+[teste.sala.relogio.olhar]
+texto = "Um relógio de parede, parado."
+
+[teste.sala.relogio.corda]
+texto = "Você dá corda no relógio e espera um pouco..."
+
+[teste.sala.relogio.tique]
+texto = "Tique-taque. Agora ele funciona."
+
+[teste.sala.mural.nome]
+texto = "Mural"
+
+[teste.sala.pessoa.nome]
+texto = "Pessoa de testes"
+
+[teste.sala.pessoa.olhar]
+texto = "Alguém que ajuda a testar as conversas."
+
+[teste.corredor.porta.nome]
+texto = "Porta da sala"
+
+[teste.corredor.porta.olhar]
+texto = "A porta de volta para a sala."
+
+[teste.corredor.janela.nome]
+texto = "Janela"
+
+[teste.corredor.janela.olhar]
+texto = "Lá fora, o céu está nublado."
+
+[teste.mural.conteudo]
+texto = "No mural, alguém escreveu: \"Segunda-feira é o pior dia da semana.\""
+
+[teste.mural.explicacao]
+texto = "É uma opinião: depende do gosto de cada pessoa, e nenhuma fonte pode provar que um dia da semana é pior que outro."
+
+[teste.pessoa.ola]
+texto = "Oi! Eu ajudo a testar as conversas."
+quem = "teste.pessoa"
+
+[teste.pessoa.pergunta_o_que_fazer]
+texto = "O que dá para fazer aqui?"
+
+[teste.pessoa.pergunta_de_novo]
+texto = "Pode explicar de novo?"
+
+[teste.pessoa.tchau]
+texto = "Tchau."
+
+[teste.pessoa.explica]
+texto = "Experimente olhar, usar e falar com cada objeto. Algumas perguntas somem depois de feitas."
+quem = "teste.pessoa"
+
+[teste.pessoa.ate_mais]
+texto = "Até mais!"
+quem = "teste.pessoa"
