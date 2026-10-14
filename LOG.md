@@ -256,3 +256,25 @@ Modelo:
 - Testes: 386 → 445 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/avaliacao-da-materia` (J7 no domínio e o teste E2), o último da Fase 1.
+
+### 2026-10-14 18:39 — Fase 1 concluída: avaliação da matéria e teste E2
+
+**Feito:**
+- `dominio/materia.py`: as peças da matéria do fechamento ficam em `conteudo/materia.toml`: fatos (que podem citar a fonte quando as flags de `fonte_se` estão marcadas), opiniões (que podem dizer quem disse, com `de`, e marcam a visão com `corrente`) e manipulações (armadilhas). Cada peça fica disponível pelas flags de `se`.
+- `avaliar` dá três critérios, cada um de 0 a 2, e uma nota total de 0 a 6, sem rótulo: **fatos com fonte** (fatos citados ÷ fatos e manipulações incluídos), **opiniões atribuídas** (atribuídas ÷ incluídas) e **visões com justiça** (todas as correntes ouvidas presentes, pelo menos 2, com no máximo 1 peça de diferença). 100% é "bem feito"; 50% ou mais, "em parte"; menos, ou nada incluído, "precisa melhorar". Opiniões sem corrente contam para a atribuição, mas não para a justiça.
+- Uma matéria impossível (peça inexistente, repetida, indisponível, fonte citada sem ter sido conferida, manipulação "citada") é erro de programação da tela, não do jogador.
+- Testes de equilíbrio: **E2** avalia 9 matérias de qualidades diferentes, em 3 estados de investigação, com as 24 permutações das 4 correntes, e exige a mesma nota em todas; **E1** confere que a avaliação só tem os três critérios, sem rótulo nem corrente.
+- Testes de conteúdo: os textos das peças entram no teste de usados e órfãos, e as flags de `se` e `fonte_se` precisam de origem.
+- Fase 1 marcada como ✅ no roteiro do briefing, e a situação do README atualizada.
+
+**Arquivos:** `src/politicalizando/dominio/materia.py` (novo), `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/materia.toml` (novo), `tests/test_materia.py` (novo), `tests/test_equilibrio.py`, `tests/test_textos_usados.py`, `tests/test_flags_exigidas.py`, `briefing.md`, `README.md`, `LOG.md`.
+
+**Motivo / observações:**
+- Nono e último PR da Fase 1 (`J7` no domínio, `E1`, `E2`). O #12 (checagem) entrou na `main` pelo auto-merge.
+- Decisões do João: peças com "citar" (fonte no fato, atribuição na opinião) e manipulação como armadilha; três níveis por critério e nota de 0 a 6, sem rótulo; limites de 100% e 50%; critério sem nada incluído fica em "precisa melhorar"; justiça exige todas as correntes ouvidas, pelo menos 2, com no máximo 1 peça de diferença; fechar a Fase 1 neste PR.
+- `E2` por construção: a avaliação lê o estado só por flags de investigação e trata as correntes apenas por contagem, sem citar nenhuma pelo nome. A posição da matéria nunca é medida.
+- O `materia.toml` começa só com o formato documentado; as peças do capítulo entram na Fase 2, com a tela da matéria.
+- **Fase 1 concluída.** Ficam para a Fase 2: ligar o diretor e a interação ao `Jogo` (input, caixa de diálogo, autosave ao entrar na cena), as telas de cena, mapa, caderno e matéria, e os primeiros dados do capítulo com formas simples. Antes da arte e das personagens (Fase 3), o João vai propor um exemplo a partir da tela de início de um jogo dele.
+- Testes: 445 → 505 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: planejar a Fase 2 (fluxo principal).
