@@ -20,7 +20,8 @@ Formato de `conteudo/cenas.toml`:
 
 Cada tabela de `cenas` com `objetos` é uma cena, e o caminho dela é o ID. A resposta a um verbo
 (e a `entrada`, que roda só na primeira visita) é uma lista de passos no formato dos roteiros,
-`{ roteiro = "id" }` ou `{ dialogo = "id" }`. Um verbo sem resposta usa a recusa genérica do
+`{ roteiro = "id" }`, `{ dialogo = "id" }` ou `{ checagem = "id" }` (um caso de checagem de
+fontes, como um post na tela ou uma manchete). Um verbo sem resposta usa a recusa genérica do
 verbo, em rodízio; as recusas nunca falam de correntes (E4). `area` é x, y, largura e altura na
 resolução lógica. `se` e `se_nao` são flags; `se_item` e `se_nao_item` são itens: um item
 coletado pode fazer o objeto sumir.
@@ -85,11 +86,12 @@ class Area:
 
 @dataclass(frozen=True)
 class Resposta:
-    """O que acontece num verbo ou na entrada: passos em linha, um roteiro ou um diálogo."""
+    """O que acontece num verbo ou na entrada: passos em linha, roteiro, diálogo ou checagem."""
 
     passos: tuple[Acao, ...] = ()
     roteiro: str | None = None
     dialogo: str | None = None
+    checagem: str | None = None
 
 
 @dataclass(frozen=True)
@@ -185,21 +187,22 @@ class Cenas(Mapping[str, Cena]):
     def itens_dados(self) -> set[str]:
         return {acao.item for acao in self._acoes() if isinstance(acao, DarItem)}
 
-    def roteiros_usados(self) -> set[str]:
+    def _referencias(self, tipo: str) -> set[str]:
         return {
-            resposta.roteiro
+            getattr(resposta, tipo)
             for cena in self.values()
             for resposta in cena.respostas()
-            if resposta.roteiro is not None
+            if getattr(resposta, tipo) is not None
         }
 
+    def roteiros_usados(self) -> set[str]:
+        return self._referencias("roteiro")
+
     def dialogos_usados(self) -> set[str]:
-        return {
-            resposta.dialogo
-            for cena in self.values()
-            for resposta in cena.respostas()
-            if resposta.dialogo is not None
-        }
+        return self._referencias("dialogo")
+
+    def checagens_usadas(self) -> set[str]:
+        return self._referencias("checagem")
 
     @classmethod
     def de_toml(cls, conteudo: str) -> Cenas:
@@ -226,10 +229,14 @@ class Cenas(Mapping[str, Cena]):
         return cls(cenas, recusas)
 
 
-def conferir_referencias(cenas: Cenas, roteiros: Mapping, dialogos: Mapping) -> None:
-    """Levanta `CenaInvalida` se uma cena cita um roteiro ou diálogo que não existe."""
+def conferir_referencias(
+    cenas: Cenas, roteiros: Mapping, dialogos: Mapping, casos: Mapping | None = None
+) -> None:
+    """Levanta `CenaInvalida` se uma cena cita roteiro, diálogo ou caso que não existe."""
+    casos = casos if casos is not None else {}
     faltando = [f"roteiro {nome!r}" for nome in sorted(cenas.roteiros_usados() - set(roteiros))]
     faltando += [f"diálogo {nome!r}" for nome in sorted(cenas.dialogos_usados() - set(dialogos))]
+    faltando += [f"caso {nome!r}" for nome in sorted(cenas.checagens_usadas() - set(casos))]
     if faltando:
         raise CenaInvalida(f"as cenas citam o que não existe: {', '.join(faltando)}")
 
@@ -343,9 +350,12 @@ def _resposta(onde: str, dados: object) -> Resposta:
         return Resposta(passos=ler_passos(dados, onde))
     if isinstance(dados, dict) and len(dados) == 1:
         ((tipo, alvo),) = dados.items()
-        if tipo in ("roteiro", "dialogo"):
+        if tipo in ("roteiro", "dialogo", "checagem"):
             try:
                 return Resposta(**{tipo: validar_id(alvo)})
             except ValueError as erro:
                 raise ValueError(f"{onde}: {erro}") from None
-    raise ValueError(f"{onde}: use uma lista de passos, {{ roteiro = ... }} ou {{ dialogo = ... }}")
+    raise ValueError(
+        f"{onde}: use uma lista de passos, {{ roteiro = ... }}, {{ dialogo = ... }} "
+        "ou { checagem = ... }"
+    )
