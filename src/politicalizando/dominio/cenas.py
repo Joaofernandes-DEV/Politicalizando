@@ -2,6 +2,8 @@
 
 Formato de `conteudo/cenas.toml`:
 
+    inicio = "praca"
+
     [recusas]
     olhar = ["recusa.olhar.1", "recusa.olhar.2"]
     usar = ["recusa.usar.1"]
@@ -18,7 +20,8 @@ Formato de `conteudo/cenas.toml`:
     usar = [{ dar_item = "folheto" }]
     se_nao_item = ["folheto"]
 
-Cada tabela de `cenas` com `objetos` é uma cena, e o caminho dela é o ID. A resposta a um verbo
+`inicio` (opcional) é a cena onde o novo jogo começa e precisa existir. Cada tabela de `cenas`
+com `objetos` é uma cena, e o caminho dela é o ID. A resposta a um verbo
 (e a `entrada`, que roda só na primeira visita) é uma lista de passos no formato dos roteiros,
 `{ roteiro = "id" }`, `{ dialogo = "id" }` ou `{ checagem = "id" }` (um caso de checagem de
 fontes, como um post na tela ou uma manchete). Um verbo sem resposta usa a recusa genérica do
@@ -47,7 +50,7 @@ class Verbo(StrEnum):
     FALAR = "falar"
 
 
-_CHAVES_RAIZ = frozenset({"recusas", "cenas"})
+_CHAVES_RAIZ = frozenset({"inicio", "recusas", "cenas"})
 _CHAVES_CENA = frozenset({"objetos", "entrada"})
 _CONDICOES = ("se", "se_nao", "se_item", "se_nao_item")
 _CHAVES_OBJETO = frozenset({"id", "nome", "area", *Verbo, *_CONDICOES})
@@ -142,9 +145,12 @@ class Cenas(Mapping[str, Cena]):
         self,
         cenas: dict[str, Cena] | None = None,
         recusas: Mapping[Verbo, tuple[str, ...]] | None = None,
+        inicio: str | None = None,
     ) -> None:
         self._cenas = dict(cenas or {})
         self.recusas: Mapping[Verbo, tuple[str, ...]] = MappingProxyType(dict(recusas or {}))
+        # A cena onde o novo jogo começa.
+        self.inicio = inicio
 
     def __getitem__(self, id_cena: str) -> Cena:
         try:
@@ -222,11 +228,12 @@ class Cenas(Mapping[str, Cena]):
             cenas: dict[str, Cena] = {}
             _coletar(tabela_cenas, (), cenas)
             recusas = _recusas(dados.get("recusas"), obrigatorias=bool(cenas))
+            inicio = _inicio(dados.get("inicio"), cenas)
         except CenaInvalida:
             raise
         except ValueError as erro:
             raise CenaInvalida(str(erro)) from erro
-        return cls(cenas, recusas)
+        return cls(cenas, recusas, inicio)
 
 
 def conferir_referencias(
@@ -257,6 +264,18 @@ def _ids(onde: str, valor: object) -> frozenset[str]:
         return frozenset(validar_id(item) for item in valor)
     except ValueError as erro:
         raise ValueError(f"{onde}: {erro}") from None
+
+
+def _inicio(dados: object, cenas: dict[str, Cena]) -> str | None:
+    if dados is None:
+        return None
+    try:
+        validar_id(dados)
+    except ValueError as erro:
+        raise ValueError(f"inicio: {erro}") from None
+    if dados not in cenas:
+        raise ValueError(f"inicio: a cena {dados!r} não existe")
+    return dados
 
 
 def _recusas(dados: object, obrigatorias: bool) -> dict[Verbo, tuple[str, ...]]:
