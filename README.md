@@ -15,7 +15,7 @@ Projeto de extensão da UNIP. Público: 14 anos ou mais.
 
 ## Situação
 
-🚧 **Em desenvolvimento: Fase 0 (fundação).** A janela abre com uma tela de título provisória. O roteiro completo, as decisões e o escopo da V1 estão no [briefing.md](briefing.md); o histórico de cada mudança está no [LOG.md](LOG.md).
+🚧 **Em desenvolvimento.** A Fase 0 (fundação) está concluída: a janela abre com uma tela de título provisória, e o lint e os testes rodam no CI. A próxima etapa é a Fase 1 (núcleo). O roteiro completo, as decisões e o escopo da V1 estão no [briefing.md](briefing.md); o histórico de cada mudança está no [LOG.md](LOG.md).
 
 O executável para Windows será publicado nas [releases](https://github.com/Joaofernandes-DEV/Politicalizando/releases) na entrega da V1.
 
