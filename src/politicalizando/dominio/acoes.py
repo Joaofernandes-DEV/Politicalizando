@@ -9,8 +9,8 @@ com `yield`. A resposta de uma `Escolha` volta como valor do `yield`:
         if resposta == 0:
             yield MarcarFlag("exemplo.aceitou")
 
-`Fala`, `Esperar` e `Escolha` esperam o jogador ou o tempo; `MarcarFlag`, `DarItem` e
-`TrocarCena` mudam o estado na hora. Quem executa é o `Diretor`.
+`Fala`, `Esperar`, `Escolha` e `AbrirTela` esperam o jogador ou o tempo; `MarcarFlag`, `DarItem`
+e `TrocarCena` mudam o estado na hora. Quem executa é o `Diretor`.
 """
 
 from __future__ import annotations
@@ -90,10 +90,25 @@ class TrocarCena:
         validar_id(self.cena)
 
 
-Acao = Fala | Escolha | Esperar | MarcarFlag | DarItem | TrocarCena
+# Telas que um roteiro pode abrir; cada uma é desenhada por um estado do jogo.
+TELAS = ("comparacao",)
+
+
+@dataclass(frozen=True)
+class AbrirTela:
+    """Abre uma tela (ex.: a comparação de propostas) e espera o jogador fechá-la."""
+
+    tela: str
+
+    def __post_init__(self) -> None:
+        if self.tela not in TELAS:
+            raise ValueError(f"tela desconhecida: {self.tela!r} (aceitas: {', '.join(TELAS)})")
+
+
+Acao = Fala | Escolha | Esperar | MarcarFlag | DarItem | TrocarCena | AbrirTela
 
 # Ações que param a sequência até o jogador (ou o tempo) responder.
-AcaoDeEspera = Fala | Escolha | Esperar
+AcaoDeEspera = Fala | Escolha | Esperar | AbrirTela
 
 # Recebe `None` depois de cada ação e o índice escolhido depois de uma `Escolha`.
 Roteiro = Generator[Acao, int | None, None]
