@@ -3,12 +3,13 @@
 Fica fora de `dominio/` porque mexe em arquivos; as regras de cada formato estão no domínio.
 Os arquivos são lidos por `importlib.resources`, que funciona no código-fonte, no pacote
 instalado e no executável. O que tem texto fica na pasta do idioma; o que só tem IDs (como os
-roteiros, os diálogos, as cenas, o mapa, as fichas, os casos de checagem e as peças da matéria)
-fica na raiz de `conteudo/`.
+roteiros, os diálogos, as cenas, o mapa, o caderno, as fichas, os casos de checagem e as peças
+da matéria) fica na raiz de `conteudo/`.
 """
 
 from importlib.resources import files
 
+from politicalizando.dominio.caderno import Caderno
 from politicalizando.dominio.cenas import Cenas, conferir_referencias
 from politicalizando.dominio.checagem import Casos
 from politicalizando.dominio.dialogo import Dialogos
@@ -67,6 +68,12 @@ def carregar_mapa() -> Mapa:
     mapa = Mapa.de_toml(arquivo.read_text(encoding="utf-8"))
     conferir_cenas(mapa, carregar_cenas())
     return mapa
+
+
+def carregar_caderno() -> Caderno:
+    """Lê `conteudo/caderno.toml`; levanta `CadernoInvalido` se o arquivo não bate."""
+    arquivo = files(__name__) / "caderno.toml"
+    return Caderno.de_toml(arquivo.read_text(encoding="utf-8"))
 
 
 def carregar_fichas() -> Fichas:
