@@ -28,6 +28,16 @@ def test_fonte_com_url_e_acesso():
     assert fonte.editora is None
 
 
+def test_fonte_do_jogo_dispensa_editora_e_url():
+    fonte = ler_fonte(
+        {"autor": "Prefeitura de Exemplo", "titulo": "Relatório", "ano": 2026, "do_jogo": True},
+        "teste",
+    )
+    assert fonte.do_jogo
+    assert fonte.editora is None and fonte.url is None
+    assert not ler_fonte(LIVRO, "teste").do_jogo, "sem a marca, a fonte é real"
+
+
 def _com(base: dict, **mudancas) -> dict:
     dados = dict(base)
     for chave, valor in mudancas.items():
@@ -51,6 +61,12 @@ def _com(base: dict, **mudancas) -> dict:
         pytest.param(_com(LIVRO, ano=999), "ano fora", id="ano-antigo-demais"),
         pytest.param(_com(LIVRO, ano=2101), "ano fora", id="ano-futuro-demais"),
         pytest.param(_com(LIVRO, editora=None), "'editora' ou 'url'", id="sem-editora-nem-url"),
+        pytest.param(
+            _com(LIVRO, editora=None, do_jogo=False),
+            "'editora' ou 'url'",
+            id="real-sem-editora",
+        ),
+        pytest.param(_com(LIVRO, do_jogo="sim"), "true ou false", id="do-jogo-texto"),
         pytest.param(_com(LIVRO, editora=""), "não pode ficar vazia", id="editora-vazia"),
         pytest.param(_com(SITE, url="http://exemplo.org"), "https://", id="url-sem-https"),
         pytest.param(_com(SITE, acesso=None), "data de 'acesso'", id="url-sem-acesso"),
