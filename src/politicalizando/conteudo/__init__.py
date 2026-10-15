@@ -3,8 +3,8 @@
 Fica fora de `dominio/` porque mexe em arquivos; as regras de cada formato estão no domínio.
 Os arquivos são lidos por `importlib.resources`, que funciona no código-fonte, no pacote
 instalado e no executável. O que tem texto fica na pasta do idioma; o que só tem IDs (como os
-roteiros, os diálogos, as cenas, o mapa, o caderno, as fichas, os casos de checagem e as peças
-da matéria) fica na raiz de `conteudo/`.
+roteiros, os diálogos, as cenas, o mapa, o caderno, as fichas, as propostas, os casos de
+checagem e as peças da matéria) fica na raiz de `conteudo/`.
 """
 
 from importlib.resources import files
@@ -17,6 +17,7 @@ from politicalizando.dominio.fichas import Fichas
 from politicalizando.dominio.interacao import Interacao
 from politicalizando.dominio.mapa import Mapa, conferir_cenas
 from politicalizando.dominio.materia import Pecas
+from politicalizando.dominio.propostas import Propostas
 from politicalizando.dominio.roteiro import Roteiros
 from politicalizando.dominio.textos import Textos
 
@@ -80,6 +81,12 @@ def carregar_fichas() -> Fichas:
     """Lê `conteudo/fichas.toml`; levanta `FichaInvalida` se o arquivo não bate."""
     arquivo = files(__name__) / "fichas.toml"
     return Fichas.de_toml(arquivo.read_text(encoding="utf-8"))
+
+
+def carregar_propostas() -> Propostas:
+    """Lê `conteudo/propostas.toml`; levanta `PropostaInvalida` se o arquivo não bate."""
+    arquivo = files(__name__) / "propostas.toml"
+    return Propostas.de_toml(arquivo.read_text(encoding="utf-8"))
 
 
 def carregar_checagem() -> Casos:
