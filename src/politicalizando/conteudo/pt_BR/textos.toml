@@ -127,6 +127,35 @@ texto = "Diferenças internas"
 [ficha.item.fontes]
 texto = "Fontes"
 
+# Comparação de propostas (J5).
+
+[comparacao.titulo]
+texto = "Comparação de propostas"
+
+[comparacao.aviso]
+texto = "Não há resposta certa: compare os argumentos e os valores."
+
+[comparacao.vazio]
+texto = "Nenhuma proposta ouvida ainda. Converse com os moradores."
+
+[comparacao.posicao]
+texto = "{atual} de {total}"
+
+[comparacao.proposta]
+texto = "Proposta"
+
+[comparacao.pros]
+texto = "Prós"
+
+[comparacao.contras]
+texto = "Contras"
+
+[comparacao.valores]
+texto = "Valores em jogo"
+
+[comparacao.dica]
+texto = "Setas: propostas e rolagem. Esc: voltar."
+
 # Mapa (J1).
 
 [mapa.titulo]
@@ -304,3 +333,14 @@ texto = "Aviso anônimo no mural"
 
 [teste.caderno.relogio]
 texto = "O relógio da sala de testes foi instalado em 1998."
+
+# Quadro de propostas da cena de teste (provisório e neutro).
+
+[teste.corredor.quadro.nome]
+texto = "Quadro de propostas"
+
+[teste.corredor.quadro.olhar]
+texto = "Um quadro para comparar propostas lado a lado."
+
+[teste.corredor.quadro.depois]
+texto = "Você se afasta do quadro."
