@@ -2,14 +2,15 @@
 
 [![CI](https://github.com/Joaofernandes-DEV/Politicalizando/actions/workflows/ci.yml/badge.svg)](https://github.com/Joaofernandes-DEV/Politicalizando/actions/workflows/ci.yml)
 
-Jogo 2D em pixel art que ensina sobre ideologias políticas e sobre como se informar para compreender o mundo atual e desenvolver um pensamento crítico sólido. A ambientação é contemporânea e distópica.
+Jogo 2D em pixel art que ensina como a política funciona, com foco na política brasileira, o que são as ideologias políticas e como se informar, para compreender o Brasil e o mundo atuais e desenvolver um pensamento crítico sólido. A ambientação é contemporânea e distópica, em Novátria, um município fictício brasileiro com as desigualdades e os problemas concretos do país real. O aprendizado parte desses problemas: para entender o fechamento de uma biblioteca, por exemplo, você investiga o orçamento municipal, o papel da prefeitura e da Câmara e a história da educação pública no Brasil.
 
 É um jogo **educativo, não propaganda**:
 
 - apresenta cada corrente pelas suas ideias centrais, com equilíbrio e sem caricaturas;
 - convida o jogador a comparar argumentos, checar fontes e reconhecer manipulação, em vez de entregar conclusões prontas;
 - usa a distopia como recurso narrativo, sem associá-la a um lado político;
-- registra as fontes de todo conteúdo factual e não retrata pessoas reais de forma ofensiva.
+- registra as fontes de todo conteúdo factual e não retrata pessoas reais de forma ofensiva;
+- separa fato documentado, interpretação historiográfica e opinião, e não estereotipa grupos sociais, regiões ou classes.
 
 Projeto de extensão da UNIP. Público: 14 anos ou mais.
 
