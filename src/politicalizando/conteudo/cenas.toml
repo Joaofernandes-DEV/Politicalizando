@@ -73,14 +73,14 @@ nome = "teste.sala.mesa.nome"
 area = [110, 100, 70, 26]
 olhar = [{ fala = "teste.sala.mesa.olhar" }]
 
-# O caderno fica em cima da mesa: vem depois dela, então fica por cima no clique.
+# O bloco de notas fica em cima da mesa: vem depois dela, então fica por cima no clique.
 [[cenas.teste.sala.objetos]]
-id = "caderno"
-nome = "teste.sala.caderno.nome"
+id = "bloco"
+nome = "teste.sala.bloco.nome"
 area = [134, 92, 18, 10]
-olhar = [{ fala = "teste.sala.caderno.olhar" }]
-usar = [{ dar_item = "caderno" }, { fala = "teste.sala.caderno.pegou" }]
-se_nao_item = ["caderno"]
+olhar = [{ fala = "teste.sala.bloco.olhar" }]
+usar = [{ dar_item = "bloco" }, { fala = "teste.sala.bloco.pegou" }]
+se_nao_item = ["bloco"]
 
 [[cenas.teste.sala.objetos]]
 id = "relogio"
@@ -91,6 +91,8 @@ usar = [
   { fala = "teste.sala.relogio.corda" },
   { esperar = 1 },
   { fala = "teste.sala.relogio.tique" },
+  { fala = "teste.sala.relogio.placa" },
+  { marcar_flag = "teste.sala.relogio.leu_placa" },
 ]
 
 [[cenas.teste.sala.objetos]]
