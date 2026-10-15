@@ -2,7 +2,7 @@
 
 Diagnóstico, decisões e roteiro da primeira versão. Este documento vem antes do código e é atualizado quando uma decisão muda; cada mudança é registrada no [LOG.md](LOG.md).
 
-> **Situação:** Fases 0 (fundação) e 1 (núcleo) concluídas; próxima: Fase 2 (fluxo principal). O conteúdo e a narrativa foram revisados em conjunto em 2026-10-14 (seções 5 e 6); os textos finais e as fontes são escritos e revisados na Fase 4.
+> **Situação:** Fases 0 (fundação) e 1 (núcleo) concluídas; Fase 2 (fluxo principal) em andamento, com a estrutura do capítulo 1 em [docs/roteiro-capitulo-1.md](docs/roteiro-capitulo-1.md). O conteúdo e a narrativa foram revisados em conjunto em 2026-10-14 (seções 5 e 6); os textos finais e as fontes são escritos e revisados na Fase 4.
 
 ---
 
@@ -63,7 +63,7 @@ Politicalizando/
 │   ├── ui/                         # texto, caixa de diálogo, menu de verbos
 │   └── assets/                     # gerados por ferramentas/
 ├── ferramentas/                    # geradores de assets e empacotador
-├── docs/                           # GIF e notas de release (Fase 5)
+├── docs/                           # roteiro do capítulo; GIF e notas de release (Fase 5)
 └── tests/
 ```
 
@@ -193,6 +193,8 @@ Valem para todo texto, diálogo, ficha, imagem, som e mecânica do jogo, e são 
 | D10 | Como salvar? | JSON, 1 slot, autosave ao entrar numa cena (só se houve mudança e nada está bloqueado) | Legível, seguro e testável; vários perfis de save ficam para a próxima |
 | D11 | Como roteirizar cutscenes e diálogos? | Dados em TOML interpretados pelo domínio como geradores Python, executados por um diretor que bloqueia o input | Equivalente às corrotinas de motores comerciais, testável sem janela e revisável por quem não programa |
 | D12 | Como usar referências de outros jogos? | Só como ideia de arquitetura e de mecânica. A referência atual é um relatório próprio de engenharia reversa do *Unusual Findings* (demo), guardado **fora do repositório**. Nada de código, textos, nomes, personagens ou assets é copiado | Respeito a direitos de terceiros (R8) |
+| D13 | Como se organiza o capítulo 1? | Três atos: a missão (escola e praça, com um caso de checagem sem lado como tutorial), a investigação (cidade aberta, em qualquer ordem, com um morador de cada corrente num local diferente) e o fechamento (comparação e matéria). Nem o local nem a ocupação de um morador podem combinar com a corrente dele. Detalhes em [docs/roteiro-capitulo-1.md](docs/roteiro-capitulo-1.md) | Nenhuma visão "vem antes" e nenhum estereótipo de lugar (R2); a exploração livre pede ação do jogador (R4) |
+| D14 | Como checar fatos de uma cidade fictícia? | Os fatos do problema do capítulo se checam em documentos do próprio jogo, marcados como fontes do jogo (fictícias); fontes reais continuam obrigatórias para tudo o que fala do mundo real (fichas, pensadores, técnicas de manipulação). A matéria fica disponível sem bloqueio desde o fim do Ato 1 | A biblioteca de Novátria não existe fora do jogo, mas a checagem precisa de resposta (C4, C6); sem bloqueio, não há derrota (J11) |
 
 **Perguntas respondidas na revisão de 2026-10-14:**
 
