@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 from politicalizando.config import ALTURA_TELA, FPS, LARGURA_TELA, TITULO
-from politicalizando.conteudo import carregar_interacao, carregar_textos
+from politicalizando.conteudo import carregar_interacao, carregar_mapa, carregar_textos
 
 if TYPE_CHECKING:
     from politicalizando.estados.base import Estado
@@ -26,6 +26,7 @@ class Jogo:
         self.textos = carregar_textos()
         # Cenas, roteiros, diálogos e casos, conferidos ao abrir: um dado quebrado falha cedo.
         self.interacao = carregar_interacao()
+        self.mapa = carregar_mapa()
         self.estado: Estado | None = None
         self.rodando = False
 
