@@ -30,4 +30,23 @@
 #   corrente = "liberalismo"
 #   se = ["biblioteca.bibliotecaria.posicao"]
 #
-# As peças do capítulo entram na Fase 2, com a tela da matéria, e os textos finais na Fase 4.
+# A tela abre por um roteiro ou por um objeto: { abrir_tela = "materia" }. Publicar marca
+# "materia.publicou".
+#
+# As peças "teste" são provisórias e neutras, da cena de teste; as peças do capítulo entram
+# com o capítulo jogável, e os textos finais na Fase 4.
+
+[pecas.teste.relogio]
+tipo = "fato"
+texto = "teste.materia.relogio"
+fonte_se = ["teste.sala.relogio.leu_placa"]
+
+[pecas.teste.mural]
+tipo = "opiniao"
+texto = "teste.materia.mural"
+de = "teste.mural"
+se = ["teste.mural.checou"]
+
+[pecas.teste.boato]
+tipo = "manipulacao"
+texto = "teste.materia.boato"
