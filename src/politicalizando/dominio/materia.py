@@ -30,6 +30,9 @@ A avaliação tem três critérios, cada um com três níveis (0 a 2), e a nota 
 Ela lê o estado só pelas flags de investigação e trata as correntes apenas por contagem, sem
 nunca citar uma pelo nome: trocar as correntes de lugar não muda a nota (E2). Não há rótulo, e
 a posição da matéria nunca é medida (E1).
+
+O jogador pode entregar e reescrever quantas vezes quiser; `publicar` avalia a versão final e
+marca `materia.publicou`, que encerra o capítulo.
 """
 
 from __future__ import annotations
@@ -43,6 +46,7 @@ from enum import IntEnum, StrEnum
 from politicalizando.dominio.correntes import validar_corrente
 from politicalizando.dominio.estado_jogo import EstadoJogo, validar_id
 
+FLAG_PUBLICOU = "materia.publicou"
 MINIMO_DE_CORRENTES = 2
 DIFERENCA_MAXIMA_ENTRE_CORRENTES = 1
 
@@ -132,6 +136,9 @@ class Pecas(Mapping[str, Peca]):
     def flags_exigidas(self) -> set[str]:
         return set().union(*(peca.se | peca.fonte_se for peca in self.values()))
 
+    def flags_marcadas(self) -> set[str]:
+        return {FLAG_PUBLICOU}
+
     @classmethod
     def de_toml(cls, conteudo: str) -> Pecas:
         try:
@@ -174,6 +181,13 @@ def avaliar(pecas: Pecas, estado: EstadoJogo, inclusoes: Iterable[Inclusao]) -> 
         atribuicao=_nivel(bons=sum(citar for _, citar in opinioes), total=len(opinioes)),
         justica=_justica(pecas, estado, [peca for peca, _ in opinioes]),
     )
+
+
+def publicar(pecas: Pecas, estado: EstadoJogo, inclusoes: Iterable[Inclusao]) -> Avaliacao:
+    """Avalia a versão final e marca `materia.publicou` (só uma ação, nunca uma nota: E1)."""
+    avaliacao = avaliar(pecas, estado, inclusoes)
+    estado.marcar_flag(FLAG_PUBLICOU)
+    return avaliacao
 
 
 def _nivel(bons: int, total: int) -> Nivel:
