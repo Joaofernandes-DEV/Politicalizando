@@ -281,3 +281,35 @@ def test_aviso_aparece_como_fala_e_bloqueia_o_input(interacao):
     assert partida.ocupada
     assert not partida.agir(objeto(partida, "folheto"), Verbo.OLHAR)
     assert confirmar_tudo(partida) == [Fala("exemplo.aviso")]
+
+
+# --- Ir pelo mapa ---------------------------------------------------------------------------
+
+
+def test_ir_para_troca_a_cena_e_roda_a_entrada(interacao):
+    partida = comecar(interacao)
+    assert partida.ir_para("exemplo.corredor")
+    assert partida.cena.id == "exemplo.corredor"
+    assert not partida.atualizar(0)
+    assert partida.diretor.acao_atual == Fala("exemplo.corredor.chegada")
+    partida.confirmar()
+    assert partida.atualizar(0), "o fim da entrada é a hora do autosave"
+
+
+def test_ir_para_recusado_com_a_partida_ocupada(interacao):
+    partida = comecar(interacao)
+    partida.agir(objeto(partida, "folheto"), Verbo.OLHAR)
+    assert not partida.ir_para("exemplo.corredor")
+    assert partida.cena.id == "exemplo.sala"
+
+
+def test_ir_para_a_cena_atual_nao_faz_nada(interacao):
+    partida = comecar(interacao)
+    assert not partida.ir_para("exemplo.sala")
+    assert not partida.ocupada
+
+
+def test_ir_para_cena_inexistente_e_erro(interacao):
+    partida = comecar(interacao)
+    with pytest.raises(KeyError, match="exemplo.sumiu"):
+        partida.ir_para("exemplo.sumiu")
