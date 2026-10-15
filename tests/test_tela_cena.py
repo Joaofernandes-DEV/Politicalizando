@@ -3,6 +3,7 @@
 import pygame
 import pytest
 
+from politicalizando.config import Paleta
 from politicalizando.conteudo import carregar_textos
 from politicalizando.dominio.acoes import Escolha, Fala
 from politicalizando.dominio.cenas import Cenas
@@ -275,6 +276,150 @@ def test_trocar_de_cena_limpa_o_foco(tela):
     assert carregar().cena_atual == "exemplo.corredor"
 
 
+# --- Mostrar objetos (I8) -------------------------------------------------------------------
+
+
+def test_o_liga_e_desliga_o_destaque_de_todos_os_objetos(tela, jogo_exemplo):
+    assert not tela.mostrando_objetos
+    tecla(tela, pygame.K_o)
+    assert tela.mostrando_objetos
+    assert [objeto.id for objeto, _ in tela.rotulos()] == ["caixa", "guia", "porta"]
+    desenha_sem_erro(tela, jogo_exemplo)
+    tecla(tela, pygame.K_o)
+    assert not tela.mostrando_objetos
+
+
+def test_o_destaque_desenha_o_nome_junto_de_cada_objeto(tela, jogo_exemplo):
+    tecla(tela, pygame.K_o)
+    tela.desenhar(jogo_exemplo.tela)
+    for objeto, rotulo in tela.rotulos():
+        area = pygame.Rect(objeto.area.x, objeto.area.y, objeto.area.largura, objeto.area.altura)
+        assert jogo_exemplo.tela.get_rect().contains(rotulo)
+        assert rotulo.colliderect(area.inflate(4, 4)), "o nome fica encostado no objeto"
+        assert jogo_exemplo.tela.get_at(area.topleft)[:3] == Paleta.DESTAQUE
+
+
+def test_o_destaque_vale_para_as_outras_cenas(tela):
+    tecla(tela, pygame.K_o)
+    tecla(tela, pygame.K_LEFT)
+    tecla(tela, pygame.K_2)
+    assert tela.partida.cena.id == "exemplo.corredor"
+    assert tela.mostrando_objetos
+    assert [objeto.id for objeto, _ in tela.rotulos()] == ["volta"]
+
+
+def test_o_destaque_continua_depois_de_voltar_ao_titulo(tela, jogo_exemplo):
+    jogo_exemplo.trocar_estado(tela)
+    tecla(tela, pygame.K_o)
+    tecla(tela, pygame.K_ESCAPE)
+    titulo = jogo_exemplo.estado
+    tecla(titulo, pygame.K_2)
+    nova = jogo_exemplo.estado
+    nova.atualizar(0)
+    assert nova is not tela
+    assert nova.mostrando_objetos
+
+
+def test_o_destaque_some_durante_a_fala_e_com_o_menu_aberto(tela, jogo_exemplo):
+    tecla(tela, pygame.K_o)
+    tecla(tela, pygame.K_TAB)
+    tecla(tela, pygame.K_1)
+    assert tela.partida.ocupada
+    assert not tela.mostrando_objetos, "a fala não fica coberta pelos nomes"
+    desenha_sem_erro(tela, jogo_exemplo)
+    tecla(tela, pygame.K_o)
+    tecla(tela, pygame.K_RETURN)
+    assert tela.mostrando_objetos, "o O durante a fala não desliga o destaque"
+
+    tecla(tela, pygame.K_RETURN)
+    assert tela.menu.aberto
+    assert not tela.mostrando_objetos
+    desenha_sem_erro(tela, jogo_exemplo)
+    tecla(tela, pygame.K_ESCAPE)
+    assert tela.mostrando_objetos
+
+
+def test_rotulos_da_cena_de_teste_nao_se_cobrem(jogo):
+    """Na sala de testes real, os nomes ficam na tela e nenhum cobre outro."""
+    tela = EstadoCena(jogo, Partida.nova(jogo.interacao))
+    tela.atualizar(0)
+    while tela.partida.ocupada:
+        tecla(tela, pygame.K_RETURN)
+    tecla(tela, pygame.K_o)
+    rotulos = [rotulo for _, rotulo in tela.rotulos()]
+    assert len(rotulos) == len(tela.partida.objetos())
+    for indice, rotulo in enumerate(rotulos):
+        assert jogo.tela.get_rect().contains(rotulo)
+        assert rotulo.collidelist(rotulos[indice + 1 :]) == -1
+        assert not rotulo.colliderect(tela.botao_caderno)
+    tela.desenhar(jogo.tela)
+
+
+# --- Fechar a janela pelo X -----------------------------------------------------------------
+
+
+def test_fechar_a_janela_salva_como_o_esc(tela, jogo_exemplo):
+    tecla(tela, pygame.K_RETURN)
+    tecla(tela, pygame.K_2)
+    assert tela.partida.estado.tem_item("caixa")
+    jogo_exemplo.trocar_estado(tela)
+    jogo_exemplo.rodando = True
+    jogo_exemplo.fechar_janela()
+    assert not jogo_exemplo.rodando
+    assert carregar().tem_item("caixa")
+
+
+def test_fechar_a_janela_no_meio_de_uma_fala_nao_salva(tela, jogo_exemplo):
+    tecla(tela, pygame.K_RETURN)
+    tecla(tela, pygame.K_2)
+    tecla(tela, pygame.K_TAB)
+    tecla(tela, pygame.K_1)
+    assert tela.partida.ocupada
+    jogo_exemplo.trocar_estado(tela)
+    jogo_exemplo.fechar_janela()
+    assert not carregar().tem_item("caixa"), "com a partida ocupada, o save fica bloqueado"
+
+
+def test_fechar_a_janela_com_save_falhando_fecha_assim_mesmo(tela, jogo_exemplo, monkeypatch):
+    def falha(*_, **__):
+        raise PermissionError("pasta sem permissão")
+
+    monkeypatch.setattr(tela_cena, "autosalvar", falha)
+    jogo_exemplo.trocar_estado(tela)
+    jogo_exemplo.rodando = True
+    jogo_exemplo.fechar_janela()
+    assert not jogo_exemplo.rodando
+
+
+def test_fechar_a_janela_pelo_loop_salva(tela, jogo_exemplo):
+    tecla(tela, pygame.K_RETURN)
+    tecla(tela, pygame.K_2)
+    jogo_exemplo.trocar_estado(tela)
+    pygame.event.post(pygame.Event(pygame.QUIT))
+    jogo_exemplo.executar()
+    assert not pygame.get_init()
+    assert carregar().tem_item("caixa")
+
+
+@pytest.mark.parametrize("abrir", ["mapa", "caderno"])
+def test_fechar_a_janela_numa_tela_sobre_a_cena_salva(tela, jogo_exemplo, abrir):
+    tecla(tela, pygame.K_RETURN)
+    tecla(tela, pygame.K_2)
+    if abrir == "mapa":
+        tela._abrir_mapa()
+    else:
+        tela._abrir_caderno()
+    assert jogo_exemplo.estado is not tela
+    jogo_exemplo.fechar_janela()
+    assert carregar().tem_item("caixa")
+
+
+def test_fechar_a_janela_no_titulo_nao_grava_nada(jogo_exemplo):
+    jogo_exemplo.trocar_estado(EstadoTitulo(jogo_exemplo))
+    jogo_exemplo.fechar_janela()
+    assert not existe_save()
+
+
 # --- Esc e título ---------------------------------------------------------------------------
 
 
@@ -333,6 +478,32 @@ def test_titulo_continuar_volta_para_a_cena_salva(jogo_exemplo):
     tela.atualizar(0)
     assert tela.partida.cena.id == "exemplo.corredor"
     assert not tela.partida.ocupada
+
+
+def test_titulo_teclas_1_e_2_escolhem_direto(jogo_exemplo):
+    estado = EstadoJogo()
+    estado.entrar_na_cena("exemplo.corredor")
+    salvar(estado)
+
+    titulo = EstadoTitulo(jogo_exemplo)
+    jogo_exemplo.trocar_estado(titulo)
+    tecla(titulo, pygame.K_2)
+    assert isinstance(jogo_exemplo.estado, EstadoCena)
+    assert jogo_exemplo.estado.partida.cena.id == "exemplo.corredor"
+
+    titulo = EstadoTitulo(jogo_exemplo)
+    jogo_exemplo.trocar_estado(titulo)
+    tecla(titulo, pygame.K_KP1)
+    assert jogo_exemplo.estado.partida.cena.id == "exemplo.sala"
+
+
+def test_titulo_sem_save_ignora_a_tecla_2(jogo_exemplo):
+    titulo = EstadoTitulo(jogo_exemplo)
+    jogo_exemplo.trocar_estado(titulo)
+    tecla(titulo, pygame.K_2)
+    assert jogo_exemplo.estado is titulo
+    tecla(titulo, pygame.K_1)
+    assert isinstance(jogo_exemplo.estado, EstadoCena)
 
 
 def test_titulo_pelo_mouse(jogo_exemplo):
