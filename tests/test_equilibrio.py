@@ -110,6 +110,7 @@ origem = "exemplo.{c}.x"
 pensadores = ["exemplo.{c}.x"]
 proposta = "exemplo.{c}.x"
 confusoes = ["exemplo.{c}.x"]
+diferencas_internas = ["exemplo.{c}.x", "exemplo.{c}.y"]
 criticas = [{{ texto = "exemplo.{c}.x", de = "outras" }}, {{ texto = "exemplo.{c}.y", de = "{o}" }}]
 fontes = [{{ autor = "Exemplo, Autor", titulo = "Obra", ano = 2000, editora = "Ed." }}]
 """
