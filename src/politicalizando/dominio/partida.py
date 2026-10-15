@@ -15,7 +15,7 @@ entrada de uma cena roda e de quando é hora do autosave ficam aqui, testadas se
 
 from __future__ import annotations
 
-from politicalizando.dominio.acoes import Fala, Roteiro
+from politicalizando.dominio.acoes import Fala, Roteiro, TrocarCena
 from politicalizando.dominio.cenas import Cena, Objeto, Verbo
 from politicalizando.dominio.diretor import Diretor
 from politicalizando.dominio.estado_jogo import EstadoJogo, SaveInvalido
@@ -68,6 +68,18 @@ class Partida:
         self.diretor.iniciar(self.interacao.agir(self.estado, objeto, verbo))
         return True
 
+    def ir_para(self, id_cena: str) -> bool:
+        """Vai para outra cena pelo mapa; a entrada e o autosave seguem o caminho de sempre.
+
+        Devolve `False` se a partida está ocupada ou se já está nessa cena.
+        """
+        if id_cena not in self.interacao.cenas:
+            raise KeyError(f"cena inexistente: {id_cena!r}")
+        if self.ocupada or id_cena == self.estado.cena_atual:
+            return False
+        self.diretor.iniciar(_trocar_cena(id_cena))
+        return True
+
     def avisar(self, fala: Fala) -> None:
         """Mostra um aviso do jogo (ex.: o save falhou) na caixa, como uma fala.
 
@@ -100,3 +112,7 @@ class Partida:
 
 def _aviso(fala: Fala) -> Roteiro:
     yield fala
+
+
+def _trocar_cena(id_cena: str) -> Roteiro:
+    yield TrocarCena(id_cena)
