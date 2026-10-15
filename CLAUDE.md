@@ -17,6 +17,7 @@ Siga o [CONTRIBUTING.md](CONTRIBUTING.md). Em resumo, a cada mudança:
 ## Cuidados
 
 - Jogo educativo, não propaganda: todo conteúdo segue os princípios C1 a C6 e as salvaguardas E1 a E5 do `briefing.md`, além do checklist de equilíbrio do CONTRIBUTING. Nunca escreva texto ou mecânica que favoreça ou ridicularize uma corrente, partido ou pessoa real.
+- Novátria é um município fictício no Brasil real (D16): leis, instituições e história são as reais, com fonte; números, bairros e pessoas de Novátria são fictícios e marcados como fonte do jogo. Separe fato documentado, interpretação e opinião (C7), não estereotipe grupos sociais (C8) e siga a regra de pessoas reais e do período pós-1988 (D17).
 - Referências de outros jogos servem só como ideia (D12): nunca copie código, textos, nomes, personagens ou assets, e nunca adicione materiais de referência ao repositório.
 - Conteúdo factual sempre com fonte registrada. Na dúvida sobre um fato, pergunte em vez de inventar.
 - Assets são gerados por `ferramentas/gerar_*.py`; não edite os binários à mão.

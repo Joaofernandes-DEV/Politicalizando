@@ -2,19 +2,21 @@
 
 Diagnóstico, decisões e roteiro da primeira versão. Este documento vem antes do código e é atualizado quando uma decisão muda; cada mudança é registrada no [LOG.md](LOG.md).
 
-> **Situação:** Fases 0 (fundação) e 1 (núcleo) concluídas; Fase 2 (fluxo principal) em andamento, com a estrutura do capítulo 1 em [docs/roteiro-capitulo-1.md](docs/roteiro-capitulo-1.md). O conteúdo e a narrativa foram revisados em conjunto em 2026-10-14 (seções 5 e 6); os textos finais e as fontes são escritos e revisados na Fase 4.
+> **Situação:** Fases 0 (fundação) e 1 (núcleo) concluídas; Fase 2 (fluxo principal) em andamento, com a estrutura do capítulo 1 em [docs/roteiro-capitulo-1.md](docs/roteiro-capitulo-1.md). Em 2026-10-14 o João ampliou a visão do jogo: Novátria passa a ser um município fictício brasileiro, e a política brasileira, a história do Brasil e as ideologias entram em capítulos (seção 1, D15 a D19 e seção 11). Os textos finais e as fontes são escritos e revisados na Fase 4.
 
 ---
 
 ## 1. Visão geral
 
-**O que é:** um jogo 2D em pixel art que ensina o que são as ideologias políticas e como se informar sobre política, para que a pessoa jogadora compreenda o mundo atual e desenvolva um pensamento crítico sólido. A ambientação é contemporânea e distópica.
+**O que é:** um jogo 2D em pixel art que ensina como a política funciona, com foco na política brasileira, o que são as ideologias políticas e como se informar, para que a pessoa jogadora compreenda o Brasil e o mundo atuais e desenvolva um pensamento crítico sólido. A ambientação é contemporânea e distópica, em **Novátria**, um município fictício brasileiro (D16).
+
+**Como ensina:** o aprendizado parte de problemas concretos do cotidiano de Novátria (educação, saúde, transporte público, saneamento, moradia, emprego, segurança, distribuição de recursos e acesso a serviços públicos), que mudam a narrativa, as personagens e as decisões do jogador. Para entender cada problema, o jogador investiga quem decide o quê (União, estados e municípios; Executivo, Legislativo e Judiciário), lê documentos, compara declarações e separa o que é comprovado. A história do Brasil entra do mesmo jeito, por arquivos, jornais, documentos, personagens e investigações, mostrando como estruturas e decisões de cada período ajudaram a formar o país de hoje e separando fato documentado, interpretação historiográfica e opinião (C7). Os conceitos gerais (Estado, governo, democracia, autoritarismo, república, monarquia, federalismo, sistemas de governo, sistemas eleitorais e modelos econômicos) aparecem quando um problema precisa deles.
 
 **Gênero:** aventura point-and-click em telas fixas. O jogador explora a cidade, examina objetos, conversa com moradores e reúne evidências; não há personagem andando pelo cenário nem condição de derrota (D8).
 
 **O que ele não é:** propaganda. O jogo não diz em quem votar nem qual corrente está certa. Ele ensina a **entender** cada corrente pelos seus próprios argumentos, a **comparar** propostas e a **reconhecer** manipulação, venha de onde vier (ver os princípios de conteúdo, seção 6).
 
-**Objetivo da V1:** um capítulo curto, completo e bem acabado, jogável de ponta a ponta em 20 a 30 minutos, que sirva de base para os capítulos seguintes e possa ser usado em sala de aula e em ações do projeto de extensão.
+**Objetivo da V1:** um capítulo completo e bem acabado, jogável de ponta a ponta em 30 a 40 minutos, ancorado na política municipal (a biblioteca, o orçamento, a prefeitura e a Câmara Municipal), que sirva de base para os capítulos seguintes (seção 11) e possa ser usado em sala de aula e em ações do projeto de extensão (D15).
 
 **Público:** pessoas de **14 anos ou mais**, como estudantes do ensino médio, universitários e o público das ações de extensão da UNIP. A linguagem é acessível, sem jargão desnecessário, e não pressupõe conhecimento prévio de política.
 
@@ -28,13 +30,16 @@ O projeto começa do zero: não há código anterior nem bugs a corrigir. Por is
 |--------|-------|----------------|
 | R1 | O jogo ser lido como propaganda de um lado | Princípios C1 a C6, salvaguardas E1 a E5 nas mecânicas, revisão de equilíbrio de todo texto antes do merge (checklist no CONTRIBUTING) e revisão externa (P5) |
 | R2 | Caricaturar uma corrente (descrever pelo que os adversários dizem dela) | Fichas com o mesmo modelo para todas; teste do defensor (C5) |
-| R3 | Escopo crescer e o capítulo ficar pela metade | Tabela de escopo (seção 9); novidades vão para "Fica para a próxima" |
+| R3 | Escopo crescer e o capítulo ficar pela metade | Tabela de escopo (seção 9) e roteiro de capítulos (seção 11): a V1 é um capítulo só (D15); novidades vão para "Fica para a próxima" |
 | R4 | Virar uma apostila com botões (texto demais, pouca decisão) | Toda cena pede uma ação do jogador; textos curtos, com aprofundamento opcional nas fichas |
 | R5 | Informação factual errada ou sem fonte | Fontes registradas junto do conteúdo (C4); conteúdo como dados revisáveis; teste que exige fonte |
 | R6 | A distopia ser associada a um partido, governo ou corrente real | O antagonista é um mecanismo (o Feed), cujo dono nunca é revelado (C3) |
 | R7 | Fonte pixel sem acentos do português | Usar a VT323 (OFL), que já desenhou bem os acentos no Jogo da Cobrinha (I2) |
 | R8 | Material de terceiros entrar no repositório (ex.: a referência de game design) | A referência fica fora do repositório e é usada só como ideia; nada de código, textos, nomes ou assets copiados (D12) |
 | R9 | Falso equilíbrio: tratar fatos verificáveis como "mais uma opinião" | Separar fato, opinião/valor e manipulação na checagem (J4) e na avaliação (J7); princípio C6 |
+| R10 | História contada como versão única, com erro ou anacronismo | Separar fato documentado, interpretação historiográfica (com autor e obra) e opinião de personagem (C7, D18); fonte em todo conteúdo histórico; revisão de História (P5) |
+| R11 | Estereotipar classes, bairros, regiões ou grupos sociais | Princípio C8: nenhum grupo associado a uma corrente, a um defeito ou a uma virtude; diversidade dentro de cada grupo |
+| R12 | Conteúdo recente ser lido como avaliação de governos ou partidos atuais | Depois de 1988, só instituições, marcos legais e dados públicos, sem avaliar governos; nenhuma pessoa viva nem partido atual (D17) |
 
 ---
 
@@ -101,13 +106,13 @@ Politicalizando/
 
 ## 5. Funcionalidades
 
-**Premissa narrativa:** em **Novátria**, uma cidade fictícia de hoje, quase toda a informação passa por um único aplicativo, o **Feed**, cujo algoritmo premia o que gera mais raiva e engajamento. **Quem controla o Feed nunca é revelado**: o tema é o mecanismo (engajamento pela raiva), não um dono que possa ser lido como "o mercado" ou "o governo". A narração é em **"você"**: você é estudante e precisa escrever para o jornal do grêmio estudantil uma matéria sobre **o fechamento da biblioteca pública**. Para isso, conversa com moradores que pensam diferente, consulta fontes e separa fato de opinião e de manipulação. A distopia não é "obra" de nenhuma corrente: todas as personagens, de todas as visões, são afetadas pelo Feed, e algumas também o usam para manipular.
+**Premissa narrativa:** em **Novátria**, um município fictício brasileiro de hoje, com bairros ricos e periferias, centro comercial, áreas com infraestrutura precária e serviços públicos desiguais (D16), quase toda a informação passa por um único aplicativo, o **Feed**, cujo algoritmo premia o que gera mais raiva e engajamento. **Quem controla o Feed nunca é revelado**: o tema é o mecanismo (engajamento pela raiva), não um dono que possa ser lido como "o mercado" ou "o governo". A narração é em **"você"**: você é estudante e precisa escrever para o jornal do grêmio estudantil uma matéria sobre **o fechamento da biblioteca pública municipal**. Para isso, investiga o orçamento do município, descobre o que cabe à prefeitura e à Câmara Municipal, conversa com moradores que pensam diferente, consulta fontes e separa fato de opinião e de manipulação. A distopia não é "obra" de nenhuma corrente: todas as personagens, de todas as visões, são afetadas pelo Feed, e algumas também o usam para manipular.
 
-O problema da biblioteca foi escolhido porque cada corrente tem uma posição genuína e defensável sobre ele (eficiência e liberdade de escolha; preservar uma instituição da comunidade; um bem público que não depende do lucro; serviço público financiado por impostos, com reforma da gestão) e porque não remete a um episódio político recente.
+O problema da biblioteca foi escolhido porque cada corrente tem uma posição genuína e defensável sobre ele (eficiência e liberdade de escolha; preservar uma instituição da comunidade; um bem público que não depende do lucro; serviço público financiado por impostos, com reforma da gestão) porque não remete a um episódio político recente e porque leva naturalmente ao orçamento municipal e a quem decide (J12).
 
 | Código | Funcionalidade |
 |--------|----------------|
-| J1 | Mapa de Novátria com os locais (praça, escola, mercado, biblioteca, rádio comunitária…); cada local é uma tela fixa |
+| J1 | Mapa de Novátria com os locais (centro, bairros com condições de vida diferentes, escola, biblioteca, prefeitura, Câmara Municipal…); cada local é uma tela fixa |
 | J2 | Diálogos em árvore com personagens fictícias que defendem visões diferentes, cada uma com seus melhores argumentos. Todas seguem o mesmo padrão de investigação: "Qual é a sua posição?", "Por que você pensa assim?", "De onde vem essa informação?", "E quem discorda, o que diria?". Opções de uso único somem depois de usadas |
 | J3 | Fichas das 4 correntes, desbloqueadas pelas conversas, todas com o mesmo modelo (ver abaixo) |
 | J4 | Checagem de fontes: posts, manchetes e falas são classificados como **fato verificável**, **opinião ou valor** ou **manipulação**. Fatos têm resposta checável; opiniões não têm resposta certa. Cada caso termina com uma explicação, e os exemplos de manipulação vêm de todas as visões e também de fontes sem lado (golpes, caça-cliques) |
@@ -118,6 +123,9 @@ O problema da biblioteca foi escolhido porque cada corrente tem uma posição ge
 | J9 | Objetos interativos: cada objeto da cena responde a Olhar, Usar e Falar com falas próprias; um item coletado some da cena nas visitas seguintes; recusas genéricas se alternam e nunca falam de correntes |
 | J10 | Cenas de entrada: entrar num local pela primeira vez pode disparar uma sequência roteirizada (ex.: a apresentação de uma personagem) |
 | J11 | Sem derrota: ações erradas geram falas explicativas, nunca game over (C2) |
+| J12 | Política brasileira na prática: cada capítulo ensina uma parte da estrutura política a partir do problema dele. No capítulo 1, o município: prefeitura (Executivo) e Câmara Municipal (Legislativo), orçamento público (receitas, impostos, despesas e vinculações), transparência, fiscalização e participação popular (audiência pública) |
+| J13 | Origem da informação: documentos, arquivos, jornais e o caderno marcam cada informação como **fato documentado**, **interpretação** (de quem, em qual obra) ou **opinião de personagem** (C7). A checagem ganha a classe "interpretação" no capítulo de história (D18) |
+| J14 | Camada histórica: cada capítulo liga o problema de hoje a processos da história do Brasil por documentos e personagens, sem aula expositiva. No capítulo 1, o arquivo da biblioteca mostra a história da educação pública e das bibliotecas no Brasil |
 
 **As 4 correntes da V1:** liberalismo, conservadorismo, socialismo e social-democracia. Elas formam o núcleo clássico do debate político moderno e se equilibram: duas mais à esquerda e duas mais à direita ou ao centro. Outras correntes entram nos próximos capítulos; o autoritarismo, de esquerda e de direita, pode ser um tema transversal de um capítulo futuro (seção 9).
 
@@ -130,7 +138,8 @@ O problema da biblioteca foi escolhido porque cada corrente tem uma posição ge
 5. O que propõe para o problema do capítulo.
 6. Principais críticas que recebe, de mais de um lado.
 7. Confusões de nome (só terminologia: ex.: "liberal" no Brasil e nos EUA; conservador e reacionário; socialismos democráticos e revolucionários; a corrente social-democrata e partidos com nomes parecidos).
-8. Fontes.
+8. Diferenças internas: as principais vertentes da corrente e no que divergem (D19).
+9. Fontes.
 
 Ideias centrais, a serem refinadas e com as fontes registradas na Fase 4:
 
@@ -151,8 +160,10 @@ Valem para todo texto, diálogo, ficha, imagem, som e mecânica do jogo, e são 
 | C2 | **Pensamento crítico, não conclusões prontas.** Estimular o jogador a comparar argumentos, checar fontes e reconhecer manipulação, em vez de entregar respostas |
 | C3 | **A distopia é recurso narrativo.** Ela existe para provocar reflexão e não é associada a um lado político específico |
 | C4 | **Fatos com fontes e respeito a pessoas reais.** Todo conteúdo factual tem fonte registrada, e nenhuma pessoa real é retratada de forma ofensiva |
-| C5 | **Teste do defensor.** Antes do merge, a descrição de cada corrente passa pela pergunta: "uma pessoa que defende esta corrente se reconheceria neste texto?". Nenhum político vivo ou partido atual aparece ou é aludido; pensadores históricos são citados apenas por suas ideias e obras |
+| C5 | **Teste do defensor.** Antes do merge, a descrição de cada corrente passa pela pergunta: "uma pessoa que defende esta corrente se reconheceria neste texto?". Nenhum político vivo ou partido atual aparece ou é aludido; pensadores históricos são citados apenas por suas ideias e obras, e figuras históricas, por fatos documentados (D17) |
 | C6 | **Equilíbrio não é falso equilíbrio.** As correntes e seus valores recebem tratamento igual, mas fatos verificáveis não são relativizados |
+| C7 | **Fato documentado, interpretação e opinião.** Na história e na política, o jogo separa o que está documentado, o que é interpretação de historiadores e cientistas sociais (sempre com autor e obra, e mais de uma quando houver debate) e o que é opinião de personagem |
+| C8 | **Sem estereótipos sociais.** Classes, bairros, regiões, religiões, cores e origens aparecem com diversidade interna; nenhum grupo é associado a uma corrente, a um defeito ou a uma virtude. A desigualdade aparece nas condições de vida e nos dados, não em caricaturas de quem vive nela |
 
 ### 6.1 Salvaguardas de equilíbrio nas mecânicas
 
@@ -186,15 +197,20 @@ Valem para todo texto, diálogo, ficha, imagem, som e mecânica do jogo, e são 
 | D3 | Plataforma? | Windows `.exe` na V1; versão web (pygbag) fica para a próxima | O fluxo de release com executável já foi testado; a web exige adaptar o loop |
 | D4 | Biblioteca? | Python 3.11+ e pygame-ce, com resolução lógica de 320×180 e `pygame.SCALED` | Já usada no método; roda no CI sem janela. O Pyxel limita a paleta e a fonte não tem acentos |
 | D5 | Licença? | Código sob MIT; conteúdo educativo sob CC BY 4.0 | Professores podem reutilizar o material citando a fonte |
-| D6 | Escopo da V1? | 1 cidade, 1 capítulo de 20 a 30 minutos, 4 correntes e a checagem de fontes | Entregar um capítulo completo em vez de vários pela metade (R3) |
+| D6 | Escopo da V1? | 1 cidade, 1 capítulo, 4 correntes e a checagem de fontes (revisto em D15) | Entregar um capítulo completo em vez de vários pela metade (R3) |
 | D7 | Versão? | `0.1.0` no desenvolvimento; `1.0.0` na entrega da V1 | Versionamento semântico do plano; a tag só é criada quando o João pedir |
 | D8 | Como o jogador se move? | Telas fixas, sem personagem andando nem pathfinding; clicar num objeto já executa a ação | Economiza arte e código; nada no jogo depende de deslocamento |
 | D9 | Controles? | Mouse e teclado na V1 | O point-and-click pede mouse; o teclado mantém a acessibilidade |
 | D10 | Como salvar? | JSON, 1 slot, autosave ao entrar numa cena (só se houve mudança e nada está bloqueado) | Legível, seguro e testável; vários perfis de save ficam para a próxima |
 | D11 | Como roteirizar cutscenes e diálogos? | Dados em TOML interpretados pelo domínio como geradores Python, executados por um diretor que bloqueia o input | Equivalente às corrotinas de motores comerciais, testável sem janela e revisável por quem não programa |
 | D12 | Como usar referências de outros jogos? | Só como ideia de arquitetura e de mecânica. A referência atual é um relatório próprio de engenharia reversa do *Unusual Findings* (demo), guardado **fora do repositório**. Nada de código, textos, nomes, personagens ou assets é copiado | Respeito a direitos de terceiros (R8) |
-| D13 | Como se organiza o capítulo 1? | Três atos: a missão (escola e praça, com um caso de checagem sem lado como tutorial), a investigação (cidade aberta, em qualquer ordem, com um morador de cada corrente num local diferente) e o fechamento (comparação e matéria). Nem o local nem a ocupação de um morador podem combinar com a corrente dele. Detalhes em [docs/roteiro-capitulo-1.md](docs/roteiro-capitulo-1.md) | Nenhuma visão "vem antes" e nenhum estereótipo de lugar (R2); a exploração livre pede ação do jogador (R4) |
+| D13 | Como se organiza o capítulo 1? | Três atos: a missão (escola e praça, com um caso de checagem sem lado como tutorial), a investigação (cidade aberta, em qualquer ordem: biblioteca, prefeitura, Câmara e bairros, com um morador de cada corrente num espaço público diferente) e o fechamento (comparação e matéria). Nem o local, nem a ocupação, nem o bairro ou a classe de um morador podem combinar com a corrente dele (C8). Detalhes em [docs/roteiro-capitulo-1.md](docs/roteiro-capitulo-1.md) | Nenhuma visão "vem antes" e nenhum estereótipo (R2, R11); a exploração livre pede ação do jogador (R4) |
 | D14 | Como checar fatos de uma cidade fictícia? | Os fatos do problema do capítulo se checam em documentos do próprio jogo, marcados como fontes do jogo (fictícias); fontes reais continuam obrigatórias para tudo o que fala do mundo real (fichas, pensadores, técnicas de manipulação). A matéria fica disponível sem bloqueio desde o fim do Ato 1 | A biblioteca de Novátria não existe fora do jogo, mas a checagem precisa de resposta (C4, C6); sem bloqueio, não há derrota (J11) |
+| D15 | Escopo da V1 depois da visão ampliada? | Continua 1 capítulo, agora de 30 a 40 minutos, ancorado na política municipal brasileira (biblioteca, orçamento, prefeitura, Câmara, transparência e participação), com uma camada histórica curta. A história do Brasil completa, os sistemas políticos, os níveis estadual e federal e outras correntes viram o roteiro de capítulos da seção 11 | Entregar um capítulo completo (R3) sem perder a visão ampla |
+| D16 | O que é Novátria? | Um município fictício num estado não especificado do Brasil real. Leis, instituições e história são as reais, com fontes; números locais, bairros e pessoas são fictícios (D14) | Ensinar a política brasileira real sem retratar uma cidade ou pessoas reais (R6) |
+| D17 | Como tratar pessoas reais e o período recente? | Figuras históricas aparecem só por fatos documentados, com fonte e sem caricatura; nenhuma pessoa viva e nenhum partido atual. Depois de 1988, o jogo trata de instituições, marcos legais e dados públicos, sem avaliar governos | Precisão histórica sem virar propaganda (R1, R12) |
+| D18 | Como separar a interpretação historiográfica? | Documentos, arquivos e caderno marcam a origem (fato documentado, interpretação com autor e obra, opinião de personagem). A checagem ganha a 4ª classe, "interpretação", no capítulo de história; no capítulo 1 ela segue com 3 classes | Ensinar que a história tem fatos e debates (C7) sem pesar o primeiro capítulo |
+| D19 | O que muda nas fichas? | Novo item "Diferenças internas" (as vertentes de cada corrente e no que divergem), igual para as 4 | Mostrar que nenhuma corrente é um bloco único (C1, R2) |
 
 **Perguntas respondidas na revisão de 2026-10-14:**
 
@@ -202,7 +218,7 @@ Valem para todo texto, diálogo, ficha, imagem, som e mecânica do jogo, e são 
 - **P2.** As 4 correntes estão confirmadas.
 - **P3.** Narração em **"você"**, com textos escritos sem adjetivos de gênero para a pessoa jogadora.
 - **P4.** Tom **sério, com leveza pontual**: humor que vem dos absurdos do Feed, nunca às custas de uma corrente ou de quem pensa diferente.
-- **P5.** **Sim**: um professor ou professora de Sociologia, Filosofia ou História revisa o conteúdo antes da Fase 4, e um grupo de estudantes testa o jogo antes da release.
+- **P5.** **Sim**: um professor ou professora de Sociologia, Filosofia ou História revisa o conteúdo antes da Fase 4, e um grupo de estudantes testa o jogo antes da release. Com a camada histórica (D18), a revisão de História passa a valer para todo conteúdo histórico.
 
 ---
 
@@ -210,9 +226,12 @@ Valem para todo texto, diálogo, ficha, imagem, som e mecânica do jogo, e são 
 
 | Entra nesta versão (V1) | Fica para a próxima |
 |-------------------------|---------------------|
-| 1 cidade (Novátria) e 1 capítulo (20 a 30 min) | Novos capítulos e cidades |
+| 1 cidade (Novátria, município fictício brasileiro) e 1 capítulo (30 a 40 min) | Novos capítulos (seção 11) e cidades |
 | 4 correntes: liberalismo, conservadorismo, socialismo e social-democracia | Outras correntes (ex.: anarquismo, ecologismo político, libertarianismo, democracia cristã) e o autoritarismo como tema transversal |
-| Fichas com fontes, no mesmo modelo para todas | Glossário completo e linha do tempo das ideias |
+| Fichas com fontes e diferenças internas, no mesmo modelo para todas | Glossário completo e linha do tempo das ideias |
+| Política municipal: prefeitura, Câmara, orçamento, transparência e participação | Níveis estadual e federal, Judiciário, processo legislativo completo, eleições e partidos (seção 11) |
+| Camada histórica curta: educação pública e bibliotecas no Brasil | História do Brasil da formação à sociedade atual, em capítulos; checagem com a classe "interpretação" |
+| — | Sistemas e modelos políticos comparados (monarquia e república, parlamentarismo e presidencialismo, federalismo, sistemas eleitorais, modelos econômicos) |
 | Checagem de fontes (fato, opinião, manipulação) com casos explicados | Minijogos variados de checagem; combinar itens para "cruzar fontes" |
 | Comparação de propostas para o problema do capítulo | Debates com várias rodadas |
 | Caderno do jogador; save de 1 slot com autosave | Vários perfis de save e estatísticas |
@@ -231,9 +250,27 @@ Valem para todo texto, diálogo, ficha, imagem, som e mecânica do jogo, e são 
 |------|------|-------|----------------|
 | 0. Fundação ✅ | Esqueleto, lint, CI, briefing | D1 a D7 | O jogo abre e fecha sem erro; lint e CI passando; `main` protegida |
 | 1. Núcleo ✅ | Domínio e conteúdo como dados | D10, D11, J2, J3, J4, J8, J9, J10, E1 a E5, R5, C4 | Estado e save, textos por ID, diretor de ações, roteiros, diálogos, cenas e objetos interativos, fichas, checagem e avaliação da matéria modelados e testados sem janela; teste que exige fonte em toda ficha; testes de equilíbrio |
-| 2. Fluxo principal | Capítulo jogável com formas simples | J1, J5, J6, J7, J11, I4, I8, I9 | O capítulo 1 pode ser jogado do início ao fim, com retângulos no lugar da arte, por mouse e por teclado |
+| 2. Fluxo principal | Capítulo jogável com formas simples | J1, J5, J6, J7, J11, J12, J13, J14, I4, I8, I9 | O capítulo 1 pode ser jogado do início ao fim, com retângulos no lugar da arte, por mouse e por teclado |
 | 3. Interface | Visual e som | I1 a I7, R7 | Arte gerada por código, fonte com acentos, menus e sons |
-| 4. Conteúdo | Textos finais e revisão | C1 a C6, R1, R2, R6, R9, P5 | Todos os textos revisados pelo checklist de equilíbrio e pela revisão externa, fontes registradas e créditos completos |
+| 4. Conteúdo | Textos finais e revisão | C1 a C8, R1, R2, R6, R9 a R12, P5 | Todos os textos revisados pelo checklist de equilíbrio e pela revisão externa, fontes registradas e créditos completos |
 | 5. Entrega | Portfólio e release | — | README com GIF, CI verde, `release.yml`, executável na release v1.0.0 conferido e LOG completo |
 
 Marque ✅ na fase ao concluí-la e registre no LOG.
+
+
+---
+
+## 11. Capítulos futuros (proposta)
+
+A visão completa do jogo é uma série de capítulos em Novátria. Cada capítulo parte de um problema concreto da cidade, ensina uma parte da estrutura política brasileira, liga o problema a uma camada da história do Brasil e mantém os princípios C1 a C8 e as salvaguardas E1 a E5. Novas correntes entram aos poucos (ex.: anarquismo, ecologismo político, libertarianismo, democracia cristã), sempre com o mesmo modelo de ficha. A ordem e os temas abaixo são uma proposta, decidida pelo João capítulo a capítulo.
+
+| Cap. | Problema em Novátria | Política | História do Brasil |
+|------|----------------------|----------|--------------------|
+| 1 (V1) | Fechamento da biblioteca municipal | Município: prefeitura e Câmara, orçamento, impostos municipais, transparência, audiência pública | Educação pública e bibliotecas |
+| 2 | Ônibus lotado e tarifa | Concessões e regulação; região metropolitana, município e estado; políticas públicas | Urbanização e migrações internas no século XX |
+| 3 | Bairro sem saneamento e moradia irregular | Federalismo e competências comuns; direito à moradia; Judiciário e Ministério Público | Lei de Terras (1850), abolição e formação das periferias, com interpretações historiográficas (estreia da classe "interpretação") |
+| 4 | Eleição municipal | Sistemas eleitorais (majoritário e proporcional), partidos como instituição, Justiça Eleitoral, campanhas e desinformação | O voto no Brasil, do Império à redemocratização |
+| 5 | Posto de saúde sem médico | SUS e financiamento entre União, estados e municípios; vinculações | Saúde pública e a Constituição de 1988 |
+| 6 | Arquivo da cidade e memória | Democracia e autoritarismo, direitos e garantias, controle do poder | Ditadura militar e redemocratização, com documentos oficiais; o autoritarismo de qualquer orientação como tema transversal |
+| 7 | A fundação de Novátria | Monarquia e república, parlamentarismo e presidencialismo (com o plebiscito de 1993) | Colonização, escravidão, independência, Império e Proclamação da República |
+| 8 | Emprego e segurança | Governo estadual e federal, Congresso (deputados e senadores), processo legislativo | Industrialização e trabalho no Brasil |
