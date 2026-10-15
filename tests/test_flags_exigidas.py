@@ -3,7 +3,8 @@
 Pega erros de digitação: uma condição com uma flag que nunca é marcada (ou um item que nunca é
 dado) esconderia ou mostraria uma opção, um objeto ou uma ficha para sempre. As condições vêm
 dos diálogos (`se`, `se_nao`), das cenas (`se`, `se_nao`, `se_item`, `se_nao_item`) e do
-desbloqueio das fichas (`se`) e das peças da matéria (`se`, `fonte_se`). As origens vêm dos
+desbloqueio das fichas (`se`), das peças da matéria (`se`, `fonte_se`) e do mapa (`se` do
+mapa e de cada local). As origens vêm dos
 roteiros, dos diálogos, das cenas (inclusive as `<cena>.visitou`) e dos casos de checagem
 (`<caso>.checou` e `<caso>.acertou`). Quando surgir um roteiro
 especial em Python que marque flags ou dê itens, a varredura de código de
@@ -17,6 +18,7 @@ from politicalizando.conteudo import (
     carregar_checagem,
     carregar_dialogos,
     carregar_fichas,
+    carregar_mapa,
     carregar_materia,
     carregar_roteiros,
 )
@@ -25,6 +27,7 @@ from politicalizando.dominio.cenas import Cenas
 from politicalizando.dominio.checagem import Casos
 from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.fichas import Fichas
+from politicalizando.dominio.mapa import Mapa
 from politicalizando.dominio.materia import Pecas
 from politicalizando.dominio.roteiro import Roteiros
 
@@ -44,12 +47,15 @@ def flags_sem_origem(
     fichas: Fichas | None = None,
     casos: Casos | None = None,
     pecas: Pecas | None = None,
+    mapa: Mapa | None = None,
 ) -> list[str]:
     exigidas = dialogos.flags_exigidas() | cenas.flags_exigidas()
     if fichas is not None:
         exigidas |= fichas.flags_exigidas()
     if pecas is not None:
         exigidas |= pecas.flags_exigidas()
+    if mapa is not None:
+        exigidas |= mapa.flags_exigidas()
     marcadas = {acao.flag for acao in _acoes(roteiros, dialogos) if isinstance(acao, MarcarFlag)}
     marcadas |= dialogos.flags_marcadas() | cenas.flags_marcadas()
     if casos is not None:
@@ -178,6 +184,6 @@ explicacao = "exemplo.e"
 
 def test_toda_flag_e_todo_item_exigidos_nos_dados_do_jogo_tem_origem():
     dados = (carregar_roteiros(), carregar_dialogos(), carregar_cenas())
-    extras = (carregar_fichas(), carregar_checagem(), carregar_materia())
+    extras = (carregar_fichas(), carregar_checagem(), carregar_materia(), carregar_mapa())
     assert flags_sem_origem(*dados, *extras) == []
     assert itens_sem_origem(*dados) == []
