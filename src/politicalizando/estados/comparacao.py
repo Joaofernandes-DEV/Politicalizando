@@ -113,6 +113,10 @@ class EstadoComparacao(Estado):
             self.atual = (self.atual + passo) % len(self.propostas)
             self.rolagem = 0
 
+    def ao_fechar(self) -> None:
+        """Fechar a janela daqui salva como na cena (se nada estiver bloqueado)."""
+        self.tela_cena.ao_fechar()
+
     def fechar(self) -> None:
         """Volta para a cena e deixa o roteiro que abriu a tela continuar."""
         self.partida.concluir_tela()
