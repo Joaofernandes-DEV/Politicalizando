@@ -3,7 +3,7 @@ import dataclasses
 import pytest
 
 from politicalizando.conteudo import carregar_roteiros
-from politicalizando.dominio.acoes import DarItem, Esperar, Fala, MarcarFlag, TrocarCena
+from politicalizando.dominio.acoes import AbrirTela, DarItem, Esperar, Fala, MarcarFlag, TrocarCena
 from politicalizando.dominio.diretor import Diretor
 from politicalizando.dominio.estado_jogo import EstadoJogo
 from politicalizando.dominio.roteiro import RoteiroInvalido, Roteiros, Sequencia
@@ -143,3 +143,10 @@ def test_catalogo_vazio_nao_usa_textos():
 
 def test_arquivo_do_jogo_carrega_sem_erro():
     assert isinstance(carregar_roteiros(), Roteiros)
+
+
+def test_passo_abrir_tela():
+    roteiros = Roteiros.de_toml('exemplo.quadro = [{ abrir_tela = "comparacao" }]')
+    assert roteiros["exemplo.quadro"].acoes == (AbrirTela("comparacao"),)
+    with pytest.raises(RoteiroInvalido, match="tela desconhecida"):
+        Roteiros.de_toml('exemplo.quadro = [{ abrir_tela = "loja" }]')

@@ -2,9 +2,10 @@
 
 As ações instantâneas (`MarcarFlag`, `DarItem`, `TrocarCena`) são aplicadas no estado na hora,
 para que o roteiro já veja o resultado na linha seguinte. Nas ações de espera, o diretor para e
-aguarda: `confirmar()` encerra uma `Fala`, `escolher()` responde uma `Escolha` e `atualizar()`
-desconta o tempo de um `Esperar`. Enquanto há sequência rodando, `ocupado` é `True`: o jogo
-bloqueia o input e o autosave (`autosalvar(estado, bloqueado=diretor.ocupado)`).
+aguarda: `confirmar()` encerra uma `Fala`, `escolher()` responde uma `Escolha`, `atualizar()`
+desconta o tempo de um `Esperar` e `concluir_tela()` encerra um `AbrirTela` (a tela fechou).
+Enquanto há sequência rodando, `ocupado` é `True`: o jogo bloqueia o input e o autosave
+(`autosalvar(estado, bloqueado=diretor.ocupado)`).
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ from __future__ import annotations
 from collections.abc import Generator
 
 from politicalizando.dominio.acoes import (
+    AbrirTela,
     AcaoDeEspera,
     DarItem,
     Escolha,
@@ -53,6 +55,13 @@ class Diretor:
     def confirmar(self) -> bool:
         """Encerra a `Fala` atual (tecla ou clique); devolve `False` se não há fala esperando."""
         if not isinstance(self._acao, Fala):
+            return False
+        self._avancar(None)
+        return True
+
+    def concluir_tela(self) -> bool:
+        """Encerra o `AbrirTela` atual (a tela fechou); `False` se não há tela esperando."""
+        if not isinstance(self._acao, AbrirTela):
             return False
         self._avancar(None)
         return True
@@ -107,7 +116,7 @@ class Diretor:
             case Esperar(segundos=segundos):
                 self._acao, self._restante = acao, segundos
                 return True
-            case Fala() | Escolha():
+            case Fala() | Escolha() | AbrirTela():
                 self._acao = acao
                 return True
             case _:

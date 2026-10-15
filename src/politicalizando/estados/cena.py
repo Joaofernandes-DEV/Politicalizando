@@ -9,6 +9,9 @@ As regras da partida (input bloqueado, entrada da cena, hora do autosave) ficam 
 - mapa: depois de liberado, o botão Mapa no canto e a tecla M abrem o mapa (J1);
 - caderno: o botão Caderno no canto e a tecla C abrem o caderno, desde o início (J6).
 
+Quando um roteiro pede `AbrirTela`, a tela de cena abre a tela pedida (ex.: a comparação de
+propostas); ao fechar, ela devolve a vez à cena e o roteiro continua.
+
 Enquanto a partida está ocupada, o input vai só para a caixa de diálogo.
 """
 
@@ -17,11 +20,12 @@ from __future__ import annotations
 import pygame
 
 from politicalizando.config import LARGURA_TELA, Paleta
-from politicalizando.dominio.acoes import Fala
+from politicalizando.dominio.acoes import AbrirTela, Fala
 from politicalizando.dominio.cenas import Objeto, Verbo
 from politicalizando.dominio.partida import Partida
 from politicalizando.estados.base import Estado
 from politicalizando.estados.caderno import EstadoCaderno
+from politicalizando.estados.comparacao import EstadoComparacao
 from politicalizando.estados.mapa import EstadoMapa
 from politicalizando.jogo import Jogo
 from politicalizando.persistencia import autosalvar
@@ -29,6 +33,9 @@ from politicalizando.ui import teclas
 from politicalizando.ui.caixa_dialogo import CONFIRMAR, CaixaDialogo
 from politicalizando.ui.menu_verbos import MenuVerbos
 from politicalizando.ui.texto import criar_fonte, renderizar
+
+# As telas que um roteiro pode abrir (`AbrirTela`).
+TELAS = {"comparacao": EstadoComparacao}
 
 # Na ordem das teclas 1, 2 e 3, a mesma do menu.
 VERBOS = (Verbo.OLHAR, Verbo.USAR, Verbo.FALAR)
@@ -184,7 +191,11 @@ class EstadoCena(Estado):
             self.foco = None
         if self.sob_mouse not in ids:
             self.sob_mouse = None
-        self.caixa.mostrar(self.partida.diretor.acao_atual)
+        acao = self.partida.diretor.acao_atual
+        self.caixa.mostrar(acao)
+        if isinstance(acao, AbrirTela):
+            self.menu.fechar()
+            self.jogo.trocar_estado(TELAS[acao.tela](self))
 
     def desenhar(self, tela: pygame.Surface) -> None:
         tela.fill(Paleta.FUNDO)

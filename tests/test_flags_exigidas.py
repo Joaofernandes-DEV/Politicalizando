@@ -4,7 +4,7 @@ Pega erros de digitação: uma condição com uma flag que nunca é marcada (ou 
 dado) esconderia ou mostraria uma opção, um objeto ou uma ficha para sempre. As condições vêm
 dos diálogos (`se`, `se_nao`), das cenas (`se`, `se_nao`, `se_item`, `se_nao_item`) e do
 desbloqueio das fichas (`se`), das peças da matéria (`se`, `fonte_se`) e do mapa (`se` do
-mapa e de cada local) e das entradas do caderno (`se`). As origens vêm dos
+mapa e de cada local) das entradas do caderno (`se`) e das propostas (`se`). As origens vêm dos
 roteiros, dos diálogos, das cenas (inclusive as `<cena>.visitou`) e dos casos de checagem
 (`<caso>.checou` e `<caso>.acertou`). Quando surgir um roteiro
 especial em Python que marque flags ou dê itens, a varredura de código de
@@ -21,6 +21,7 @@ from politicalizando.conteudo import (
     carregar_fichas,
     carregar_mapa,
     carregar_materia,
+    carregar_propostas,
     carregar_roteiros,
 )
 from politicalizando.dominio.acoes import Acao, DarItem, MarcarFlag
@@ -31,6 +32,7 @@ from politicalizando.dominio.dialogo import Dialogos
 from politicalizando.dominio.fichas import Fichas
 from politicalizando.dominio.mapa import Mapa
 from politicalizando.dominio.materia import Pecas
+from politicalizando.dominio.propostas import Propostas
 from politicalizando.dominio.roteiro import Roteiros
 
 
@@ -51,6 +53,7 @@ def flags_sem_origem(
     pecas: Pecas | None = None,
     mapa: Mapa | None = None,
     caderno: Caderno | None = None,
+    propostas: Propostas | None = None,
 ) -> list[str]:
     exigidas = dialogos.flags_exigidas() | cenas.flags_exigidas()
     if fichas is not None:
@@ -61,10 +64,14 @@ def flags_sem_origem(
         exigidas |= mapa.flags_exigidas()
     if caderno is not None:
         exigidas |= caderno.flags_exigidas()
+    if propostas is not None:
+        exigidas |= propostas.flags_exigidas()
     marcadas = {acao.flag for acao in _acoes(roteiros, dialogos) if isinstance(acao, MarcarFlag)}
     marcadas |= dialogos.flags_marcadas() | cenas.flags_marcadas()
     if casos is not None:
         marcadas |= casos.flags_marcadas()
+    if propostas is not None:
+        marcadas |= propostas.flags_marcadas()
     return sorted(exigidas - marcadas)
 
 
@@ -195,6 +202,7 @@ def test_toda_flag_e_todo_item_exigidos_nos_dados_do_jogo_tem_origem():
         carregar_materia(),
         carregar_mapa(),
         carregar_caderno(),
+        carregar_propostas(),
     )
     assert flags_sem_origem(*dados, *extras) == []
     assert itens_sem_origem(*dados) == []

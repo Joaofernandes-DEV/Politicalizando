@@ -8,6 +8,7 @@
 #   marcar_flag = "id.da.flag"  marca uma flag de investigação
 #   dar_item = "id_do_item"     põe um item no inventário
 #   trocar_cena = "id_da_cena"  muda a cena atual
+#   abrir_tela = "comparacao"   abre uma tela e espera o jogador fechá-la
 #
 # Exemplo:
 #

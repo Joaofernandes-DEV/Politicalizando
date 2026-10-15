@@ -1,0 +1,25 @@
+# Comparação de propostas: como cada corrente propõe resolver o problema do capítulo (J5).
+#
+# A chave é a corrente: liberalismo, conservadorismo, socialismo ou social_democracia. Todas as
+# propostas seguem o mesmo modelo, com a mesma quantidade de prós, de contras e de valores e
+# tamanho parecido (teste de equilíbrio). Os textos ficam no textos.toml, por ID.
+#
+#   se         flags que liberam a proposta (opcional), ex.: ouviu a posição do morador
+#   proposta   ID do texto da proposta (pode ser o mesmo do item 5 da ficha)
+#   pros       vantagens apontadas (lista)
+#   contras    problemas apontados (lista)
+#   valores    valores em jogo (lista)
+#
+# As propostas saem na ordem fixa das correntes e não há resposta certa (C2). Ver a comparação
+# com pelo menos duas propostas marca "comparacao.comparou" (só investigação, E1). A tela abre
+# por um roteiro ou por um objeto: { abrir_tela = "comparacao" }.
+#
+# Exemplo (estrutura só; as propostas reais entram na Fase 4, com o checklist de equilíbrio e a
+# revisão externa):
+#
+#   [propostas.liberalismo]
+#   se = ["biblioteca.morador.posicao"]
+#   proposta = "proposta.liberalismo"
+#   pros = ["proposta.liberalismo.pro.1"]
+#   contras = ["proposta.liberalismo.contra.1"]
+#   valores = ["proposta.liberalismo.valor.1"]

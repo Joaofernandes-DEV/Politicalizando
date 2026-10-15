@@ -20,6 +20,7 @@ from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass
 
 from politicalizando.dominio.acoes import (
+    AbrirTela,
     Acao,
     DarItem,
     Esperar,
@@ -37,6 +38,7 @@ _PASSOS: dict[str, Callable[[object], Acao]] = {
     "marcar_flag": MarcarFlag,
     "dar_item": DarItem,
     "trocar_cena": TrocarCena,
+    "abrir_tela": AbrirTela,
 }
 
 

@@ -12,6 +12,7 @@ from politicalizando.conteudo import (
     carregar_fichas,
     carregar_interacao,
     carregar_mapa,
+    carregar_propostas,
     carregar_textos,
 )
 
@@ -35,6 +36,7 @@ class Jogo:
         self.mapa = carregar_mapa()
         self.caderno = carregar_caderno()
         self.fichas = carregar_fichas()
+        self.propostas = carregar_propostas()
         self.estado: Estado | None = None
         self.rodando = False
 

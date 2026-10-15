@@ -123,6 +123,13 @@ nome = "teste.corredor.janela.nome"
 area = [140, 30, 60, 40]
 olhar = [{ fala = "teste.corredor.janela.olhar" }]
 
+[[cenas.teste.corredor.objetos]]
+id = "quadro"
+nome = "teste.corredor.quadro.nome"
+area = [230, 30, 60, 40]
+olhar = [{ fala = "teste.corredor.quadro.olhar" }]
+usar = [{ abrir_tela = "comparacao" }, { fala = "teste.corredor.quadro.depois" }]
+
 # O pátio só se alcança pelo mapa.
 [cenas.teste.patio]
 

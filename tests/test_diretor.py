@@ -1,6 +1,7 @@
 import pytest
 
 from politicalizando.dominio.acoes import (
+    AbrirTela,
     DarItem,
     Escolha,
     Esperar,
@@ -252,3 +253,23 @@ def test_autosave_fica_bloqueado_enquanto_a_sequencia_roda():
     diretor.confirmar()
     assert autosalvar(estado, bloqueado=diretor.ocupado)
     assert existe_save()
+
+
+def test_abrir_tela_espera_a_tela_fechar():
+    def roteiro(estado: EstadoJogo) -> Roteiro:
+        yield AbrirTela("comparacao")
+        yield MarcarFlag("exemplo.fechou")
+
+    diretor, estado = diretor_com(roteiro)
+    assert diretor.acao_atual == AbrirTela("comparacao")
+    assert diretor.ocupado
+    assert not diretor.confirmar(), "uma tela não fecha como uma fala"
+    assert diretor.concluir_tela()
+    assert not diretor.ocupado
+    assert estado.tem_flag("exemplo.fechou")
+
+
+def test_concluir_tela_sem_tela_esperando_nao_faz_nada():
+    diretor, _ = diretor_com(com_escolha)
+    assert not diretor.concluir_tela()
+    assert diretor.acao_atual == Fala("exemplo.guia.ola")
