@@ -8,6 +8,13 @@ depois, casos de checagem), no formato:
       url = "https://...", acesso = 2026-10-14 }
 
 É preciso `editora` ou `url`; uma `url` exige `https://` e a data de `acesso` (data TOML).
+
+Uma **fonte do jogo** (`do_jogo = true`) é um documento que só existe em Novátria, como o
+relatório da biblioteca ou o orçamento do município (D14, D16). Ela aparece marcada assim para
+quem joga e dispensa `editora` e `url`. Nunca serve para o que fala do mundo real: as fichas,
+por exemplo, recusam fontes do jogo.
+
+    { autor = "Prefeitura de Novátria", titulo = "Orçamento de 2026", ano = 2026, do_jogo = true }
 """
 
 from __future__ import annotations
@@ -18,7 +25,7 @@ from dataclasses import dataclass
 ANO_MINIMO = 1000
 ANO_MAXIMO = 2100
 
-_CHAVES = frozenset({"autor", "titulo", "ano", "editora", "url", "acesso"})
+_CHAVES = frozenset({"autor", "titulo", "ano", "editora", "url", "acesso", "do_jogo"})
 
 
 @dataclass(frozen=True)
@@ -29,6 +36,8 @@ class Fonte:
     editora: str | None = None
     url: str | None = None
     acesso: datetime.date | None = None
+    # Documento fictício de Novátria (D14); dispensa editora e url.
+    do_jogo: bool = False
 
     def __post_init__(self) -> None:
         for nome in ("autor", "titulo"):
@@ -39,7 +48,9 @@ class Fonte:
             raise ValueError(f"ano inválido: {self.ano!r}")
         if not ANO_MINIMO <= self.ano <= ANO_MAXIMO:
             raise ValueError(f"ano fora de {ANO_MINIMO} a {ANO_MAXIMO}: {self.ano}")
-        if self.editora is None and self.url is None:
+        if not isinstance(self.do_jogo, bool):
+            raise ValueError(f"'do_jogo' deveria ser true ou false: {self.do_jogo!r}")
+        if self.editora is None and self.url is None and not self.do_jogo:
             raise ValueError("a fonte precisa de 'editora' ou 'url'")
         if self.editora is not None and (
             not isinstance(self.editora, str) or not self.editora.strip()
