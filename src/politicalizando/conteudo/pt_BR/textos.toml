@@ -36,6 +36,97 @@ texto = "Usar"
 [verbo.falar]
 texto = "Falar"
 
+# Caderno (J6, J13).
+
+[caderno.botao]
+texto = "Caderno"
+
+[caderno.dica]
+texto = "Setas: abas e rolagem. Enter: abrir. Esc: voltar."
+
+[caderno.vazio]
+texto = "Nada anotado aqui ainda."
+
+[caderno.aba.fichas]
+texto = "Fichas"
+
+[caderno.aba.conversas]
+texto = "Conversas"
+
+[caderno.aba.fontes]
+texto = "Fontes"
+
+[caderno.aba.itens]
+texto = "Itens"
+
+[caderno.origem.fato]
+texto = "Fato documentado"
+
+[caderno.origem.interpretacao]
+texto = "Interpretação"
+
+[caderno.fonte.do_jogo]
+texto = "fonte do jogo"
+
+[caderno.fonte.acesso]
+texto = "acesso em"
+
+# Nomes das correntes e itens da ficha (J3), na ordem do modelo.
+
+[corrente.liberalismo]
+texto = "Liberalismo"
+
+[corrente.conservadorismo]
+texto = "Conservadorismo"
+
+[corrente.socialismo]
+texto = "Socialismo"
+
+[corrente.social_democracia]
+texto = "Social-democracia"
+
+[corrente.outras]
+texto = "Outras correntes"
+
+[ficha.item.ideia_central]
+texto = "Ideia central"
+
+[ficha.item.valores]
+texto = "Valores"
+
+[ficha.item.estado]
+texto = "Estado"
+
+[ficha.item.mercado]
+texto = "Mercado"
+
+[ficha.item.sociedade]
+texto = "Sociedade"
+
+[ficha.item.origem]
+texto = "Origem histórica"
+
+[ficha.item.pensadores]
+texto = "Pensadores de referência"
+
+[ficha.item.proposta]
+texto = "Proposta para o problema"
+
+[ficha.item.criticas]
+texto = "Críticas"
+
+[ficha.item.critica_de]
+texto = "Crítica de:"
+
+[ficha.item.confusoes]
+texto = "Confusões de nome"
+
+[ficha.item.diferencas_internas]
+texto = "Diferenças internas"
+
+[ficha.item.fontes]
+texto = "Fontes"
+
 # Mapa (J1).
 
 [mapa.titulo]
@@ -104,14 +195,14 @@ texto = "Mesa"
 [teste.sala.mesa.olhar]
 texto = "Uma mesa comum, um pouco bamba."
 
-[teste.sala.caderno.nome]
-texto = "Caderno"
+[teste.sala.bloco.nome]
+texto = "Bloco de notas"
 
-[teste.sala.caderno.olhar]
-texto = "Um caderno com as páginas em branco."
+[teste.sala.bloco.olhar]
+texto = "Um bloco de notas com as páginas em branco."
 
-[teste.sala.caderno.pegou]
-texto = "Você guarda o caderno na mochila."
+[teste.sala.bloco.pegou]
+texto = "Você guarda o bloco de notas na mochila."
 
 [teste.sala.relogio.nome]
 texto = "Relógio"
@@ -124,6 +215,9 @@ texto = "Você dá corda no relógio e espera um pouco..."
 
 [teste.sala.relogio.tique]
 texto = "Tique-taque. Agora ele funciona."
+
+[teste.sala.relogio.placa]
+texto = "Uma placa embaixo dele diz: instalado em 1998."
 
 [teste.sala.mural.nome]
 texto = "Mural"
@@ -193,3 +287,20 @@ texto = "Corredor"
 
 [teste.mapa.patio]
 texto = "Pátio"
+
+# Caderno da cena de teste (provisório e neutro).
+
+[teste.item.bloco]
+texto = "Bloco de notas"
+
+[teste.caderno.pessoa]
+texto = "Para testar, vale olhar, usar e falar com cada objeto."
+
+[teste.caderno.mural]
+texto = "Segunda-feira é o pior dia da semana."
+
+[teste.caderno.mural_autor]
+texto = "Aviso anônimo no mural"
+
+[teste.caderno.relogio]
+texto = "O relógio da sala de testes foi instalado em 1998."
