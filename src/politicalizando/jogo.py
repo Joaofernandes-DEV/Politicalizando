@@ -41,6 +41,9 @@ class Jogo:
         self.pecas = carregar_materia()
         self.estado: Estado | None = None
         self.rodando = False
+        # "Mostrar objetos" (I8): ligado pela tecla O, vale para todas as cenas até ser
+        # desligado, inclusive depois de voltar ao título. Não vai para o save.
+        self.mostrar_objetos = False
 
     def trocar_estado(self, estado: Estado) -> None:
         self.estado = estado
@@ -49,6 +52,14 @@ class Jogo:
         """Pede o fim do loop; o pygame é encerrado ao sair de `executar`."""
         self.rodando = False
 
+    def fechar_janela(self) -> None:
+        """O X da janela: a tela atual se despede (ex.: a cena salva) e o loop acaba."""
+        try:
+            if self.estado is not None:
+                self.estado.ao_fechar()
+        finally:
+            self.encerrar()
+
     def executar(self) -> None:
         self.rodando = True
         try:
@@ -56,7 +67,7 @@ class Jogo:
                 dt = self.relogio.tick(FPS) / 1000
                 for evento in pygame.event.get():
                     if evento.type == pygame.QUIT:
-                        self.encerrar()
+                        self.fechar_janela()
                     elif self.estado is not None:
                         self.estado.tratar_evento(evento)
                 if not self.rodando:
