@@ -36,6 +36,17 @@ texto = "Usar"
 [verbo.falar]
 texto = "Falar"
 
+# Mapa (J1).
+
+[mapa.titulo]
+texto = "Mapa de Novátria"
+
+[mapa.botao]
+texto = "Mapa"
+
+[mapa.dica]
+texto = "Esc: voltar"
+
 # Recusas genéricas, quando um objeto não responde ao verbo. Nunca falam de correntes (E4).
 
 [recusa.olhar.1]
@@ -161,3 +172,24 @@ quem = "teste.pessoa"
 [teste.pessoa.ate_mais]
 texto = "Até mais!"
 quem = "teste.pessoa"
+
+[teste.patio.banco.nome]
+texto = "Banco"
+
+[teste.patio.banco.olhar]
+texto = "Um banco de madeira, à sombra."
+
+[teste.patio.arvore.nome]
+texto = "Árvore"
+
+[teste.patio.arvore.olhar]
+texto = "Uma árvore alta, com folhas secas no chão."
+
+[teste.mapa.sala]
+texto = "Sala de testes"
+
+[teste.mapa.corredor]
+texto = "Corredor"
+
+[teste.mapa.patio]
+texto = "Pátio"

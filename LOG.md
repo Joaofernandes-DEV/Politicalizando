@@ -362,3 +362,23 @@ Modelo:
 - Testes: 566 → 570 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
 - Próximo: PR `feat/mapa-de-novatria` (`J1`).
+
+### 2026-10-14 23:55 — Fase 2: mapa de Novátria
+
+**Feito:**
+- `dominio/mapa.py` e `conteudo/mapa.toml`: os locais da cidade. Cada local tem nome (texto), cena de destino, área na tela do mapa e as flags que o liberam (`se`); um local bloqueado fica escondido. O mapa também tem um `se`: antes dele, não abre. A ordem dos locais é a do arquivo (também a do teclado) e nunca segue as correntes. A validação recusa chaves erradas, áreas fora da tela e `id`, cena ou área repetidos, e `carregar_mapa` confere se as cenas de destino existem.
+- `Partida.ir_para`: vai para outra cena pelo mapa, com a entrada e o autosave de sempre; é recusado com a partida ocupada e não faz nada na cena atual.
+- Tela do mapa (`estados/mapa.py`): locais como retângulos com o nome sempre visível e o local atual marcado (borda grossa e um losango). Clique, ou Tab, setas e Enter, para ir; Esc ou M voltam sem sair do lugar.
+- Tela de cena: o botão Mapa no canto e a tecla M, só com o mapa liberado e nada em andamento. O `Jogo` carrega o mapa ao abrir.
+- Dados de teste: um pátio que só se alcança pelo mapa; o mapa abre depois de checar o mural (como o tutorial do capítulo) e o pátio aparece depois de visitar o corredor. Textos de interface: título do mapa, botão e dica.
+- Testes: domínio do mapa; `ir_para`; a tela do mapa e o botão com o driver `dummy`; o mapa entra nos testes de flags sem origem e de textos usados.
+
+**Arquivos:** `src/politicalizando/dominio/mapa.py` (novo), `src/politicalizando/dominio/partida.py`, `src/politicalizando/estados/mapa.py` (novo), `src/politicalizando/estados/cena.py`, `src/politicalizando/jogo.py`, `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/mapa.toml` (novo), `src/politicalizando/conteudo/cenas.toml`, `src/politicalizando/conteudo/pt_BR/textos.toml`, `tests/test_mapa.py` (novo), `tests/test_tela_mapa.py` (novo), `tests/test_partida.py`, `tests/test_flags_exigidas.py`, `tests/test_textos_usados.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Terceiro PR de código da Fase 2 (`J1`, `D8`, parte de `I4`). O #17 (fichas com diferenças internas) entrou na `main` pelo auto-merge; esta branch partiu do topo dele, para não haver conflito no LOG.
+- Decisões do João: o mapa abre pelo botão Mapa e pela tecla M, só depois de liberado; locais bloqueados ficam escondidos.
+- Os locais `teste` saem quando o mapa do capítulo entrar (PR `feat/capitulo-1-jogavel`), com os locais do roteiro (centro, bairros, biblioteca, prefeitura, Câmara, terminal de ônibus).
+- Testes: 570 → 608 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão (João):** o mapa bloqueado antes do mural, o botão e a tecla M depois, o pátio escondido até visitar o corredor, a ida ao pátio pelo mapa, a volta com Esc e o Continuar. A janela fechou com código 0, e o save ficou em `teste.patio`.
+- Próximo: PR `feat/caderno` (`J6`).

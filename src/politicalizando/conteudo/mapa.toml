@@ -1,0 +1,52 @@
+# Mapa de Novátria: os locais da cidade e quando cada um aparece (briefing J1, D8).
+#
+# `se` (opcional) são as flags que liberam o mapa; antes delas, o botão Mapa e a tecla M não
+# aparecem. Cada [[locais]] tem:
+#   id      nome curto, único no mapa
+#   nome    ID do texto com o nome do local, sempre visível no mapa
+#   cena    a cena para onde o local leva (precisa existir no cenas.toml)
+#   area    [x, y, largura, altura] na tela do mapa, na resolução lógica de 320×180
+#   se      flags que liberam o local (opcional); um local bloqueado fica escondido
+#
+# A ordem dos locais é a do arquivo (também a do teclado) e nunca segue as correntes.
+#
+# Exemplo:
+#
+#   se = ["praca.tutorial.checou"]
+#
+#   [[locais]]
+#   id = "biblioteca"
+#   nome = "mapa.biblioteca"
+#   cena = "biblioteca.salao"
+#   area = [40, 60, 64, 28]
+#
+#   [[locais]]
+#   id = "praca"
+#   nome = "mapa.praca"
+#   cena = "praca.centro"
+#   area = [140, 60, 64, 28]
+#   se = ["escola.editoria.missao"]
+#
+# Os locais "teste" são provisórios e neutros, da cena de teste; saem quando o mapa do capítulo
+# entrar (PR feat/capitulo-1-jogavel).
+
+se = ["teste.mural.checou"]
+
+[[locais]]
+id = "sala"
+nome = "teste.mapa.sala"
+cena = "teste.sala"
+area = [24, 56, 80, 36]
+
+[[locais]]
+id = "corredor"
+nome = "teste.mapa.corredor"
+cena = "teste.corredor"
+area = [120, 56, 80, 36]
+
+[[locais]]
+id = "patio"
+nome = "teste.mapa.patio"
+cena = "teste.patio"
+area = [216, 56, 80, 36]
+se = ["teste.corredor.visitou"]

@@ -120,3 +120,18 @@ id = "janela"
 nome = "teste.corredor.janela.nome"
 area = [140, 30, 60, 40]
 olhar = [{ fala = "teste.corredor.janela.olhar" }]
+
+# O pátio só se alcança pelo mapa.
+[cenas.teste.patio]
+
+[[cenas.teste.patio.objetos]]
+id = "banco"
+nome = "teste.patio.banco.nome"
+area = [60, 100, 70, 20]
+olhar = [{ fala = "teste.patio.banco.olhar" }]
+
+[[cenas.teste.patio.objetos]]
+id = "arvore"
+nome = "teste.patio.arvore.nome"
+area = [200, 30, 50, 100]
+olhar = [{ fala = "teste.patio.arvore.olhar" }]
