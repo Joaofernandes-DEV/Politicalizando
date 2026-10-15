@@ -4,7 +4,7 @@ Formato de `conteudo/checagem.toml` (os textos ficam no `textos.toml`, por ID):
 
     [casos.praca.cartaz]
     tipo = "manchete"
-    conteudo = "caso.praca.cartaz.texto"
+    conteudo = "caso.praca.cartaz.conteudo"
     classe = "fato"
     confere = false
     explicacao = "caso.praca.cartaz.explicacao"
