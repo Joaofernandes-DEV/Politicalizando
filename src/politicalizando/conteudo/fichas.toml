@@ -1,4 +1,4 @@
-# Fichas das correntes: o mesmo modelo de 8 itens para todas (briefing J3, seção 5).
+# Fichas das correntes: o mesmo modelo de 9 itens para todas (briefing J3, D19, seção 5).
 #
 # A chave da ficha é a corrente: liberalismo, conservadorismo, socialismo ou social_democracia.
 # Os textos ficam no textos.toml, por ID; as fontes ficam aqui, como dados. Todos os itens são
@@ -15,7 +15,9 @@
 #   criticas        6. críticas, cada uma com `texto` e `de` (outra corrente ou "outras");
 #                      pelo menos 2 origens diferentes, nunca a própria corrente
 #   confusoes       7. confusões de nome, só terminologia (lista)
-#   fontes          8. autor, titulo, ano e editora; ou url (https://) com a data de acesso
+#   diferencas_internas
+#                   8. as vertentes da corrente e no que divergem (lista, pelo menos 2)
+#   fontes          9. autor, titulo, ano e editora; ou url (https://) com a data de acesso
 #
 # Exemplo (estrutura só; os textos e as fontes reais entram na Fase 4):
 #
@@ -30,6 +32,7 @@
 #   pensadores = ["ficha.liberalismo.pensador.1"]
 #   proposta = "ficha.liberalismo.proposta"
 #   confusoes = ["ficha.liberalismo.confusao.1"]
+#   diferencas_internas = ["ficha.liberalismo.vertente.1", "ficha.liberalismo.vertente.2"]
 #
 #   [[fichas.liberalismo.criticas]]
 #   texto = "ficha.liberalismo.critica.1"
