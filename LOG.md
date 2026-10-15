@@ -301,3 +301,20 @@ Modelo:
 - Testes: 505 → 566 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão (João):** a cena de teste inteira, por mouse e por teclado: boas-vindas, verbos, recusas, caderno que some, relógio, checagem do mural, diálogo com opção de uso único, ida e volta ao corredor, Esc para o título e Continuar. A janela fechou com código 0, e o save ficou em `teste.sala`.
 - Próximo: PR `docs/roteiro-do-capitulo-1`.
+
+### 2026-10-14 23:24 — Fase 2: roteiro do capítulo 1
+
+**Feito:**
+- `docs/roteiro-capitulo-1.md` (novo): a estrutura do capítulo 1, com três atos (missão, investigação e fechamento), os locais, as personagens, a regra contra estereótipo, as quatro perguntas iguais para os quatro moradores, os casos de checagem previstos, as peças da matéria, as flags de investigação, os caminhos mínimo e completo e o que ainda está em aberto. Nenhum texto final: as falas são descritas, e os nomes ficam para o João.
+- Briefing: novas decisões D13 (organização do capítulo) e D14 (fatos da cidade fictícia em documentos do jogo, marcados como fontes do jogo; matéria sem bloqueio), situação atualizada e `docs/` na estrutura.
+- Exemplos de ID de texto terminados em `.texto` trocados no `checagem.toml`, no `roteiros.toml` e na documentação de `dominio/checagem.py`: um ID assim é lido como o texto da tabela de cima e recusado pelo leitor de textos.
+
+**Arquivos:** `docs/roteiro-capitulo-1.md` (novo), `briefing.md`, `src/politicalizando/conteudo/checagem.toml`, `src/politicalizando/conteudo/roteiros.toml`, `src/politicalizando/dominio/checagem.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Segundo PR da Fase 2 (`J1`, `J5`, `J6`, `J7` e `J11` planejados; `R2`, `R4`, `C4`, `C6`, `E1`, `E3`, `E5`). O #14 (partida e tela de cena) entrou na `main` pelo auto-merge.
+- Decisões do João: três atos; um morador por local, sem que o local ou a ocupação combinem com a corrente; fatos do problema checados em documentos fictícios do jogo, com fontes reais para o mundo real; matéria disponível sem bloqueio desde o fim do Ato 1.
+- A distribuição das correntes pelos locais é uma proposta, a confirmar pelo João no PR `feat/capitulo-1-jogavel`. A marca de fonte do jogo pede uma mudança em `dominio/fontes.py` no PR dos primeiros documentos.
+- Testes: 566 → 566 (mais 1 `xfail` esperado; só documentação e comentários). `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** nada mudou no jogo.
+- Próximo: PR `feat/mapa-de-novatria` (`J1`).
