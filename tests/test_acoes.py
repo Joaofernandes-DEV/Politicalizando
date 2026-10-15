@@ -3,6 +3,7 @@ import dataclasses
 import pytest
 
 from politicalizando.dominio.acoes import (
+    AbrirTela,
     DarItem,
     Escolha,
     Esperar,
@@ -77,3 +78,9 @@ def test_acoes_sao_imutaveis_e_comparaveis(acao):
         setattr(acao, campo, "outro")
     assert acao == dataclasses.replace(acao)
     assert hash(acao) == hash(dataclasses.replace(acao))
+
+
+def test_abrir_tela_aceita_so_telas_conhecidas():
+    assert AbrirTela("comparacao").tela == "comparacao"
+    with pytest.raises(ValueError, match="tela desconhecida"):
+        AbrirTela("loja")
