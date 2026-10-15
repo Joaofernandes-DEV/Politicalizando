@@ -415,3 +415,30 @@ Modelo:
 - Testes: 608 → 650 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão (João):** o caderno vazio desde o início, as conversas e as fontes aparecendo com a origem, o bloco de notas na aba Itens e a navegação por teclado e mouse. A janela fechou com código 0.
 - Próximo: PR `feat/comparacao-de-propostas` (`J5`).
+
+### 2026-10-15 16:46 — Fase 2: comparação de propostas
+
+**Feito:**
+- `dominio/propostas.py` e `conteudo/propostas.toml` (J5):
+  - uma proposta por corrente para o problema do capítulo: o texto da proposta, os prós, os contras e os valores em jogo;
+  - cada proposta é liberada por flags e sai sempre na ordem fixa das correntes, sem resposta certa (C2);
+  - ver a comparação com pelo menos duas propostas marca `comparacao.comparou`, só uma ação de investigação (E1).
+- Nova ação `AbrirTela` (`abrir_tela` nos roteiros e nas cenas): o roteiro abre uma tela e o diretor espera ela fechar (`concluir_tela`), como espera uma fala. A tela de cena abre a tela pedida e, ao fechar, o roteiro continua. A primeira tela é a comparação; a da matéria usa a mesma ação no próximo PR.
+- Tela de comparação (`estados/comparacao.py`):
+  - uma proposta por vez, com a posição ("1 de 2") e o aviso "Não há resposta certa";
+  - teclado: ←/→ trocam a proposta, ↑/↓ e Page Up/Page Down rolam, Esc fecha;
+  - mouse: os botões `<` e `>` trocam a proposta, e a roda rola;
+  - sem propostas liberadas, a tela mostra um aviso.
+- Cena de teste: um quadro de propostas no corredor abre a comparação. O `propostas.toml` real fica só com o formato, como o `fichas.toml`.
+- Testes de equilíbrio: as propostas precisam ter a mesma quantidade de prós, contras e valores e tamanho até 1,3×. Um `xfail` estrito exige as 4 correntes, para lembrar a Fase 4.
+- Testes: a ação e o diretor; as propostas; o equilíbrio; a tela de comparação com o driver `dummy`; as propostas entram nos testes de flags sem origem e de textos usados.
+
+**Arquivos:** `src/politicalizando/dominio/acoes.py`, `src/politicalizando/dominio/diretor.py`, `src/politicalizando/dominio/roteiro.py`, `src/politicalizando/dominio/partida.py`, `src/politicalizando/dominio/propostas.py` (novo), `src/politicalizando/estados/comparacao.py` (novo), `src/politicalizando/estados/cena.py`, `src/politicalizando/jogo.py`, `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/propostas.toml` (novo), `src/politicalizando/conteudo/roteiros.toml`, `src/politicalizando/conteudo/cenas.toml`, `src/politicalizando/conteudo/pt_BR/textos.toml`, `tests/test_acoes.py`, `tests/test_diretor.py`, `tests/test_roteiro.py`, `tests/test_propostas.py` (novo), `tests/test_tela_comparacao.py` (novo), `tests/test_equilibrio.py`, `tests/test_flags_exigidas.py`, `tests/test_textos_usados.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Quinto PR de código da Fase 2 (`J5`, `C2`, `E1`). O #19 (caderno) entrou na `main` pelo auto-merge; esta branch partiu do topo dele.
+- Decisões do João: um `propostas.toml` próprio (o texto da proposta pode ser o mesmo do item 5 da ficha); a ação genérica `abrir_tela`; o equilíbrio com a mesma quantidade de prós, contras e valores e o limite de 1,3×.
+- Enquanto a tela aberta pelo roteiro está na frente, a partida fica ocupada: o input da cena e o autosave ficam bloqueados.
+- Testes: 650 → 684 (mais 2 `xfail` esperados: fichas e propostas da Fase 4), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão (João):** o quadro de propostas no corredor, a tela de comparação vazia com o aviso, o Esc fechando a tela e o roteiro continuando, e o resto do jogo como antes. A janela fechou com código 0.
+- Próximo: PR `feat/tela-da-materia` (`J7`, `J11`).
