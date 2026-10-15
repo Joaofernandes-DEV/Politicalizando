@@ -63,6 +63,10 @@ Todo PR que cria ou altera textos, diálogos, fichas, arte ou mecânicas segue o
 - [ ] Nenhuma pessoa real é retratada de forma ofensiva; nenhum político vivo ou partido atual aparece ou é aludido.
 - [ ] Fatos verificáveis não foram tratados como "mais uma opinião" (falso equilíbrio).
 - [ ] Nenhuma flag, pontuação ou escolha mede o alinhamento ideológico do jogador.
+- [ ] Nenhuma classe, bairro, região, religião, cor ou origem é associada a uma corrente, a um defeito ou a uma virtude; cada grupo aparece com diversidade interna (C8).
+- [ ] Na história e na política, o texto separa fato documentado, interpretação (com autor e obra) e opinião de personagem (C7).
+- [ ] Figuras históricas aparecem só por fatos documentados, com fonte; depois de 1988, o texto trata de instituições, marcos legais e dados públicos, sem avaliar governos (D17).
+- [ ] Leis e instituições citadas são as reais, com fonte; o que só existe em Novátria está marcado como fonte do jogo (D14, D16).
 
 ## Referências de outros jogos
 
