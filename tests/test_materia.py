@@ -3,6 +3,7 @@ import pytest
 from politicalizando.conteudo import carregar_materia
 from politicalizando.dominio.estado_jogo import EstadoJogo
 from politicalizando.dominio.materia import (
+    FLAG_PUBLICOU,
     Avaliacao,
     Inclusao,
     MateriaInvalida,
@@ -12,6 +13,7 @@ from politicalizando.dominio.materia import (
     TipoPeca,
     avaliar,
     pecas_disponiveis,
+    publicar,
 )
 
 # Peças fictícias e neutras: só IDs de exemplo.
@@ -234,6 +236,20 @@ def test_materia_completa_tira_a_nota_maxima():
 
 def test_materia_vazia_tira_zero():
     assert nota().total == 0
+
+
+def test_publicar_avalia_e_marca_a_flag():
+    estado = estado_com("exemplo.fonte_a")
+    avaliacao = publicar(PECAS, estado, [_i("fato_a", True)])
+    assert avaliacao.fatos is B
+    assert estado.tem_flag(FLAG_PUBLICOU)
+    assert PECAS.flags_marcadas() == {FLAG_PUBLICOU}
+
+
+def test_avaliar_sem_publicar_nao_marca_nada():
+    estado = estado_com("exemplo.fonte_a")
+    avaliar(PECAS, estado, [_i("fato_a", True)])
+    assert estado.flags == {"exemplo.fonte_a"}
 
 
 # --- Matéria impossível (defeito da tela) -------------------------------------------------
