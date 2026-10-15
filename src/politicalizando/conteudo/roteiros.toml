@@ -3,7 +3,7 @@
 # Cada lista é um roteiro, e o caminho dela é o ID (minúsculas, sem acento, trechos separados
 # por ponto). Cada passo é uma tabela com exatamente uma ação:
 #
-#   fala = "id.do.texto"        mostra um texto do textos.toml e espera o jogador
+#   fala = "id.da.fala"         mostra um texto do textos.toml e espera o jogador
 #   esperar = 0.5               pausa por alguns segundos
 #   marcar_flag = "id.da.flag"  marca uma flag de investigação
 #   dar_item = "id_do_item"     põe um item no inventário

@@ -21,7 +21,7 @@
 #
 #   [casos.praca.cartaz]
 #   tipo = "manchete"
-#   conteudo = "caso.praca.cartaz.texto"
+#   conteudo = "caso.praca.cartaz.conteudo"
 #   classe = "fato"
 #   confere = false
 #   explicacao = "caso.praca.cartaz.explicacao"
@@ -29,7 +29,7 @@
 #
 #   [casos.feed.golpe_do_premio]
 #   tipo = "post"
-#   conteudo = "caso.feed.golpe_do_premio.texto"
+#   conteudo = "caso.feed.golpe_do_premio.conteudo"
 #   classe = "manipulacao"
 #   origem = "sem_lado"
 #   tecnica = "golpe"
