@@ -9,7 +9,7 @@ Os IDs vêm de duas fontes:
   (`dialogos.toml`), os nomes de objeto, as falas em linha e as recusas das cenas
   (`cenas.toml`), os itens das fichas (`fichas.toml`) e o conteúdo e a explicação dos casos
   de checagem (`checagem.toml`), as peças da matéria (`materia.toml`) e os nomes dos locais
-  do mapa (`mapa.toml`).
+  do mapa (`mapa.toml`) e as anotações e os nomes dos itens do caderno (`caderno.toml`).
 """
 
 import ast
@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 from politicalizando.conteudo import (
+    carregar_caderno,
     carregar_cenas,
     carregar_checagem,
     carregar_dialogos,
@@ -120,6 +121,7 @@ def ids_usados() -> tuple[set[str], list[str]]:
     ids |= carregar_checagem().ids_de_texto()
     ids |= carregar_materia().ids_de_texto()
     ids |= carregar_mapa().ids_de_texto()
+    ids |= carregar_caderno().ids_de_texto()
     return ids, problemas
 
 
