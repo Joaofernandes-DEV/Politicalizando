@@ -1,0 +1,62 @@
+# Caderno do jogador: anotações, fontes consultadas e nomes dos itens (briefing J6, J13, C7).
+#
+# [itens] dá o nome de cada item do inventário: item = "ID do texto". Todo item que o jogo dá
+# precisa de nome (teste).
+#
+# Cada [[entradas]] é uma anotação que aparece quando as flags de `se` estão marcadas, sempre
+# com a origem marcada:
+#   id       nome curto, único no caderno
+#   texto    ID do texto da anotação
+#   origem   opiniao (aba Conversas), fato ou interpretacao (aba Fontes)
+#   de       só em opiniao, obrigatório: ID do texto com o nome de quem disse
+#   fontes   em fato e interpretacao, obrigatórias: reais, ou do jogo (do_jogo = true) para o
+#            que só existe em Novátria (D14, D16). Numa interpretação, a fonte é o autor e a obra
+#   se       flags que liberam a entrada (opcional)
+#
+# As entradas saem na ordem do arquivo. O caderno só mostra; nunca marca flags (E1).
+#
+# Exemplo:
+#
+#   [itens]
+#   folheto = "item.folheto"
+#
+#   [[entradas]]
+#   id = "guia_posicao"
+#   texto = "caderno.guia.posicao"
+#   origem = "opiniao"
+#   de = "praca.guia.nome"
+#   se = ["praca.guia.posicao"]
+#
+#   [[entradas]]
+#   id = "orcamento"
+#   texto = "caderno.orcamento"
+#   origem = "fato"
+#   fontes = [{ autor = "Prefeitura", titulo = "Orçamento de 2026", ano = 2026, do_jogo = true }]
+#   se = ["prefeitura.portal.leu"]
+#
+# As entradas "teste" são provisórias e neutras, da cena de teste; saem quando o caderno do
+# capítulo entrar.
+
+[itens]
+bloco = "teste.item.bloco"
+
+[[entradas]]
+id = "pessoa"
+texto = "teste.caderno.pessoa"
+origem = "opiniao"
+de = "teste.sala.pessoa.nome"
+se = ["teste.pessoa.o_que_fazer"]
+
+[[entradas]]
+id = "mural"
+texto = "teste.caderno.mural"
+origem = "opiniao"
+de = "teste.caderno.mural_autor"
+se = ["teste.mural.checou"]
+
+[[entradas]]
+id = "relogio"
+texto = "teste.caderno.relogio"
+origem = "fato"
+fontes = [{ autor = "Escola de testes", titulo = "Placa do relógio da sala", ano = 1998, do_jogo = true }]
+se = ["teste.sala.relogio.leu_placa"]
