@@ -1,4 +1,4 @@
-"""Fichas das correntes: o mesmo modelo de 8 itens para todas (J3, briefing seção 5).
+"""Fichas das correntes: o mesmo modelo de 9 itens para todas (J3, D19, briefing seção 5).
 
 Formato de `conteudo/fichas.toml` (os textos ficam no `textos.toml`, por ID):
 
@@ -13,6 +13,10 @@ Formato de `conteudo/fichas.toml` (os textos ficam no `textos.toml`, por ID):
     pensadores = ["ficha.liberalismo.pensador.1"]
     proposta = "ficha.liberalismo.proposta"
     confusoes = ["ficha.liberalismo.confusao.1"]
+    diferencas_internas = [
+      "ficha.liberalismo.vertente.1",
+      "ficha.liberalismo.vertente.2",
+    ]
 
     [[fichas.liberalismo.criticas]]
     texto = "ficha.liberalismo.critica.1"
@@ -26,9 +30,10 @@ Formato de `conteudo/fichas.toml` (os textos ficam no `textos.toml`, por ID):
 
 A chave da ficha é a corrente, então há no máximo uma por corrente. Todos os itens são
 obrigatórios; as críticas vêm de pelo menos 2 origens diferentes (outras correntes ou
-"outras", para críticas de fora das 4) e nunca da própria corrente; toda ficha tem fonte. A
-ficha aparece quando as flags de `se` estão marcadas, e as desbloqueadas saem sempre na ordem
-fixa das correntes, nunca numa ordem que favoreça uma delas.
+"outras", para críticas de fora das 4) e nunca da própria corrente; as diferenças internas
+trazem pelo menos 2 vertentes, para mostrar que nenhuma corrente é um bloco único; toda ficha
+tem fonte. A ficha aparece quando as flags de `se` estão marcadas, e as desbloqueadas saem
+sempre na ordem fixa das correntes, nunca numa ordem que favoreça uma delas.
 """
 
 from __future__ import annotations
@@ -44,9 +49,10 @@ from politicalizando.dominio.fontes import Fonte, ler_fonte
 # Crítica que vem de fora das 4 correntes da V1 (ex.: ecologismo, libertarianismo).
 ORIGEM_EXTERNA = "outras"
 MINIMO_ORIGENS_DE_CRITICA = 2
+MINIMO_DE_VERTENTES = 2
 
 _ITENS_TEXTO = ("ideia_central", "estado", "mercado", "sociedade", "origem", "proposta")
-_ITENS_LISTA = ("valores", "pensadores", "confusoes")
+_ITENS_LISTA = ("valores", "pensadores", "confusoes", "diferencas_internas")
 _CHAVES_FICHA = frozenset({*_ITENS_TEXTO, *_ITENS_LISTA, "criticas", "fontes", "se"})
 _CHAVES_CRITICA = frozenset({"texto", "de"})
 
@@ -74,6 +80,8 @@ class Ficha:
     proposta: str
     criticas: tuple[Critica, ...]
     confusoes: tuple[str, ...]
+    # As vertentes da corrente e no que divergem (D19).
+    diferencas_internas: tuple[str, ...]
     fontes: tuple[Fonte, ...]
     se: frozenset[str] = frozenset()
 
@@ -93,6 +101,7 @@ class Ficha:
             self.proposta,
             *(critica.texto for critica in self.criticas),
             *self.confusoes,
+            *self.diferencas_internas,
         )
 
 
@@ -182,6 +191,11 @@ def _ficha(corrente: str, dados: object) -> Ficha:
         nome: tuple(_id(f"{onde}, {nome}", item) for item in _lista(f"{onde}, {nome}", dados[nome]))
         for nome in _ITENS_LISTA
     }
+    if len(set(listas["diferencas_internas"])) < MINIMO_DE_VERTENTES:
+        raise ValueError(
+            f"{onde}: as diferenças internas precisam de pelo menos {MINIMO_DE_VERTENTES} "
+            "vertentes diferentes"
+        )
     criticas = tuple(
         _critica(corrente, f"{onde}, crítica {numero}", item)
         for numero, item in enumerate(_lista(f"{onde}, criticas", dados["criticas"]), 1)
