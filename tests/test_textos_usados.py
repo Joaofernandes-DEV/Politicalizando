@@ -7,9 +7,10 @@ Os IDs vêm de duas fontes:
   `Escolha(("id_a", "id_b"))`;
 - dos dados: as falas dos roteiros (`roteiros.toml`), as falas e opções dos diálogos
   (`dialogos.toml`), os nomes de objeto, as falas em linha e as recusas das cenas
-  (`cenas.toml`), os itens das fichas (`fichas.toml`) e o conteúdo e a explicação dos casos
-  de checagem (`checagem.toml`), as peças da matéria (`materia.toml`) e os nomes dos locais
-  do mapa (`mapa.toml`) e as anotações e os nomes dos itens do caderno (`caderno.toml`).
+  (`cenas.toml`), os itens das fichas (`fichas.toml`), o conteúdo e a explicação dos casos
+  de checagem (`checagem.toml`), as peças da matéria (`materia.toml`), os nomes dos locais
+  do mapa (`mapa.toml`), as anotações e os nomes dos itens do caderno (`caderno.toml`) e as
+  propostas (`propostas.toml`).
 """
 
 import ast
@@ -24,6 +25,7 @@ from politicalizando.conteudo import (
     carregar_fichas,
     carregar_mapa,
     carregar_materia,
+    carregar_propostas,
     carregar_roteiros,
     carregar_textos,
 )
@@ -122,6 +124,7 @@ def ids_usados() -> tuple[set[str], list[str]]:
     ids |= carregar_materia().ids_de_texto()
     ids |= carregar_mapa().ids_de_texto()
     ids |= carregar_caderno().ids_de_texto()
+    ids |= carregar_propostas().ids_de_texto()
     return ids, problemas
 
 
