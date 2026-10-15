@@ -345,3 +345,20 @@ Modelo:
 - Testes: 566 → 566 (mais 1 `xfail` esperado; só documentação). `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** nada mudou no jogo.
 - Próximo: PR `feat/ficha-diferencas-internas` (D19), depois `feat/mapa-de-novatria` (`J1`).
+
+### 2026-10-14 23:46 — Fichas com diferenças internas
+
+**Feito:**
+- `dominio/fichas.py`: o modelo da ficha passa a ter 9 itens, com o novo item obrigatório `diferencas_internas` (as vertentes da corrente e no que divergem), entre as confusões de nome e as fontes. Cada ficha precisa de pelo menos 2 vertentes diferentes. Os textos do item entram nos IDs usados e, por isso, no limite de tamanho entre as fichas (1,3×).
+- `fichas.toml`: o comentário do formato e o exemplo seguem o modelo de 9 itens.
+- Testes: o item novo é obrigatório; lista vazia, vertente única e vertente repetida são recusadas; os exemplos de ficha dos testes de fichas, de equilíbrio, de flags e de textos usados ganham o item.
+
+**Arquivos:** `src/politicalizando/dominio/fichas.py`, `src/politicalizando/conteudo/fichas.toml`, `tests/test_fichas.py`, `tests/test_equilibrio.py`, `tests/test_flags_exigidas.py`, `tests/test_textos_usados.py`, `LOG.md`.
+
+**Motivo / observações:**
+- `D19`, `C1`, `R2`: mostrar que nenhuma corrente é um bloco único, com o mesmo espaço para as 4. O #16 (visão ampliada) entrou na `main` pelo auto-merge.
+- Decisão do João: pelo menos 2 vertentes por corrente.
+- O `fichas.toml` continua só com o formato documentado; as vertentes reais entram com as fichas, na Fase 4, com fonte e revisão externa (P5).
+- Testes: 566 → 570 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** `python -m politicalizando --fechar-em 1` abriu e fechou com código 0. Nada mudou na tela, então não houve teste visual.
+- Próximo: PR `feat/mapa-de-novatria` (`J1`).

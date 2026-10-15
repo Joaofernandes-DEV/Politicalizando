@@ -120,6 +120,7 @@ origem = "exemplo.origem"
 pensadores = ["exemplo.pensador"]
 proposta = "exemplo.proposta"
 confusoes = ["exemplo.confusao"]
+diferencas_internas = ["exemplo.vertente_1", "exemplo.vertente_2"]
 criticas = [
   { texto = "exemplo.critica_1", de = "liberalismo" },
   { texto = "exemplo.critica_2", de = "outras" },
