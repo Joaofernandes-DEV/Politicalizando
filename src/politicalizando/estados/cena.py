@@ -27,6 +27,7 @@ from politicalizando.estados.base import Estado
 from politicalizando.estados.caderno import EstadoCaderno
 from politicalizando.estados.comparacao import EstadoComparacao
 from politicalizando.estados.mapa import EstadoMapa
+from politicalizando.estados.materia import EstadoMateria
 from politicalizando.jogo import Jogo
 from politicalizando.persistencia import autosalvar
 from politicalizando.ui import teclas
@@ -35,7 +36,7 @@ from politicalizando.ui.menu_verbos import MenuVerbos
 from politicalizando.ui.texto import criar_fonte, renderizar
 
 # As telas que um roteiro pode abrir (`AbrirTela`).
-TELAS = {"comparacao": EstadoComparacao}
+TELAS = {"comparacao": EstadoComparacao, "materia": EstadoMateria}
 
 # Na ordem das teclas 1, 2 e 3, a mesma do menu.
 VERBOS = (Verbo.OLHAR, Verbo.USAR, Verbo.FALAR)

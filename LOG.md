@@ -442,3 +442,31 @@ Modelo:
 - Testes: 650 → 684 (mais 2 `xfail` esperados: fichas e propostas da Fase 4), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão (João):** o quadro de propostas no corredor, a tela de comparação vazia com o aviso, o Esc fechando a tela e o roteiro continuando, e o resto do jogo como antes. A janela fechou com código 0.
 - Próximo: PR `feat/tela-da-materia` (`J7`, `J11`).
+
+### 2026-10-15 17:00 — Fase 2: tela da matéria
+
+**Feito:**
+- Tela da matéria (`estados/materia.py`), aberta por `{ abrir_tela = "materia" }` (J7):
+  - cada peça disponível tem duas caixas: **incluir** e **citar** (a fonte de um fato, ou quem disse uma opinião);
+  - o tipo da peça não aparece; um fato com a fonte ainda não conferida e uma manipulação mostram o mesmo "(fonte não conferida)";
+  - teclado: ↑/↓ escolhem a peça, ←/→ a caixa, Enter ou Espaço marcam, E entrega e Esc sai sem entregar;
+  - mouse: clique nas caixas e nos botões, e a roda rola a lista.
+- **Comentário da editoria** ao entregar (J11): os três critérios (fatos com fonte, opiniões atribuídas, visões com justiça), cada um com o nível e uma explicação do que fazer melhor. Não há nota única nem rótulo (E1, E2).
+- Depois do comentário, R reescreve (as escolhas ficam) e P publica. Dá para reescrever quantas vezes quiser.
+- `dominio/materia.py`: `publicar` avalia a versão final e marca `materia.publicou`, a flag que vai encerrar o capítulo. Avaliar sem publicar não marca nada.
+- `AbrirTela` aceita a tela `materia`. O `Jogo` carrega as peças ao abrir.
+- Cena de teste: uma máquina de escrever na sala abre a matéria. Três peças neutras: o fato do relógio (a fonte libera ao ler a placa), a opinião do mural e um caça-cliques sobre relógios como armadilha.
+- Textos: rótulos da tela, os três níveis e as nove explicações, que falam do método e nunca de correntes.
+- Testes: a publicação e a flag; a tela com o driver `dummy` (incluir, citar, citar bloqueado, boato pesando nos fatos, entregar, reescrever, publicar, Esc, aviso sem peças); e um teste de que nenhum texto da matéria cita uma corrente.
+
+**Arquivos:** `src/politicalizando/dominio/materia.py`, `src/politicalizando/dominio/acoes.py`, `src/politicalizando/estados/materia.py` (novo), `src/politicalizando/estados/cena.py`, `src/politicalizando/jogo.py`, `src/politicalizando/conteudo/materia.toml`, `src/politicalizando/conteudo/cenas.toml`, `src/politicalizando/conteudo/pt_BR/textos.toml`, `tests/test_tela_materia.py` (novo), `tests/test_materia.py`, `tests/test_equilibrio.py`, `tests/test_flags_exigidas.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Sexto PR de código da Fase 2 (`J7`, `J11`, `E1`, `E2`). O #20 (comparação de propostas) entrou na `main` pelo auto-merge.
+- Decisões do João: reescrever quantas vezes quiser antes de publicar; o tipo da peça escondido; os controles propostos.
+- Na cena de teste, "Visões com justiça" sempre fica em "precisa melhorar", porque nenhuma peça de teste tem corrente. O caso com correntes está coberto pelos testes da Fase 1.
+- A tela de fim do capítulo, liberada por `materia.publicou`, fica para o PR do capítulo jogável.
+- Durante o PR, os testes da tela pegaram um erro na posição do botão Publicar, corrigido antes do teste à mão.
+- Testes: 684 → 698 (mais 2 `xfail` esperados), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão (João):** a máquina de escrever abrindo a matéria, as peças sem o tipo, a citação bloqueada até ler a placa, entregar, o comentário da editoria, reescrever e publicar. A janela fechou com código 0.
+- Próximo: PR `feat/mostrar-objetos` (`I8`) e revisão do teclado.

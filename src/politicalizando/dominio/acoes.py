@@ -91,7 +91,7 @@ class TrocarCena:
 
 
 # Telas que um roteiro pode abrir; cada uma é desenhada por um estado do jogo.
-TELAS = ("comparacao",)
+TELAS = ("comparacao", "materia")
 
 
 @dataclass(frozen=True)

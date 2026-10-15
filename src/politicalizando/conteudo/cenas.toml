@@ -102,6 +102,13 @@ area = [70, 24, 48, 32]
 olhar = { checagem = "teste.mural" }
 
 [[cenas.teste.sala.objetos]]
+id = "maquina"
+nome = "teste.sala.maquina.nome"
+area = [150, 134, 30, 18]
+olhar = [{ fala = "teste.sala.maquina.olhar" }]
+usar = [{ abrir_tela = "materia" }]
+
+[[cenas.teste.sala.objetos]]
 id = "pessoa"
 nome = "teste.sala.pessoa.nome"
 area = [210, 58, 22, 70]

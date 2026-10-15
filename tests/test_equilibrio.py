@@ -68,6 +68,14 @@ def test_e4_recusa_neutra_passa():
     assert recusas_que_citam_correntes({"exemplo.recusa"}, textos) == []
 
 
+def test_comentarios_da_editoria_nunca_falam_de_correntes():
+    """Os comentários da matéria avaliam o método, nunca a posição (E1, E2)."""
+    textos = carregar_textos()
+    comentarios = {id_texto for id_texto in textos if id_texto.startswith("materia.")}
+    assert comentarios, "os textos da matéria sumiram?"
+    assert recusas_que_citam_correntes(comentarios, textos) == []
+
+
 def test_e4_recusas_do_jogo_nunca_falam_de_correntes():
     recusas = set().union(*carregar_cenas().recusas.values())
     assert recusas_que_citam_correntes(recusas, carregar_textos()) == []

@@ -156,6 +156,87 @@ texto = "Valores em jogo"
 [comparacao.dica]
 texto = "Setas: propostas e rolagem. Esc: voltar."
 
+# Matéria e comentário da editoria (J7, J11). Os comentários falam do método, nunca de
+# correntes, e não dão nota única nem rótulo (E1).
+
+[materia.titulo]
+texto = "Matéria para o jornal do grêmio"
+
+[materia.instrucao]
+texto = "Escolha o que entra na matéria e o que vai citado."
+
+[materia.vazio]
+texto = "Ainda não há nada para a matéria. Investigue a cidade primeiro."
+
+[materia.citar_fonte]
+texto = "citar a fonte"
+
+[materia.citar_quem]
+texto = "dizer quem disse"
+
+[materia.sem_fonte]
+texto = "fonte não conferida"
+
+[materia.entregar]
+texto = "Entregar (E)"
+
+[materia.dica]
+texto = "Esc: sair"
+
+[materia.comentario]
+texto = "Comentário da editoria"
+
+[materia.reescrever]
+texto = "Reescrever (R)"
+
+[materia.publicar]
+texto = "Publicar (P)"
+
+[materia.criterio.fatos]
+texto = "Fatos com fonte"
+
+[materia.criterio.atribuicao]
+texto = "Opiniões atribuídas"
+
+[materia.criterio.justica]
+texto = "Visões com justiça"
+
+[materia.nivel.precisa_melhorar]
+texto = "precisa melhorar"
+
+[materia.nivel.em_parte]
+texto = "em parte"
+
+[materia.nivel.bem_feito]
+texto = "bem feito"
+
+[materia.explica.fatos.bem_feito]
+texto = "Todo fato da matéria tem a fonte citada."
+
+[materia.explica.fatos.em_parte]
+texto = "Parte dos fatos ficou sem fonte. Confira a fonte antes de afirmar algo."
+
+[materia.explica.fatos.precisa_melhorar]
+texto = "A maior parte do que a matéria afirma ficou sem fonte, ou nenhum fato entrou. Algo que parece fato pode não ser: confira antes de usar."
+
+[materia.explica.atribuicao.bem_feito]
+texto = "Toda opinião diz quem a defendeu."
+
+[materia.explica.atribuicao.em_parte]
+texto = "Algumas opiniões aparecem sem dizer de quem são."
+
+[materia.explica.atribuicao.precisa_melhorar]
+texto = "As opiniões aparecem como se fossem do jornal, ou nenhuma opinião entrou. Diga sempre quem disse."
+
+[materia.explica.justica.bem_feito]
+texto = "As visões que você ouviu aparecem de forma equilibrada."
+
+[materia.explica.justica.em_parte]
+texto = "Algumas visões que você ouviu ficaram de fora ou com menos espaço que as outras."
+
+[materia.explica.justica.precisa_melhorar]
+texto = "A matéria traz menos de duas visões diferentes. Ouça quem pensa diferente e dê espaço a cada visão."
+
 # Mapa (J1).
 
 [mapa.titulo]
@@ -344,3 +425,20 @@ texto = "Um quadro para comparar propostas lado a lado."
 
 [teste.corredor.quadro.depois]
 texto = "Você se afasta do quadro."
+
+# Matéria da cena de teste (provisória e neutra).
+
+[teste.sala.maquina.nome]
+texto = "Máquina de escrever"
+
+[teste.sala.maquina.olhar]
+texto = "Uma máquina de escrever para a matéria do jornal do grêmio."
+
+[teste.materia.relogio]
+texto = "O relógio da sala de testes foi instalado em 1998."
+
+[teste.materia.mural]
+texto = "Segunda-feira é o pior dia da semana."
+
+[teste.materia.boato]
+texto = "URGENTE: relógios de parede estão sumindo das escolas! Clique e descubra."

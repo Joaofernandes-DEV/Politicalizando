@@ -72,6 +72,8 @@ def flags_sem_origem(
         marcadas |= casos.flags_marcadas()
     if propostas is not None:
         marcadas |= propostas.flags_marcadas()
+    if pecas is not None:
+        marcadas |= pecas.flags_marcadas()
     return sorted(exigidas - marcadas)
 
 
