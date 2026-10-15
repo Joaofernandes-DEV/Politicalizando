@@ -2,8 +2,8 @@
 
 Aqui ficam o E1 e o E2 (a avaliação da matéria não tem rótulo, e trocar as correntes de lugar
 não muda a nota), o E3 (mesma estrutura de diálogo por corrente), o E4 (recusas sem correntes),
-o E5 (manipulação distribuída por igual) e o equilíbrio das fichas (mesmo modelo, tamanho
-parecido, as 4 correntes).
+o E5 (manipulação distribuída por igual) e o equilíbrio das fichas e das propostas (mesmo
+modelo, mesma quantidade, tamanho parecido, as 4 correntes).
 """
 
 from collections import Counter
@@ -17,6 +17,7 @@ from politicalizando.conteudo import (
     carregar_checagem,
     carregar_dialogos,
     carregar_fichas,
+    carregar_propostas,
     carregar_textos,
 )
 from politicalizando.dominio.checagem import SEM_LADO, Casos, Classe
@@ -25,6 +26,7 @@ from politicalizando.dominio.dialogo import FIM, Dialogo, Dialogos
 from politicalizando.dominio.estado_jogo import EstadoJogo
 from politicalizando.dominio.fichas import Fichas
 from politicalizando.dominio.materia import Avaliacao, Inclusao, Pecas, avaliar
+from politicalizando.dominio.propostas import Propostas
 from politicalizando.dominio.textos import Textos
 
 # A ficha mais longa pode ter no máximo 1,3× os caracteres da mais curta.
@@ -152,6 +154,79 @@ def test_fichas_do_jogo_tem_tamanho_parecido():
 )
 def test_ha_uma_ficha_para_cada_uma_das_4_correntes():
     assert list(carregar_fichas()) == list(CORRENTES)
+
+
+# --- Propostas: mesmo modelo, mesma quantidade e tamanho parecido (J5) ---------------------
+
+
+def desequilibrio_das_propostas(propostas: Propostas, textos: Textos) -> str | None:
+    """Uma mensagem se as propostas não têm o mesmo espaço (quantidade e tamanho)."""
+    quantidades = {
+        corrente: (len(proposta.pros), len(proposta.contras), len(proposta.valores))
+        for corrente, proposta in propostas.items()
+    }
+    if len(set(quantidades.values())) > 1:
+        return f"quantidades diferentes de prós, contras e valores: {quantidades}"
+    tamanhos = {
+        corrente: sum(len(textos[id_texto].texto) for id_texto in proposta.ids_de_texto())
+        for corrente, proposta in propostas.items()
+    }
+    if len(tamanhos) < 2:
+        return None
+    maior = max(tamanhos, key=tamanhos.get)
+    menor = min(tamanhos, key=tamanhos.get)
+    if tamanhos[maior] > LIMITE_DE_TAMANHO_DAS_FICHAS * tamanhos[menor]:
+        return f"{maior} ({tamanhos[maior]}) longa demais perto de {menor}: {tamanhos}"
+    return None
+
+
+def _propostas_e_textos(
+    tamanhos: dict[str, int], contras: dict[str, int] | None = None
+) -> tuple[Propostas, Textos]:
+    propostas, textos = [], []
+    for corrente, tamanho in tamanhos.items():
+        quantos = (contras or {}).get(corrente, 1)
+        lista = ", ".join(f'"exemplo.{corrente}.x"' for _ in range(quantos))
+        propostas.append(
+            f'[propostas.{corrente}]\nproposta = "exemplo.{corrente}.proposta"\n'
+            f'pros = ["exemplo.{corrente}.x"]\ncontras = [{lista}]\n'
+            f'valores = ["exemplo.{corrente}.x"]\n'
+        )
+        textos.append(
+            f'[exemplo.{corrente}.proposta]\ntexto = "{"a" * tamanho}"\n'
+            f'[exemplo.{corrente}.x]\ntexto = "b"\n'
+        )
+    return Propostas.de_toml("".join(propostas)), Textos.de_toml("".join(textos))
+
+
+def test_propostas_equilibradas_passam():
+    propostas, textos = _propostas_e_textos({"liberalismo": 100, "socialismo": 120})
+    assert desequilibrio_das_propostas(propostas, textos) is None
+
+
+def test_proposta_com_mais_contras_e_acusada():
+    propostas, textos = _propostas_e_textos(
+        {"liberalismo": 100, "socialismo": 100}, contras={"socialismo": 2}
+    )
+    assert "quantidades diferentes" in desequilibrio_das_propostas(propostas, textos)
+
+
+def test_proposta_muito_mais_longa_e_acusada():
+    propostas, textos = _propostas_e_textos({"liberalismo": 200, "socialismo": 100})
+    assert desequilibrio_das_propostas(propostas, textos).startswith("liberalismo")
+
+
+def test_propostas_do_jogo_estao_equilibradas():
+    assert desequilibrio_das_propostas(carregar_propostas(), carregar_textos()) is None
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="As propostas reais entram na Fase 4. Quando as 4 chegarem, este teste passa e o "
+    "xfail estrito acusa: remova a marcação para o teste virar obrigatório.",
+)
+def test_ha_uma_proposta_para_cada_uma_das_4_correntes():
+    assert list(carregar_propostas()) == list(CORRENTES)
 
 
 # --- E3: mesma estrutura de diálogo para cada corrente --------------------------------------
