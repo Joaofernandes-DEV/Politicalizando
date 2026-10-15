@@ -210,6 +210,8 @@ def _ficha(corrente: str, dados: object) -> Ficha:
         ler_fonte(item, f"{onde}, fonte {numero}")
         for numero, item in enumerate(_lista(f"{onde}, fontes", dados["fontes"]), 1)
     )
+    if any(fonte.do_jogo for fonte in fontes):
+        raise ValueError(f"{onde}: as fichas falam do mundo real e não usam fontes do jogo")
     se = dados.get("se", [])
     if not isinstance(se, list):
         raise ValueError(f"{onde}, se: deveria ser uma lista de flags")

@@ -66,6 +66,12 @@ def test_ficha_completa_carrega_com_os_9_itens():
     assert ficha.se == {"exemplo.socialismo.desbloqueio"}
 
 
+def test_ficha_recusa_fonte_do_jogo():
+    fonte = '[{ autor = "Prefeitura", titulo = "Relatório", ano = 2026, do_jogo = true }]'
+    with pytest.raises(FichaInvalida, match="não usam fontes do jogo"):
+        Fichas.de_toml(_trocar("fontes", f"fontes = {fonte}"))
+
+
 def test_ficha_sem_se_ja_comeca_desbloqueada():
     ficha = Fichas.de_toml(ficha_toml("liberalismo", sem=("se",)))["liberalismo"]
     assert ficha.se == frozenset()

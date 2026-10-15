@@ -382,3 +382,36 @@ Modelo:
 - Testes: 570 → 608 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão (João):** o mapa bloqueado antes do mural, o botão e a tecla M depois, o pátio escondido até visitar o corredor, a ida ao pátio pelo mapa, a volta com Esc e o Continuar. A janela fechou com código 0, e o save ficou em `teste.patio`.
 - Próximo: PR `feat/caderno` (`J6`).
+
+### 2026-10-15 16:33 — Fase 2: caderno do jogador
+
+**Feito:**
+- `dominio/caderno.py` e `conteudo/caderno.toml`: as anotações do caderno, cada uma liberada por flags e com a origem marcada (J13, C7):
+  - **opinião** leva `de`, o nome de quem disse;
+  - **fato** leva fontes reais ou do jogo;
+  - **interpretação** leva fontes com o autor e a obra.
+
+  O arquivo também dá o nome de cada item do inventário. A validação recusa origem sem os campos que ela pede, `de` em fato, fontes em opinião e entradas repetidas. O caderno nunca marca flags (E1).
+- `dominio/fontes.py`: a marca de **fonte do jogo** (`do_jogo = true`) para documentos que só existem em Novátria (D14, D16). Ela dispensa editora e URL, e as fichas a recusam, porque falam do mundo real.
+- Tela do caderno (`estados/caderno.py`):
+  - abas Fichas, Conversas, Fontes e Itens;
+  - as fichas desbloqueadas saem na ordem fixa das correntes e abrem com os 9 itens e rolagem;
+  - a origem e a fonte aparecem em cada anotação, com "(fonte do jogo)" quando é o caso;
+  - teclado: ←/→ ou 1 a 4 trocam a aba, ↑/↓ e Page Up/Page Down rolam, Enter abre a ficha, e Esc ou C fecham;
+  - mouse: clique na aba ou na ficha, e a roda rola.
+- Tela de cena: botão Caderno no canto e tecla C, desde o início; o botão Mapa fica ao lado. O `Jogo` carrega o caderno e as fichas ao abrir.
+- Cena de teste: o item "caderno" passa a se chamar "bloco de notas", para não confundir com o caderno do jogo. O relógio termina mostrando uma placa, que vira um fato com fonte do jogo. Duas opiniões entram no caderno (a da pessoa de testes e a do mural).
+- Textos de interface: abas, origens, "fonte do jogo", aviso de caderno vazio, nomes das correntes e títulos dos itens da ficha.
+- Testes: domínio do caderno; a fonte do jogo; a recusa nas fichas; todo item que o jogo dá tem nome no caderno; a tela do caderno com o driver `dummy`; o caderno entra nos testes de flags sem origem e de textos usados.
+
+**Arquivos:** `src/politicalizando/dominio/caderno.py` (novo), `src/politicalizando/dominio/fontes.py`, `src/politicalizando/dominio/fichas.py`, `src/politicalizando/estados/caderno.py` (novo), `src/politicalizando/estados/cena.py`, `src/politicalizando/jogo.py`, `src/politicalizando/conteudo/__init__.py`, `src/politicalizando/conteudo/caderno.toml` (novo), `src/politicalizando/conteudo/cenas.toml`, `src/politicalizando/conteudo/pt_BR/textos.toml`, `tests/test_caderno.py` (novo), `tests/test_tela_caderno.py` (novo), `tests/test_fontes.py`, `tests/test_fichas.py`, `tests/test_flags_exigidas.py`, `tests/test_textos_usados.py`, `LOG.md`.
+
+**Motivo / observações:**
+- Quarto PR de código da Fase 2 (`J6`, `J13`, `D14`; prepara `J3` na tela). O #18 (mapa) entrou na `main` pelo auto-merge.
+- Decisões do João: anotações escritas em dados, com a origem marcada; tecla C e botão Caderno desde o início; a marca de fonte do jogo neste PR; o item de teste renomeado para bloco de notas.
+- A aba Fichas fica vazia no jogo real até as fichas da Fase 4. A tela da ficha aberta foi testada com fichas de exemplo.
+- Um item de um save antigo que não tem nome no caderno fica de fora da aba Itens, em vez de quebrar a tela.
+- Pendência: um ID de texto terminado em `.texto` é recusado pelo leitor de textos com uma mensagem confusa (aconteceu de novo nos testes deste PR). Vale um PR pequeno para explicar o erro.
+- Testes: 608 → 650 (mais 1 `xfail` esperado), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão (João):** o caderno vazio desde o início, as conversas e as fontes aparecendo com a origem, o bloco de notas na aba Itens e a navegação por teclado e mouse. A janela fechou com código 0.
+- Próximo: PR `feat/comparacao-de-propostas` (`J5`).
