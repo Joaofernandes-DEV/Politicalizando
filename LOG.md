@@ -318,3 +318,30 @@ Modelo:
 - Testes: 566 → 566 (mais 1 `xfail` esperado; só documentação e comentários). `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão:** nada mudou no jogo.
 - Próximo: PR `feat/mapa-de-novatria` (`J1`).
+
+### 2026-10-14 23:42 — Visão ampliada: Novátria brasileira
+
+**Feito:**
+- Briefing:
+  - visão geral com o foco na política brasileira, o "como ensina" (problemas concretos, quem decide o quê, história por documentos e personagens) e a V1 de 30 a 40 minutos;
+  - riscos novos: R10 (história como versão única), R11 (estereótipos sociais) e R12 (conteúdo recente lido como avaliação de governos);
+  - premissa e J1 com Novátria brasileira e itens novos: J12 (política brasileira na prática), J13 (origem da informação) e J14 (camada histórica);
+  - ficha com o item "Diferenças internas" e princípios novos: C7 (fato documentado, interpretação e opinião) e C8 (sem estereótipos sociais), com o C5 ampliado;
+  - decisões D15 a D19 e D6 e D13 revistas; escopo, fases e a nova seção 11 com a proposta de capítulos futuros.
+- `docs/roteiro-capitulo-1.md` reescrito:
+  - o capítulo passa pela prefeitura, pelo portal da transparência, pela Câmara (com audiência pública e pergunta do jogador), pelo terminal de ônibus e por dois bairros com condições de vida diferentes;
+  - novas seções de política municipal (com a base legal a conferir) e de camada histórica;
+  - os quatro moradores ficam em espaços públicos usados por todos;
+  - 10 casos de checagem e duração de 30 a 40 minutos.
+- CONTRIBUTING: quatro itens novos no checklist de equilíbrio. CLAUDE.md: cuidado com Novátria no Brasil real. README: nova descrição do jogo.
+
+**Arquivos:** `briefing.md`, `docs/roteiro-capitulo-1.md`, `CONTRIBUTING.md`, `CLAUDE.md`, `README.md`, `LOG.md`.
+
+**Motivo / observações:**
+- O João pediu que Novátria represente a sociedade brasileira real, com as desigualdades e os problemas concretos do país, que a história do Brasil e o funcionamento da política brasileira entrem no jogo a partir desses problemas, e que as ideologias apareçam com contexto, diferenças internas e críticas.
+- Decisões do João: a V1 continua um capítulo, ancorado na política municipal, e o resto vira roteiro de capítulos (D15); Novátria é um município fictício no Brasil real (D16); regra para pessoas reais e para o período depois de 1988 (D17); interpretação historiográfica marcada nos documentos e 4ª classe da checagem só no capítulo de história (D18); 9º item da ficha (D19).
+- A seção 11 é uma proposta: a ordem e os temas dos capítulos futuros são decididos pelo João capítulo a capítulo. A base legal da seção 3 do roteiro e os marcos históricos da seção 4 são candidatos, conferidos com fonte e com a revisão de História na Fase 4 (P5).
+- A regra contra estereótipo agora vale também para classe, bairro e região (C8). A distribuição das correntes proposta no PR anterior saiu do roteiro: ela é decidida no PR do capítulo jogável, conferindo a regra.
+- Testes: 566 → 566 (mais 1 `xfail` esperado; só documentação). `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão:** nada mudou no jogo.
+- Próximo: PR `feat/ficha-diferencas-internas` (D19), depois `feat/mapa-de-novatria` (`J1`).
