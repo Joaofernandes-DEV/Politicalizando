@@ -90,6 +90,9 @@ class Partida:
     def confirmar(self) -> bool:
         return self.diretor.confirmar()
 
+    def concluir_tela(self) -> bool:
+        return self.diretor.concluir_tela()
+
     def escolher(self, indice: int) -> bool:
         return self.diretor.escolher(indice)
 
