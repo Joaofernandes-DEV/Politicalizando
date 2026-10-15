@@ -22,5 +22,8 @@ class Estado:
     def atualizar(self, dt: float) -> None:
         """Avança a lógica da tela em `dt` segundos. Por padrão, não faz nada."""
 
+    def ao_fechar(self) -> None:
+        """Chamada quando a janela é fechada pelo X. Por padrão, não faz nada."""
+
     def desenhar(self, tela: pygame.Surface) -> None:
         """Desenha a tela inteira na superfície da resolução lógica."""
