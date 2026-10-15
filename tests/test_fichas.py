@@ -21,6 +21,10 @@ def ficha_toml(corrente: str, extra: str = "", sem: tuple[str, ...] = ()) -> str
         "pensadores": f'pensadores = ["exemplo.{corrente}.pensador"]',
         "proposta": f'proposta = "exemplo.{corrente}.proposta"',
         "confusoes": f'confusoes = ["exemplo.{corrente}.confusao"]',
+        "diferencas_internas": (
+            f'diferencas_internas = ["exemplo.{corrente}.vertente_1",'
+            f' "exemplo.{corrente}.vertente_2"]'
+        ),
         "criticas": (
             f'criticas = [{{ texto = "exemplo.{corrente}.critica_1", de = "{outras[0]}" }},'
             f' {{ texto = "exemplo.{corrente}.critica_2", de = "outras" }}]'
@@ -34,7 +38,7 @@ def ficha_toml(corrente: str, extra: str = "", sem: tuple[str, ...] = ()) -> str
     return f"[fichas.{corrente}]\n{corpo}\n{extra}\n"
 
 
-def test_ficha_completa_carrega_com_os_8_itens():
+def test_ficha_completa_carrega_com_os_9_itens():
     ficha = Fichas.de_toml(ficha_toml("socialismo"))["socialismo"]
     assert ficha.corrente == "socialismo"
     assert ficha.ideia_central == "exemplo.socialismo.ideia"
@@ -52,6 +56,10 @@ def test_ficha_completa_carrega_com_os_8_itens():
         Critica("exemplo.socialismo.critica_2", "outras"),
     )
     assert ficha.confusoes == ("exemplo.socialismo.confusao",)
+    assert ficha.diferencas_internas == (
+        "exemplo.socialismo.vertente_1",
+        "exemplo.socialismo.vertente_2",
+    )
     assert ficha.fontes == (
         Fonte(autor="Exemplo, Autor", titulo="Obra de exemplo", ano=2000, editora="Ed."),
     )
@@ -79,6 +87,7 @@ ITENS_OBRIGATORIOS = [
     "proposta",
     "criticas",
     "confusoes",
+    "diferencas_internas",
     "fontes",
 ]
 
@@ -110,6 +119,21 @@ def _trocar(item: str, linha: str, corrente: str = "conservadorismo") -> str:
         ),
         pytest.param(_trocar("valores", "valores = []"), "pelo menos um item", id="lista-vazia"),
         pytest.param(_trocar("fontes", "fontes = []"), "pelo menos um item", id="sem-fonte"),
+        pytest.param(
+            _trocar("diferencas_internas", "diferencas_internas = []"),
+            "pelo menos um item",
+            id="sem-vertentes",
+        ),
+        pytest.param(
+            _trocar("diferencas_internas", 'diferencas_internas = ["exemplo.v"]'),
+            "pelo menos 2 vertentes",
+            id="uma-vertente-so",
+        ),
+        pytest.param(
+            _trocar("diferencas_internas", 'diferencas_internas = ["exemplo.v", "exemplo.v"]'),
+            "pelo menos 2 vertentes",
+            id="vertente-repetida",
+        ),
         pytest.param(
             _trocar("ideia_central", 'ideia_central = "Ideia"'), "ideia_central", id="id-invalido"
         ),
@@ -217,12 +241,14 @@ def test_ids_de_texto_seguem_a_ordem_do_modelo():
         "exemplo.liberalismo.critica_1",
         "exemplo.liberalismo.critica_2",
         "exemplo.liberalismo.confusao",
+        "exemplo.liberalismo.vertente_1",
+        "exemplo.liberalismo.vertente_2",
     )
 
 
 def test_catalogo_junta_textos_e_flags():
     fichas = todas()
-    assert len(fichas.ids_de_texto()) == 12 * len(CORRENTES)
+    assert len(fichas.ids_de_texto()) == 14 * len(CORRENTES)
     assert fichas.flags_exigidas() == {f"exemplo.{c}.desbloqueio" for c in CORRENTES}
 
 
