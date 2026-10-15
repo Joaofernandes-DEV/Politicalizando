@@ -470,3 +470,28 @@ Modelo:
 - Testes: 684 → 698 (mais 2 `xfail` esperados), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
 - **Testado à mão (João):** a máquina de escrever abrindo a matéria, as peças sem o tipo, a citação bloqueada até ler a placa, entregar, o comentário da editoria, reescrever e publicar. A janela fechou com código 0.
 - Próximo: PR `feat/mostrar-objetos` (`I8`) e revisão do teclado.
+
+### 2026-10-15 17:20 — Fase 2: mostrar objetos e revisão do teclado
+
+**Feito:**
+- **Mostrar objetos** (I8): na tela de cena, a tecla O liga e desliga o destaque de todos os objetos visíveis, com o nome de cada um escrito junto do retângulo.
+  - Vale para todas as cenas até ser desligado, inclusive depois de voltar ao título na mesma sessão. Não vai para o save.
+  - O destaque some durante falas e escolhas e com o menu de verbos aberto, para não cobrir a caixa.
+  - O objeto com o foco do teclado ou sob o mouse ganha a borda mais grossa e o nome em destaque.
+  - `ui/rotulos.py` escolhe onde escrever cada nome: acima, abaixo, dentro (se couber), à direita ou à esquerda, sem sair da tela e evitando cobrir outro nome, outro objeto e os botões do canto.
+- **Revisão do teclado** (I4):
+  - no título, as teclas 1 e 2 (também do teclado numérico) escolhem Novo jogo e Continuar;
+  - teste de ponta a ponta só com teclado, na cena de teste real com o driver `dummy`: Novo jogo, checar o mural, o caderno, o mapa até o corredor, o quadro de propostas fechado com Esc, a volta à sala pela porta, a máquina de escrever com entregar (E) e publicar (P), Esc para o título e Continuar.
+- **Fechar a janela pelo X salva como o Esc**, se nada estiver bloqueado (`autosalvar` com `bloqueado=partida.ocupada`). Vale também com o mapa, o caderno, a comparação ou a matéria na frente. Se a gravação falhar, a janela fecha assim mesmo.
+- Textos: a dica da tecla O entrou em `teste.sala.boas_vindas.2` (cabe em 3 linhas da caixa). Os controles do README ganharam O, M, C, as teclas 1 e 2 do título e o salvamento ao fechar a janela.
+
+**Arquivos:** `src/politicalizando/ui/rotulos.py` (novo), `src/politicalizando/estados/cena.py`, `src/politicalizando/estados/titulo.py`, `src/politicalizando/estados/base.py`, `src/politicalizando/estados/mapa.py`, `src/politicalizando/estados/caderno.py`, `src/politicalizando/estados/comparacao.py`, `src/politicalizando/estados/materia.py`, `src/politicalizando/jogo.py`, `src/politicalizando/conteudo/pt_BR/textos.toml`, `tests/test_rotulos.py` (novo), `tests/test_teclado.py` (novo), `tests/test_tela_cena.py`, `README.md`, `LOG.md`.
+
+**Motivo / observações:**
+- Sétimo PR de código da Fase 2 (`I4`, `I8`). O #21 (tela da matéria) entrou na `main` pelo auto-merge; esta branch partiu da `main` atualizada.
+- O estado de "Mostrar objetos" fica no `Jogo`, e não na tela de cena, para não se perder quando se volta ao título e se continua: quem precisa do destaque não precisa ligá-lo de novo.
+- O posicionamento dos nomes fica em `ui/`, não em `dominio/`: é geometria de tela, não regra do jogo.
+- Durante o PR, os testes pegaram um nome que, empurrado para dentro da tela, cobria o próprio objeto. Agora só valem as posições que cabem na tela; as empurradas ficam como último recurso.
+- Testes: 698 → 720 (mais 2 `xfail` esperados), todos passando localmente (Windows, Python 3.11.8, pygame-ce 2.5.8), também com `--import-mode=importlib`. `ruff check` e `ruff format --check` sem apontamentos.
+- **Testado à mão (João):** a tecla O na sala e no corredor, as teclas 1 e 2 no título e fechar a janela pelo X salvando. A janela fechou com código 0.
+- Próximo: PR `feat/capitulo-1-jogavel`, que fecha a Fase 2. Ele precisa de um plano aprovado pelo João antes de começar, inclusive a distribuição das correntes pelos 4 espaços públicos (C8).
