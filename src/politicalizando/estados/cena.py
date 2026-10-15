@@ -6,7 +6,8 @@ As regras da partida (input bloqueado, entrada da cena, hora do autosave) ficam 
 - mouse: o objeto sob o cursor fica destacado e mostra o nome; o clique abre o menu de verbos;
 - teclado: Tab, Shift+Tab e as setas percorrem os objetos, Enter ou Espaço abrem o menu, 1, 2 e
   3 usam um verbo direto e Esc volta ao título (salvando, se nada estiver bloqueado);
-- mapa: depois de liberado, o botão Mapa no canto e a tecla M abrem o mapa (J1).
+- mapa: depois de liberado, o botão Mapa no canto e a tecla M abrem o mapa (J1);
+- caderno: o botão Caderno no canto e a tecla C abrem o caderno, desde o início (J6).
 
 Enquanto a partida está ocupada, o input vai só para a caixa de diálogo.
 """
@@ -20,6 +21,7 @@ from politicalizando.dominio.acoes import Fala
 from politicalizando.dominio.cenas import Objeto, Verbo
 from politicalizando.dominio.partida import Partida
 from politicalizando.estados.base import Estado
+from politicalizando.estados.caderno import EstadoCaderno
 from politicalizando.estados.mapa import EstadoMapa
 from politicalizando.jogo import Jogo
 from politicalizando.persistencia import autosalvar
@@ -44,9 +46,14 @@ class EstadoCena(Estado):
         self.sob_mouse: str | None = None
         self._menu_de: str | None = None
         self._cena: str | None = None
-        self._rotulo_mapa = renderizar(self.fonte, jogo.textos["mapa.botao"].texto, Paleta.TEXTO)
+        # Botões no canto de cima: o Caderno na ponta e o Mapa ao lado dele.
+        textos = jogo.textos
+        self._rotulo_caderno = renderizar(self.fonte, textos["caderno.botao"].texto, Paleta.TEXTO)
+        self.botao_caderno = self._rotulo_caderno.get_rect().inflate(8, 2)
+        self.botao_caderno.topright = (LARGURA_TELA - 2, 2)
+        self._rotulo_mapa = renderizar(self.fonte, textos["mapa.botao"].texto, Paleta.TEXTO)
         self.botao_mapa = self._rotulo_mapa.get_rect().inflate(8, 2)
-        self.botao_mapa.topright = (LARGURA_TELA - 2, 2)
+        self.botao_mapa.topright = (self.botao_caderno.left - 2, 2)
 
     # --- Input -------------------------------------------------------------------------------
 
@@ -68,6 +75,8 @@ class EstadoCena(Estado):
             and self.botao_mapa.collidepoint(evento.pos)
         ):
             self._abrir_mapa()
+        elif teclas.clique_esquerdo(evento) and self.botao_caderno.collidepoint(evento.pos):
+            self._abrir_caderno()
         elif teclas.clique_esquerdo(evento):
             objeto = self.partida.objeto_em(*evento.pos)
             if objeto is not None:
@@ -89,6 +98,8 @@ class EstadoCena(Estado):
         elif tecla == pygame.K_m:
             if self.mapa_liberado:
                 self._abrir_mapa()
+        elif tecla == pygame.K_c:
+            self._abrir_caderno()
         elif tecla == pygame.K_TAB:
             self._mover_foco(-1 if evento.mod & pygame.KMOD_SHIFT else 1)
         elif tecla in teclas.PROXIMO:
@@ -113,6 +124,10 @@ class EstadoCena(Estado):
     def _abrir_mapa(self) -> None:
         self.menu.fechar()
         self.jogo.trocar_estado(EstadoMapa(self))
+
+    def _abrir_caderno(self) -> None:
+        self.menu.fechar()
+        self.jogo.trocar_estado(EstadoCaderno(self))
 
     def _objeto_em_foco(self) -> Objeto | None:
         """O objeto com o foco; sem foco, o primeiro da cena (Enter já funciona de cara)."""
@@ -183,12 +198,19 @@ class EstadoCena(Estado):
             pygame.draw.rect(tela, borda, area, 1)
         if not self.partida.ocupada:
             self._desenhar_nome(tela)
+        if not self.partida.ocupada:
+            self._desenhar_botao(tela, self.botao_caderno, self._rotulo_caderno)
         if self.mapa_liberado:
-            pygame.draw.rect(tela, Paleta.FUNDO, self.botao_mapa)
-            pygame.draw.rect(tela, Paleta.TEXTO, self.botao_mapa, 1)
-            tela.blit(self._rotulo_mapa, self._rotulo_mapa.get_rect(center=self.botao_mapa.center))
+            self._desenhar_botao(tela, self.botao_mapa, self._rotulo_mapa)
         self.menu.desenhar(tela)
         self.caixa.desenhar(tela)
+
+    def _desenhar_botao(
+        self, tela: pygame.Surface, botao: pygame.Rect, rotulo: pygame.Surface
+    ) -> None:
+        pygame.draw.rect(tela, Paleta.FUNDO, botao)
+        pygame.draw.rect(tela, Paleta.TEXTO, botao, 1)
+        tela.blit(rotulo, rotulo.get_rect(center=botao.center))
 
     def _desenhar_nome(self, tela: pygame.Surface) -> None:
         """O nome do objeto sob o mouse (ou com o foco) numa faixa no alto da tela."""
