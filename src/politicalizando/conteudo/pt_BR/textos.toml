@@ -291,7 +291,7 @@ texto = "Não é bem isso."
 texto = "Esta é uma sala de testes, com retângulos no lugar da arte."
 
 [teste.sala.boas_vindas.2]
-texto = "Clique num objeto, ou use Tab e Enter. As teclas 1, 2 e 3 escolhem Olhar, Usar e Falar."
+texto = "Clique num objeto, ou use Tab e Enter. As teclas 1, 2 e 3 escolhem Olhar, Usar e Falar. A tecla O mostra todos os objetos."
 
 [teste.sala.porta.nome]
 texto = "Porta"

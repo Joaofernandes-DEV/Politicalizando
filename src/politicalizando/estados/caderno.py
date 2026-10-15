@@ -198,6 +198,10 @@ class EstadoCaderno(Estado):
             self.ficha_aberta = fichas[indice]
             self.rolagem = 0
 
+    def ao_fechar(self) -> None:
+        """Fechar a janela daqui salva como na cena (se nada estiver bloqueado)."""
+        self.tela_cena.ao_fechar()
+
     def _voltar(self) -> None:
         self.jogo.trocar_estado(self.tela_cena)
 

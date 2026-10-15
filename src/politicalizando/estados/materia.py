@@ -155,6 +155,10 @@ class EstadoMateria(Estado):
         publicar_materia(self.jogo.pecas, self.partida.estado, self.inclusoes())
         self.fechar()
 
+    def ao_fechar(self) -> None:
+        """Fechar a janela daqui salva como na cena (se nada estiver bloqueado)."""
+        self.tela_cena.ao_fechar()
+
     def fechar(self) -> None:
         self.partida.concluir_tela()
         self.jogo.trocar_estado(self.tela_cena)

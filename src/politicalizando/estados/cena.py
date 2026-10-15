@@ -6,13 +6,17 @@ As regras da partida (input bloqueado, entrada da cena, hora do autosave) ficam 
 - mouse: o objeto sob o cursor fica destacado e mostra o nome; o clique abre o menu de verbos;
 - teclado: Tab, Shift+Tab e as setas percorrem os objetos, Enter ou Espaço abrem o menu, 1, 2 e
   3 usam um verbo direto e Esc volta ao título (salvando, se nada estiver bloqueado);
+- mostrar objetos: a tecla O liga e desliga o destaque de todos os objetos visíveis, com o nome
+  de cada um junto do retângulo (I8). Vale para todas as cenas até ser desligado e some durante
+  as falas e com o menu de verbos aberto, para não cobrir a caixa;
 - mapa: depois de liberado, o botão Mapa no canto e a tecla M abrem o mapa (J1);
 - caderno: o botão Caderno no canto e a tecla C abrem o caderno, desde o início (J6).
 
 Quando um roteiro pede `AbrirTela`, a tela de cena abre a tela pedida (ex.: a comparação de
 propostas); ao fechar, ela devolve a vez à cena e o roteiro continua.
 
-Enquanto a partida está ocupada, o input vai só para a caixa de diálogo.
+Enquanto a partida está ocupada, o input vai só para a caixa de diálogo. Fechar a janela salva
+como o Esc (`ao_fechar`).
 """
 
 from __future__ import annotations
@@ -30,7 +34,7 @@ from politicalizando.estados.mapa import EstadoMapa
 from politicalizando.estados.materia import EstadoMateria
 from politicalizando.jogo import Jogo
 from politicalizando.persistencia import autosalvar
-from politicalizando.ui import teclas
+from politicalizando.ui import rotulos, teclas
 from politicalizando.ui.caixa_dialogo import CONFIRMAR, CaixaDialogo
 from politicalizando.ui.menu_verbos import MenuVerbos
 from politicalizando.ui.texto import criar_fonte, renderizar
@@ -108,6 +112,8 @@ class EstadoCena(Estado):
                 self._abrir_mapa()
         elif tecla == pygame.K_c:
             self._abrir_caderno()
+        elif tecla == pygame.K_o:
+            self.jogo.mostrar_objetos = not self.jogo.mostrar_objetos
         elif tecla == pygame.K_TAB:
             self._mover_foco(-1 if evento.mod & pygame.KMOD_SHIFT else 1)
         elif tecla in teclas.PROXIMO:
@@ -128,6 +134,11 @@ class EstadoCena(Estado):
     def mapa_liberado(self) -> bool:
         """O botão e a tecla do mapa só valem com o mapa liberado e nada em andamento."""
         return not self.partida.ocupada and self.jogo.mapa.liberado(self.partida.estado)
+
+    @property
+    def mostrando_objetos(self) -> bool:
+        """O destaque de todos os objetos está ligado e não cobre a caixa nem o menu."""
+        return self.jogo.mostrar_objetos and not self.partida.ocupada and not self.menu.aberto
 
     def _abrir_mapa(self) -> None:
         self.menu.fechar()
@@ -172,6 +183,10 @@ class EstadoCena(Estado):
             return False
         return True
 
+    def ao_fechar(self) -> None:
+        """Fechar a janela salva como o Esc; se a gravação falhar, a janela fecha assim mesmo."""
+        self._salvar()
+
     def _voltar_ao_titulo(self) -> None:
         from politicalizando.estados.titulo import EstadoTitulo
 
@@ -201,14 +216,20 @@ class EstadoCena(Estado):
     def desenhar(self, tela: pygame.Surface) -> None:
         tela.fill(Paleta.FUNDO)
         destacados = {self.foco, self.sob_mouse}
+        mostrando = self.mostrando_objetos
         for objeto in self.partida.objetos():
-            area = pygame.Rect(
-                objeto.area.x, objeto.area.y, objeto.area.largura, objeto.area.altura
-            )
-            borda = Paleta.DESTAQUE if objeto.id in destacados else Paleta.APAGADO
+            area = _retangulo(objeto)
             pygame.draw.rect(tela, Paleta.OBJETO, area)
-            pygame.draw.rect(tela, borda, area, 1)
-        if not self.partida.ocupada:
+            if mostrando:
+                # Todos destacados; o foco e o mouse ganham a borda mais grossa.
+                espessura = 2 if objeto.id in destacados else 1
+                pygame.draw.rect(tela, Paleta.DESTAQUE, area, espessura)
+            else:
+                borda = Paleta.DESTAQUE if objeto.id in destacados else Paleta.APAGADO
+                pygame.draw.rect(tela, borda, area, 1)
+        if mostrando:
+            self._desenhar_rotulos(tela)
+        elif not self.partida.ocupada:
             self._desenhar_nome(tela)
         if not self.partida.ocupada:
             self._desenhar_botao(tela, self.botao_caderno, self._rotulo_caderno)
@@ -224,14 +245,42 @@ class EstadoCena(Estado):
         pygame.draw.rect(tela, Paleta.TEXTO, botao, 1)
         tela.blit(rotulo, rotulo.get_rect(center=botao.center))
 
+    def rotulos(self) -> list[tuple[Objeto, pygame.Rect]]:
+        """Cada objeto visível com o retângulo onde o nome dele é escrito (Mostrar objetos)."""
+        objetos = self.partida.objetos()
+        tamanhos = [self._tamanho_rotulo(objeto) for objeto in objetos]
+        botoes = [self.botao_caderno, *([self.botao_mapa] if self.mapa_liberado else [])]
+        areas = [_retangulo(objeto) for objeto in objetos]
+        postos = rotulos.posicionar(areas, tamanhos, self.jogo.tela.get_rect(), botoes)
+        return list(zip(objetos, postos, strict=True))
+
+    def _nome(self, objeto: Objeto) -> str:
+        # ids-de-texto: dados (os nomes vêm do cenas.toml)
+        return self.jogo.textos[objeto.nome].texto
+
+    def _tamanho_rotulo(self, objeto: Objeto) -> tuple[int, int]:
+        largura, altura = self.fonte.size(self._nome(objeto))
+        return largura + 4, altura
+
+    def _desenhar_rotulos(self, tela: pygame.Surface) -> None:
+        destacados = {self.foco, self.sob_mouse}
+        for objeto, posto in self.rotulos():
+            cor = Paleta.DESTAQUE if objeto.id in destacados else Paleta.TEXTO
+            nome = renderizar(self.fonte, self._nome(objeto), cor)
+            pygame.draw.rect(tela, Paleta.FUNDO, posto)
+            tela.blit(nome, nome.get_rect(center=posto.center))
+
     def _desenhar_nome(self, tela: pygame.Surface) -> None:
         """O nome do objeto sob o mouse (ou com o foco) numa faixa no alto da tela."""
         id_objeto = self.sob_mouse or self.foco
         objeto = next((obj for obj in self.partida.objetos() if obj.id == id_objeto), None)
         if objeto is None:
             return
-        # ids-de-texto: dados (os nomes vêm do cenas.toml)
-        nome = renderizar(self.fonte, self.jogo.textos[objeto.nome].texto, Paleta.TEXTO)
+        nome = renderizar(self.fonte, self._nome(objeto), Paleta.TEXTO)
         faixa = nome.get_rect(midtop=(LARGURA_TELA // 2, 2)).inflate(8, 2)
         pygame.draw.rect(tela, Paleta.FUNDO, faixa)
         tela.blit(nome, nome.get_rect(center=faixa.center))
+
+
+def _retangulo(objeto: Objeto) -> pygame.Rect:
+    return pygame.Rect(objeto.area.x, objeto.area.y, objeto.area.largura, objeto.area.altura)

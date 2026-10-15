@@ -39,6 +39,10 @@ class EstadoMapa(Estado):
     def _locais(self) -> tuple[Local, ...]:
         return self.mapa.locais_liberados(self.partida.estado)
 
+    def ao_fechar(self) -> None:
+        """Fechar a janela daqui salva como na cena (se nada estiver bloqueado)."""
+        self.tela_cena.ao_fechar()
+
     def _voltar(self) -> None:
         self.jogo.trocar_estado(self.tela_cena)
 

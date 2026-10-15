@@ -37,7 +37,7 @@ python -m pip install -e ".[dev]"
 python -m politicalizando
 ```
 
-Controles: clique num objeto para Olhar, Usar ou Falar; ou use `Tab` e as setas para escolher o objeto, `Enter` para abrir o menu e `1`, `2` e `3` para os verbos. No título, `Esc` fecha o jogo; numa cena, volta ao título salvando o progresso. Para um teste rápido que fecha sozinho: `python -m politicalizando --fechar-em 2`.
+Controles: clique num objeto para Olhar, Usar ou Falar; ou use `Tab` e as setas para escolher o objeto, `Enter` para abrir o menu e `1`, `2` e `3` para os verbos. `O` mostra todos os objetos da cena com o nome de cada um (aperte de novo para esconder), `M` abre o mapa (depois de liberado) e `C` abre o caderno. No título, `1` e `2` escolhem Novo jogo e Continuar, e `Esc` fecha o jogo; numa cena, `Esc` volta ao título salvando o progresso, e fechar a janela também salva. Para um teste rápido que fecha sozinho: `python -m politicalizando --fechar-em 2`.
 
 ## Como desenvolver
 

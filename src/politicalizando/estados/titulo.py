@@ -1,5 +1,7 @@
 """Tela de título provisória: Novo jogo, Continuar (se houver save) e Esc para sair.
 
+Teclado: ↑/↓ escolhem e Enter ou Espaço confirmam; 1 e 2 escolhem direto (I4). Mouse: clique.
+
 O visual final e os outros menus (como jogar, créditos) são da Fase 3 (I7).
 """
 
@@ -89,6 +91,8 @@ class EstadoTitulo(Estado):
                 self.selecionada = (self.selecionada - 1) % len(self.opcoes)
             elif evento.key in teclas.PROXIMO:
                 self.selecionada = (self.selecionada + 1) % len(self.opcoes)
+            elif (indice := teclas.numero(evento.key)) is not None and indice < len(self.opcoes):
+                self._escolher(indice)
         elif evento.type == pygame.MOUSEMOTION:
             if (indice := self._botao_em(evento.pos)) is not None:
                 self.selecionada = indice
